@@ -10,3 +10,6 @@ commands:
   shop:
     description: Opens the main shop GUI.
     usage: /shop
+  csv:
+    description: Generates csv files
+    usage: /csv
