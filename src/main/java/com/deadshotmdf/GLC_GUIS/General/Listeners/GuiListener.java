@@ -2,10 +2,12 @@ package com.deadshotmdf.GLC_GUIS.General.Listeners;
 
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class GUIListener implements Listener {
@@ -18,6 +20,11 @@ public class GUIListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onClick(InventoryClickEvent ev) {
+        handle((Player) ev.getWhoClicked(), ev, TypeAction.CLICK);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onClick(InventoryCreativeEvent ev) {
         handle((Player) ev.getWhoClicked(), ev, TypeAction.CLICK);
     }
 
