@@ -4,19 +4,8 @@ gui:
   size: 54
   per_player: false
   default_elements:
-    "48":
-      item:
-        material: "ARROW"
-        name: "&aPrevious Page"
-      actions:
-        - "OPEN_PAGE weapons_shop %previous_page%"
-    "50":
-      item:
-        material: "ARROW"
-        name: "&aNext Page"
-      actions:
-        - "OPEN_PAGE weapons_shop %next_page%"
     "49":
+      slots: 49
       item:
         material: "PAPER"
         name: "&ePage %current_page% of %total_pages%"
@@ -25,17 +14,34 @@ gui:
       item:
         material: "BLACK_STAINED_GLASS_PANE"
         name: ""
+      actions:
+        - FILLER
     "back_button":
-      slot: 45
+      slots: 45
       item:
         material: "BARRIER"
         name: "&cBack"
       actions:
         - "OPEN_GUI main_shop"
+    "48":
+      slots: 48
+      item:
+        material: "ARROW"
+        name: "&aPrevious Page"
+      actions:
+        - "BACK_PAGE"
+    "50":
+      slots: 50
+      item:
+        material: "ARROW"
+        name: "&aNext Page"
+      actions:
+        - "NEXT_PAGE"
   pages:
     "0":
       elements:
         "10":
+          slots: 10
           item:
             material: "WOODEN_SWORD"
             name: "&aWooden Sword"
@@ -44,6 +50,7 @@ gui:
           actions:
             - "OPEN_GUI purchase_confirmation %item_material% %item_name% %item_price%"
         "11":
+          slots: 11
           item:
             material: "STONE_SWORD"
             name: "&aStone Sword"
@@ -55,6 +62,7 @@ gui:
     "1":
       elements:
         "10":
+          slots: 10
           item:
             material: "IRON_SWORD"
             name: "&aIron Sword"
@@ -63,6 +71,7 @@ gui:
           actions:
             - "OPEN_GUI purchase_confirmation %item_material% %item_name% %item_price%"
         "11":
+          slots: 11
           item:
             material: "DIAMOND_SWORD"
             name: "&aDiamond Sword"

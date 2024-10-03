@@ -1,5 +1,6 @@
 package com.deadshotmdf.GLC_GUIS.General.Buttons;
 
+import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -21,7 +22,7 @@ public class OpenGUIButton extends AbstractActionButton{
     }
 
     @Override
-    public void onClick(InventoryClickEvent event, Object... args) {
+    public void onClick(InventoryClickEvent event, GUI gui, Object... args) {
         guiManager.openGui((Player) event.getWhoClicked(), guiName);
     }
 

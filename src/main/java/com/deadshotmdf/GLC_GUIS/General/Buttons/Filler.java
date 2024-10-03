@@ -1,5 +1,6 @@
 package com.deadshotmdf.GLC_GUIS.General.Buttons;
 
+import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -24,7 +25,7 @@ public class Filler extends AbstractButton {
     public ItemStack getItemStackClone(String[] placeholder, String... replace){ return this.item.clone(); }
 
     @Override
-    public void onClick(InventoryClickEvent event, Object... args) {
+    public void onClick(InventoryClickEvent event, GUI gui, Object... args) {
         // Do jack shit, fillers are not clickable.
     }
 }
