@@ -3,7 +3,6 @@ package com.deadshotmdf.GLC_GUIS.General.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.GuiElement;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -23,6 +22,7 @@ public abstract class AbstractGUI implements GUI{
     protected final int totalPages;
     protected final GUI backGUI;
     protected String[] placeholders, replacements;
+    private boolean changingPage;
 
     protected AbstractGUI(GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, GUI backGUI) {
         this.guiManager = guiManager;
@@ -58,20 +58,17 @@ public abstract class AbstractGUI implements GUI{
     public void open(Player player, int page){
         Inventory inventory = pageInventories.get(page);
 
-        if (page < 0 || page >= totalPages || inventory == null) {
-            player.sendMessage(ChatColor.RED + "Invalid page number.");
-            guiManager.removeOpenGui(player, true);
+        if (page < 0 || page >= totalPages || inventory == null)
             return;
-        }
 
-
+        changingPage = true;
         player.openInventory(inventory);
     }
 
     @Override
     public void handleClick(InventoryClickEvent ev) {
         Inventory inventory = ev.getInventory();
-        int page = getPageByInventory(inventory, pageInventories);
+        int page = getPageByInventory(inventory);
 
         if (page == -1){
             guiManager.removeOpenGui((Player) ev.getWhoClicked(), false);
@@ -87,11 +84,16 @@ public abstract class AbstractGUI implements GUI{
         if (element == null)
             return;
 
-        element.onClick(ev);
+        element.onClick(ev, this);
     }
 
     @Override
     public void handleClose(InventoryCloseEvent ev) {
+        if(changingPage){
+            changingPage = false;
+            return;
+        }
+
         guiManager.removeOpenGui((Player) ev.getPlayer(), true);
     }
 
@@ -124,11 +126,21 @@ public abstract class AbstractGUI implements GUI{
         catch(Throwable ignored){}
     }
 
-    private static int getPageByInventory(Inventory inventory, Map<Integer, Inventory> inventories) {
-        for (Map.Entry<Integer, Inventory> entry : inventories.entrySet()) {
+    @Override
+    public int getPageByInventory(Player player){
+        return getPageByInventory(player.getOpenInventory().getTopInventory());
+    }
+
+    @Override
+    public int getPageByInventory(Inventory inventory) {
+        if(inventory == null)
+            return -1;
+
+        for (Map.Entry<Integer, Inventory> entry : pageInventories.entrySet()) {
             if (entry.getValue() == inventory)
                 return entry.getKey();
         }
+
         return -1;
     }
 

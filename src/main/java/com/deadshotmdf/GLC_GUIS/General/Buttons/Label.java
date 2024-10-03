@@ -1,5 +1,6 @@
 package com.deadshotmdf.GLC_GUIS.General.Buttons;
 
+import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,7 +17,7 @@ public class Label extends AbstractButton {
     }
 
     @Override
-    public void onClick(InventoryClickEvent event, Object... args) {
+    public void onClick(InventoryClickEvent event, GUI gui, Object... args) {
         // Do jack shit, labels are not clickable.
     }
 }

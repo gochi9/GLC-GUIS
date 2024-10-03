@@ -5,27 +5,27 @@ gui:
   per_player: false
   default_elements:
     "idk":
-      slots: "0-9,17-26"
+      slots: '0-9,17-26'
       item:
         material: "BLACK_STAINED_GLASS_PANE"
         name: ""
       actions:
         - 'FILLER'
     "11":
-        slots: "10"
-        item:
-          material: "DIAMOND_SWORD"
-          name: "&bWeapons"
-          lore:
-            - "&7Click to view weapons"
-        actions:
-          - "OPEN_GUI weapons_shop"
+      slots: '10'
+      item:
+        material: "DIAMOND_SWORD"
+        name: "&bWeapons"
+        lore:
+          - "&7Click to view weapons"
+      actions:
+        - "OPEN_GUI weapons_shop"
     "13":
-        slots: "15"
-        item:
-          material: "IRON_CHESTPLATE"
-          name: "&bArmor"
-          lore:
-            - "&7Click to view armor"
-        actions:
-          - "OPEN_GUI armor_shop"
+      slots: '15'
+      item:
+        material: "IRON_CHESTPLATE"
+        name: "&bArmor"
+        lore:
+          - "&7Click to view armor"
+      actions:
+        - "OPEN_GUI armor_shop"

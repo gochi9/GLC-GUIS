@@ -1,10 +1,7 @@
 package com.deadshotmdf.GLC_GUIS.General.Managers;
 
 import com.deadshotmdf.GLC_GUIS.GUIUtils;
-import com.deadshotmdf.GLC_GUIS.General.Buttons.Filler;
-import com.deadshotmdf.GLC_GUIS.General.Buttons.GuiElement;
-import com.deadshotmdf.GLC_GUIS.General.Buttons.Label;
-import com.deadshotmdf.GLC_GUIS.General.Buttons.OpenGUIButton;
+import com.deadshotmdf.GLC_GUIS.General.Buttons.*;
 import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerGUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.SharedGUI;
 import org.bukkit.Bukkit;
@@ -82,12 +79,14 @@ public abstract class AbstractGUIManager {
         // Parse page-specific elements
         Map<Integer, Map<Integer, GuiElement>> pages = parsePages(guiSection.getConfigurationSection("pages"));
 
-        pages.values().forEach(map -> map.values().forEach(System.out::println));
+        System.out.println(defaultElements.size() + " " + pages.size());
+        pages.values().forEach(System.out::println);
 
         // Merge default elements with page-specific elements
         Map<Integer, Map<Integer, GuiElement>> mergedPages = mergeDefaultWithPages(defaultElements, pages);
 
-        mergedPages.put(0, defaultElements);
+        if(mergedPages.isEmpty())
+            mergedPages.put(0, defaultElements);
 
         // Register GUI with GuiManager
         guiManager.registerGuiTemplate(guiName.toLowerCase(), perPlayer ? new PerPlayerGUI(guiManager, title, size, mergedPages, null) : new SharedGUI(guiManager, title, size, mergedPages, null));
@@ -99,12 +98,21 @@ public abstract class AbstractGUIManager {
 
     private Map<Integer, Map<Integer, GuiElement>> mergeDefaultWithPages(Map<Integer, GuiElement> defaultElements,
                                                                          Map<Integer, Map<Integer, GuiElement>> pages) {
+
         Map<Integer, Map<Integer, GuiElement>> mergedPages = new LinkedHashMap<>(pages);
 
-        pages.keySet().forEach(page -> defaultElements.forEach((slot, item) ->{
-            if(pages.get(page).get(slot) != null)
-                mergedPages.computeIfAbsent(page, _ -> new HashMap<>()).put(slot, item);
-        }));
+        for (Integer page : pages.keySet()) {
+            mergedPages.computeIfAbsent(page, _ -> new LinkedHashMap<>());
+
+            for (Map.Entry<Integer, GuiElement> defaultEntry : defaultElements.entrySet()) {
+                Integer slot = defaultEntry.getKey();
+                GuiElement defaultElement = defaultEntry.getValue();
+
+                GuiElement pageSpecificElement = pages.get(page).get(slot);
+
+                mergedPages.get(page).put(slot, pageSpecificElement != null ? pageSpecificElement : defaultElement);
+            }
+        }
 
         return mergedPages;
     }
@@ -132,6 +140,13 @@ public abstract class AbstractGUIManager {
             String targetGui = parts[1];
             return new OpenGUIButton(item, this, guiManager, targetGui);
         }
+
+        else if(action.startsWith("BACK_PAGE"))
+            return new MovePageButton(item, this,false);
+
+        else if(action.startsWith("NEXT_PAGE"))
+            return new MovePageButton(item, this,true);
+
         else if (action.equalsIgnoreCase("FILLER"))
             return new Filler(item);
 
@@ -181,7 +196,7 @@ public abstract class AbstractGUIManager {
             Set<Integer> slots = GUIUtils.getSlots(section.getString(key + ".slots"));
 
             if(slots.isEmpty())
-                GUIUtils.getSlots(section.getString(key + ".slot"));
+                slots = GUIUtils.getSlots(section.getString(key + ".slot"));
 
             if(slots.isEmpty())
                 continue;
@@ -197,7 +212,9 @@ public abstract class AbstractGUIManager {
 
     private Map<Integer, Map<Integer, GuiElement>> parsePages(ConfigurationSection pagesSection) {
         Map<Integer, Map<Integer, GuiElement>> pages = new LinkedHashMap<>();
-        if (pagesSection == null) return pages;
+
+        if (pagesSection == null)
+            return pages;
 
         for (String pageKey : pagesSection.getKeys(false)) {
             int pageNumber = Integer.parseInt(pageKey);

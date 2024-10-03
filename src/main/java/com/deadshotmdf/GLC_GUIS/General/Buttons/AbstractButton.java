@@ -1,5 +1,6 @@
 package com.deadshotmdf.GLC_GUIS.General.Buttons;
 
+import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -41,7 +42,7 @@ public abstract class AbstractButton implements GuiElement{
         return item;
     }
 
-    public abstract void onClick(InventoryClickEvent event, Object... args);
+    public abstract void onClick(InventoryClickEvent event, GUI gui, Object... args);
 
     private static List<String> replace(List<String> lore, String[] placeholder, String... replace){
         List<String> list = new ArrayList<>(lore.size());
