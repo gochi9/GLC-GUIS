@@ -4,7 +4,6 @@ import com.deadshotmdf.GLC_GUIS.GUIUtils;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.*;
 import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerGUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.SharedGUI;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -93,8 +92,6 @@ public abstract class AbstractGUIManager {
 
         plugin.getLogger().info("Loaded GUI: " + guiName + " " + mergedPages.size() + " " + mergedPages.get(0).size());
     }
-
-
 
     private Map<Integer, Map<Integer, GuiElement>> mergeDefaultWithPages(Map<Integer, GuiElement> defaultElements,
                                                                          Map<Integer, Map<Integer, GuiElement>> pages) {
