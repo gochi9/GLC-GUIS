@@ -1,18 +1,24 @@
 package com.deadshotmdf.GLC_GUIS.General.Managers;
 
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class GuiManager {
 
-    private final Map<String, GUI> guiTemplates = new HashMap<>();
-    private final Map<UUID, GUI> openGuis = new HashMap<>();
-   // private final Set<>
+    private final Map<String, GUI> guiTemplates;
+    private final Map<UUID, GUI> openGuis;
+    private final Set<AbstractGUIManager> managers;
+
+    public GuiManager() {
+        this.guiTemplates = new HashMap<>();
+        this.openGuis = new HashMap<>();
+        this.managers = new HashSet<>();
+    }
 
     public void registerGuiTemplate(String name, GUI gui) {
         guiTemplates.put(name, gui);
@@ -23,7 +29,7 @@ public class GuiManager {
     }
 
     public void openGui(Player player, String guiName) {
-        GUI gui = guiTemplates.get(guiName);
+        GUI gui = guiTemplates.get(guiName.toLowerCase());
 
         if(gui == null){
             player.sendMessage(ChatColor.RED + "GUI not found: " + guiName);
@@ -55,6 +61,17 @@ public class GuiManager {
             player.closeInventory();
 
         openGuis.remove(uuid);
+    }
+
+    public void addManager(AbstractGUIManager manager){
+        this.managers.add(manager);
+    }
+
+    public void reloadConfig(){
+        Bukkit.getOnlinePlayers().forEach(HumanEntity::closeInventory);
+        openGuis.clear();
+        guiTemplates.clear();
+        this.managers.forEach(AbstractGUIManager::loadGUIsRecursive);
     }
 
 }
