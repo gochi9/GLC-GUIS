@@ -20,6 +20,7 @@ gui:
         - "CLOSE"
     "13":
       slots: 13
+      purchasableItem: true
       item:
         material: "%item_material%"
         name: "&6%item_name%"

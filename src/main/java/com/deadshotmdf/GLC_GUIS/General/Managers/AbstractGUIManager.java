@@ -122,7 +122,9 @@ public abstract class AbstractGUIManager {
         if (itemSection == null)
             return null;
 
-        ItemStack item = parseItem(itemSection);
+        boolean purchasableItem = section.getBoolean("purchasableItem", false);
+        ItemStack item = purchasableItem ? new ItemStack(Material.DIRT) : parseItem(itemSection);
+
         if (item == null)
             return null;
 
@@ -131,6 +133,10 @@ public abstract class AbstractGUIManager {
             return null;
 
         String action = actions.get(0).toUpperCase();
+
+        if(purchasableItem)
+            return new PurchasableButton(item, this);
+
         if (action.startsWith("OPEN_GUI")) {
             String[] parts = action.split(" ");
             if (parts.length < 2) return null;
