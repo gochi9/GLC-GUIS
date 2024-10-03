@@ -11,20 +11,21 @@ gui:
         name: ""
       actions:
         - 'FILLER'
-  elements:
     "11":
-      item:
-        material: "DIAMOND_SWORD"
-        name: "&bWeapons"
-        lore:
-          - "&7Click to view weapons"
-      actions:
-        - "OPEN_GUI weapons_shop"
+        slots: "10"
+        item:
+          material: "DIAMOND_SWORD"
+          name: "&bWeapons"
+          lore:
+            - "&7Click to view weapons"
+        actions:
+          - "OPEN_GUI weapons_shop"
     "13":
-      item:
-        material: "IRON_CHESTPLATE"
-        name: "&bArmor"
-        lore:
-          - "&7Click to view armor"
-      actions:
-        - "OPEN_GUI armor_shop"
+        slots: "15"
+        item:
+          material: "IRON_CHESTPLATE"
+          name: "&bArmor"
+          lore:
+            - "&7Click to view armor"
+        actions:
+          - "OPEN_GUI armor_shop"

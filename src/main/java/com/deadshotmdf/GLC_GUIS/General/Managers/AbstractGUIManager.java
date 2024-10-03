@@ -7,6 +7,7 @@ import com.deadshotmdf.GLC_GUIS.General.Buttons.Label;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.OpenGUIButton;
 import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerGUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.SharedGUI;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -16,10 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class AbstractGUIManager {
@@ -32,9 +30,14 @@ public abstract class AbstractGUIManager {
         this.guiManager = guiManager;
         this.plugin = plugin;
         this.basePath = basePath;
+        this.guiManager.addManager(this);
     }
 
-    private void loadGUIsRecursive(File directory) {
+    public void loadGUIsRecursive(){
+        this.loadGUIsRecursive(basePath);
+    }
+
+    public void loadGUIsRecursive(File directory) {
         if(!basePath.exists() && basePath.isDirectory())
             return;
 
@@ -79,30 +82,29 @@ public abstract class AbstractGUIManager {
         // Parse page-specific elements
         Map<Integer, Map<Integer, GuiElement>> pages = parsePages(guiSection.getConfigurationSection("pages"));
 
+        pages.values().forEach(map -> map.values().forEach(System.out::println));
+
         // Merge default elements with page-specific elements
         Map<Integer, Map<Integer, GuiElement>> mergedPages = mergeDefaultWithPages(defaultElements, pages);
 
-        // Register GUI with GuiManager
-        guiManager.registerGuiTemplate(guiName, perPlayer ? new PerPlayerGUI(guiManager, title, size, mergedPages, null) : new SharedGUI(guiManager, title, size, mergedPages, null));
+        mergedPages.put(0, defaultElements);
 
-        plugin.getLogger().info("Loaded GUI: " + guiName);
+        // Register GUI with GuiManager
+        guiManager.registerGuiTemplate(guiName.toLowerCase(), perPlayer ? new PerPlayerGUI(guiManager, title, size, mergedPages, null) : new SharedGUI(guiManager, title, size, mergedPages, null));
+
+        plugin.getLogger().info("Loaded GUI: " + guiName + " " + mergedPages.size() + " " + mergedPages.get(0).size());
     }
 
 
 
     private Map<Integer, Map<Integer, GuiElement>> mergeDefaultWithPages(Map<Integer, GuiElement> defaultElements,
                                                                          Map<Integer, Map<Integer, GuiElement>> pages) {
-        Map<Integer, Map<Integer, GuiElement>> mergedPages = new HashMap<>();
+        Map<Integer, Map<Integer, GuiElement>> mergedPages = new LinkedHashMap<>(pages);
 
-        for (Map.Entry<Integer, Map<Integer, GuiElement>> entry : pages.entrySet()) {
-            int pageNumber = entry.getKey();
-            Map<Integer, GuiElement> pageElements = new HashMap<>(defaultElements);
-            pageElements.putAll(entry.getValue());
-            mergedPages.put(pageNumber, pageElements);
-        }
-
-        if (mergedPages.isEmpty() && !defaultElements.isEmpty())
-            mergedPages.put(0, new HashMap<>(defaultElements));
+        pages.keySet().forEach(page -> defaultElements.forEach((slot, item) ->{
+            if(pages.get(page).get(slot) != null)
+                mergedPages.computeIfAbsent(page, _ -> new HashMap<>()).put(slot, item);
+        }));
 
         return mergedPages;
     }
@@ -170,34 +172,36 @@ public abstract class AbstractGUIManager {
     }
 
     private Map<Integer, GuiElement> parseElements(ConfigurationSection section){
-        HashMap<Integer, GuiElement> elements = new HashMap<>();
+        LinkedHashMap<Integer, GuiElement> elements = new LinkedHashMap<>();
 
         if(section == null)
             return elements;
 
         for(String key : section.getKeys(false)){
-            Set<Integer> slots = GUIUtils.getSlots(section.getString("slots"));
+            Set<Integer> slots = GUIUtils.getSlots(section.getString(key + ".slots"));
 
             if(slots.isEmpty())
-                GUIUtils.getSlots(section.getString("slot"));
+                GUIUtils.getSlots(section.getString(key + ".slot"));
 
             if(slots.isEmpty())
                 continue;
 
             GuiElement element = parseGuiElement(section.getConfigurationSection(key));
-            slots.forEach(slot -> elements.put(slot, element));
+
+            if(element != null)
+                slots.forEach(slot -> elements.put(slot, element));
         }
 
         return elements;
     }
 
     private Map<Integer, Map<Integer, GuiElement>> parsePages(ConfigurationSection pagesSection) {
-        Map<Integer, Map<Integer, GuiElement>> pages = new HashMap<>();
+        Map<Integer, Map<Integer, GuiElement>> pages = new LinkedHashMap<>();
         if (pagesSection == null) return pages;
 
         for (String pageKey : pagesSection.getKeys(false)) {
             int pageNumber = Integer.parseInt(pageKey);
-            ConfigurationSection pageSection = pagesSection.getConfigurationSection(pageKey).getConfigurationSection("elements");
+            ConfigurationSection pageSection = pagesSection.getConfigurationSection(pageKey + ".elements");
             if (pageSection == null)
                 continue;
 

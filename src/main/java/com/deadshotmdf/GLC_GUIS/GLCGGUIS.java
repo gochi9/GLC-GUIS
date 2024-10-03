@@ -1,8 +1,12 @@
 package com.deadshotmdf.GLC_GUIS;
 
+import com.deadshotmdf.GLC_GUIS.General.Listeners.GUIListener;
 import com.deadshotmdf.GLC_GUIS.General.Managers.ButtonRegistry;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
+import com.deadshotmdf.GLC_GUIS.Shop.OpenShopCommand;
+import com.deadshotmdf.GLC_GUIS.Shop.ShopManager;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,6 +15,7 @@ public final class GLCGGUIS extends JavaPlugin {
     private Economy economy;
     private GuiManager guiManager;
     private ButtonRegistry buttonRegistry;
+    private ShopManager shopManager;;
 
     @Override
     public void onEnable() {
@@ -22,6 +27,13 @@ public final class GLCGGUIS extends JavaPlugin {
 
         this.guiManager = new GuiManager();
         this.buttonRegistry = new ButtonRegistry();
+        this.shopManager = new ShopManager(guiManager, this);
+
+        this.guiManager.reloadConfig();
+
+        Bukkit.getPluginManager().registerEvents(new GUIListener(guiManager), this);
+
+        this.getCommand("shop").setExecutor(new OpenShopCommand(guiManager));
     }
 
     @Override
