@@ -1,0 +1,24 @@
+gui:
+  name: "purchase_confirmation"
+  title: "&aConfirm Purchase"
+  size: 27
+  per_player: true
+  elements:
+    "11":
+      item:
+        material: "GREEN_WOOL"
+        name: "&aConfirm"
+      actions:
+        - "CONFIRM_PURCHASE %item_material% %item_price%"
+    "15":
+      item:
+        material: "RED_WOOL"
+        name: "&cCancel"
+      actions:
+        - "CLOSE"
+    "13":
+      item:
+        material: "%item_material%"
+        name: "&6%item_name%"
+        lore:
+          - "&7Vault Price: &a$%item_price%"

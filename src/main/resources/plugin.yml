@@ -1,0 +1,12 @@
+name: GLC-GUIS
+main: com.deadshotmdf.GLC_GUIS.GLCGGUIS
+authors: [ DeadshotMDF, Bodygiard1 ]
+version: 1.0
+api-version: 1.21
+depend:
+  - Vault
+  - GLCoins-Server
+commands:
+  shop:
+    description: Opens the main shop GUI.
+    usage: /shop

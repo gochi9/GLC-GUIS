@@ -1,0 +1,73 @@
+gui:
+  name: "weapons_shop"
+  title: "&bWeapons Shop"
+  size: 54
+  per_player: false
+  default_elements:
+    "48":
+      item:
+        material: "ARROW"
+        name: "&aPrevious Page"
+      actions:
+        - "OPEN_PAGE weapons_shop %previous_page%"
+    "50":
+      item:
+        material: "ARROW"
+        name: "&aNext Page"
+      actions:
+        - "OPEN_PAGE weapons_shop %next_page%"
+    "49":
+      item:
+        material: "PAPER"
+        name: "&ePage %current_page% of %total_pages%"
+    "filler":
+      slots: "0-8,45-53"
+      item:
+        material: "BLACK_STAINED_GLASS_PANE"
+        name: ""
+    "back_button":
+      slot: 45
+      item:
+        material: "BARRIER"
+        name: "&cBack"
+      actions:
+        - "OPEN_GUI main_shop"
+  pages:
+    "0":
+      elements:
+        "10":
+          item:
+            material: "WOODEN_SWORD"
+            name: "&aWooden Sword"
+            lore:
+              - "&7Price: &6$10"
+          actions:
+            - "OPEN_GUI purchase_confirmation %item_material% %item_name% %item_price%"
+        "11":
+          item:
+            material: "STONE_SWORD"
+            name: "&aStone Sword"
+            lore:
+              - "&7Price: &6$20"
+          actions:
+            - "OPEN_GUI purchase_confirmation %item_material% %item_name% %item_price%"
+        # Additional items...
+    "1":
+      elements:
+        "10":
+          item:
+            material: "IRON_SWORD"
+            name: "&aIron Sword"
+            lore:
+              - "&7Price: &6$30"
+          actions:
+            - "OPEN_GUI purchase_confirmation %item_material% %item_name% %item_price%"
+        "11":
+          item:
+            material: "DIAMOND_SWORD"
+            name: "&aDiamond Sword"
+            lore:
+              - "&7Price: &6$50"
+          actions:
+            - "OPEN_GUI purchase_confirmation %item_material% %item_name% %item_price%"
+        # Additional items...
