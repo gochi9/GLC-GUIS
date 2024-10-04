@@ -38,18 +38,22 @@ public class GenericShopTransactionGUI extends PerPlayerGUI {
         this.max_buy = GUIUtils.getIntegerOrDefault(GUIUtils.retrieveFrom("max_buy", ":", args), 0);
         this.max_sell = GUIUtils.getIntegerOrDefault(GUIUtils.retrieveFrom("max_sell", ":", args), 0);
         this.item = new ItemStack(this.material == null ? Material.GLASS : this.material);
+        this.amount = 1;
         ItemMeta meta = this.item.getItemMeta();
         meta.setDisplayName(material != null ? material.toString().toLowerCase() : item_name);
+
+        int maxStack = isBuy ? max_buy : max_sell;
+        if(maxStack > 0)
+            meta.setMaxStackSize(maxStack);
+
         this.item.setItemMeta(meta);
         this.refreshInventory();
     }
 
     public void changeAmount(int amount, boolean add){
-        Bukkit.broadcastMessage(isBuy + " " + add + " " + max_buy + " " + this.amount);
-        this.amount = Math.max(isBuy ? max_buy : max_sell, this.amount + (add ? amount : -amount));
+        this.amount = Math.min(isBuy ? max_buy : max_sell, this.amount + (add ? amount : -amount));
         this.amount = Math.max(1, this.amount);
         this.item.setAmount(this.amount);
-        Bukkit.broadcastMessage(this.amount+"");
         refreshInventory();
     }
 
