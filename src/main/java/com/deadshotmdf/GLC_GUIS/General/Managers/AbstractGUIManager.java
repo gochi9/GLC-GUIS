@@ -97,7 +97,7 @@ public abstract class AbstractGUIManager {
         if(mergedPages.isEmpty())
             mergedPages.put(0, guiElementsData.getDefaultElements());
 
-        guiManager.registerGuiTemplate(guiName.toLowerCase(), specifyGUI(perPlayer, guiManager, title, size, mergedPages));
+        guiManager.registerGuiTemplate(guiName.toLowerCase(), specifyGUI(perPlayer, guiManager, title, size, mergedPages, config.getString("specialType")));
 
         plugin.getLogger().info("Loaded GUI: " + guiName + " " + mergedPages.size() + " " + mergedPages.get(0).size());
     }
@@ -251,7 +251,7 @@ public abstract class AbstractGUIManager {
         return element;
     }
 
-    protected GUI specifyGUI(boolean perPlayer, GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> mergedPages){
+    protected GUI specifyGUI(boolean perPlayer, GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> mergedPages, String type){
         return perPlayer ? new PerPlayerGUI(guiManager, title, size, mergedPages, null) : new SharedGUI(guiManager, title, size, mergedPages, null);
     }
 

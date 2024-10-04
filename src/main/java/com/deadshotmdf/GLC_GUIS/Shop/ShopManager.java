@@ -21,9 +21,11 @@ public class ShopManager extends AbstractGUIManager {
     }
 
     @Override
-    protected GUI specifyGUI(boolean perPlayer, GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> mergedPages){
-        System.out.println(title.endsWith("Confirm Purchase"));
-        return title.endsWith("Confirm Purchase") ? new GenericShopTransactionGUI(guiManager, title, size, mergedPages, null) : super.specifyGUI(perPlayer, guiManager, title, size, mergedPages);
+    protected GUI specifyGUI(boolean perPlayer, GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> mergedPages, String type){
+        return switch (type) {
+            case "GENERIC_CONFIRMATION" -> new GenericShopTransactionGUI(guiManager, title, size, mergedPages, null);
+            default -> super.specifyGUI(perPlayer, guiManager, title, size, mergedPages, type);
+        };
     }
 
 }
