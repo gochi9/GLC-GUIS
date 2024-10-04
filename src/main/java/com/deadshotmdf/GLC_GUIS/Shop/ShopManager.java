@@ -22,7 +22,7 @@ public class ShopManager extends AbstractGUIManager {
 
     @Override
     protected GUI specifyGUI(boolean perPlayer, GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> mergedPages, String type){
-        return switch (type) {
+        return switch (type != null ? type.toUpperCase() : "null") {
             case "GENERIC_CONFIRMATION" -> new GenericShopTransactionGUI(guiManager, title, size, mergedPages, null);
             default -> super.specifyGUI(perPlayer, guiManager, title, size, mergedPages, type);
         };
