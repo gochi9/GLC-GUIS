@@ -12,8 +12,8 @@ libraries:
   - org.apache.poi:poi-ooxml:5.2.3
 commands:
   shop:
-    description: Opens the main shop GUI.
-    usage: /shop
+    description: Opens the main example GUI.
+    usage: /example
   csv:
     description: Generates csv files
     usage: /csv

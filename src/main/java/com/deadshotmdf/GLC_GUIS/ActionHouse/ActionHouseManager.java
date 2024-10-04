@@ -13,7 +13,7 @@ import java.util.Map;
 public class ActionHouseManager extends AbstractGUIManager {
 
     public ActionHouseManager(GuiManager guiManager, JavaPlugin plugin) {
-        super(guiManager, plugin, new File(plugin.getDataFolder(), "guis/shop/"));
+        super(guiManager, plugin, new File(plugin.getDataFolder(), "guis/ah/"));
     }
 
     @Override
