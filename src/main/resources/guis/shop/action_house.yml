@@ -1,0 +1,7 @@
+gui:
+  name: "main_shop"
+  title: "&aMain Shop"
+  size: 27
+  per_player: false
+  excel_file_name: 'ah_shop.xlsx'
+  default_format: 'page,slots,material,name,lore,action'

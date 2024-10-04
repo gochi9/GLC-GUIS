@@ -1,6 +1,5 @@
 package com.deadshotmdf.GLC_GUIS;
 
-import com.deadshotmdf.GLC_GUIS.CSV.CsvCommand;
 import com.deadshotmdf.GLC_GUIS.General.Listeners.GUIListener;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import com.deadshotmdf.GLC_GUIS.Shop.OpenShopCommand;
@@ -33,7 +32,6 @@ public final class GLCGGUIS extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new GUIListener(guiManager), this);
 
         this.getCommand("shop").setExecutor(new OpenShopCommand(guiManager));
-        this.getCommand("csv").setExecutor(new CsvCommand(this));
 
     }
 
