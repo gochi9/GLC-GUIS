@@ -1,9 +1,10 @@
-package com.deadshotmdf.GLC_GUIS.Shop;
+package com.deadshotmdf.GLC_GUIS.ActionHouse;
 
 import com.deadshotmdf.GLC_GUIS.General.Buttons.GuiElement;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.AbstractGUIManager;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
+import com.deadshotmdf.GLC_GUIS.Shop.GenericShopTransactionGUI;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;

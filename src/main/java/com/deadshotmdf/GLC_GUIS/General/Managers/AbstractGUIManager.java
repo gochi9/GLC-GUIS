@@ -52,22 +52,16 @@ public abstract class AbstractGUIManager {
                 loadGUIsRecursive(file);
 
             else if (file.isFile() && file.getName().endsWith(".yml"))
-                loadGUI(file);
+                loadGUI(file, file.getName().replace(".yml", ""));
         }
     }
 
-    private void loadGUI(File guiFile) {
+    private void loadGUI(File guiFile, String guiName) {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(guiFile);
         ConfigurationSection guiSection = config.getConfigurationSection("gui");
 
         if (guiSection == null) {
             plugin.getLogger().warning("No 'gui' section found in " + guiFile.getName());
-            return;
-        }
-
-        String guiName = guiSection.getString("name");
-        if (guiName == null || guiName.isEmpty()) {
-            plugin.getLogger().warning("GUI name not defined in " + guiFile.getName());
             return;
         }
 
