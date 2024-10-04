@@ -3,6 +3,7 @@ package com.deadshotmdf.GLC_GUIS.General.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.GuiElement;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -68,7 +69,7 @@ public abstract class AbstractGUI implements GUI{
     protected abstract GUI createNewInstance(UUID player, GUI backGUI, String... args);
 
     @Override
-    public void open(Player player, int page){
+    public void open(HumanEntity player, int page){
         Inventory inventory = pageInventories.get(page);
 
         if (page < 0 || page >= totalPages || inventory == null)

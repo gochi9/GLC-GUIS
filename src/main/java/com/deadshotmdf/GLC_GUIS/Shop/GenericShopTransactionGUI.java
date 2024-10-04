@@ -2,11 +2,11 @@ package com.deadshotmdf.GLC_GUIS.Shop;
 
 import com.deadshotmdf.GLC_GUIS.GUIUtils;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.GuiElement;
+import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.GenericShopChangeAmount;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.ReplaceableButton;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerGUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -59,7 +59,7 @@ public class GenericShopTransactionGUI extends PerPlayerGUI {
 
     @Override
     public void handleClick(InventoryClickEvent ev, Object... args) {
-        super.handleClick(ev, isBuy, amount);
+        super.handleClick(ev, isBuy, amount, isBuy ? buy_value : sell_value, item.getType());
         try{refreshInventory();}
         catch (Throwable ignored){}
     }
@@ -76,11 +76,18 @@ public class GenericShopTransactionGUI extends PerPlayerGUI {
         for(Map.Entry<Integer, GuiElement> elements : pageElements.get(0).entrySet())
             if(elements.getValue() instanceof ReplaceableButton)
                 inventory.setItem(elements.getKey(), ReplaceableButton.createSimpleReplaceableButton(this.item).getItemStackClone(null));
+            else if (elements.getValue() instanceof GenericShopChangeAmount button)
+                inventory.setItem(elements.getKey(), noLongerUseful(button) ? null : button.getItemStackClone(null));
+
     }
 
     @Override
     protected GUI createNewInstance(UUID player, GUI backGUI, String... args) {
         return new GenericShopTransactionGUI(guiManager, title, size, pageElements, backGUI, args);
+    }
+
+    private boolean noLongerUseful(GenericShopChangeAmount button){
+        return ((button.isAdd() && (this.amount + button.getValue()) > (isBuy ? this.max_buy : max_sell)) || (!button.isAdd() && this.amount <= 1));
     }
 
 }

@@ -13,7 +13,5 @@ libraries:
 commands:
   shop:
     description: Opens the main example GUI.
-    usage: /example
-  csv:
-    description: Generates csv files
-    usage: /csv
+    usage: /shop
+  glcguis:

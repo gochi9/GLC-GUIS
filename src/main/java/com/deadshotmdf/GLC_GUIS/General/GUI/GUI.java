@@ -1,5 +1,6 @@
 package com.deadshotmdf.GLC_GUIS.General.GUI;
 
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -14,7 +15,7 @@ public interface GUI {
     void handleClose(InventoryCloseEvent ev);
     void refreshInventory();
     public GUI createInstance(UUID player, GUI backGUI, String... args);
-    void open(Player player, int page);
+    void open(HumanEntity player, int page);
     int getPageCount();
     void deletePages();
     int getPageByInventory(Player player);

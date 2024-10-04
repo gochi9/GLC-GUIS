@@ -25,6 +25,14 @@ public class GenericShopChangeAmount extends AbstractButton {
         this.value = args.length > 1 ? GUIUtils.getIntegerOrDefault(args[1], 0) : 0;
     }
 
+    public int getValue(){
+        return value;
+    }
+
+    public boolean isAdd(){
+        return add;
+    }
+
     @Override
     public void onClick(InventoryClickEvent event, GUI gui, Object... args) {
         if(value == 0 || !(gui instanceof GenericShopTransactionGUI shop))

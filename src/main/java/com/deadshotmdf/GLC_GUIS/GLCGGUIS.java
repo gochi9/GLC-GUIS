@@ -1,6 +1,7 @@
 package com.deadshotmdf.GLC_GUIS;
 
 import com.deadshotmdf.GLC_GUIS.ActionHouse.ActionHouseManager;
+import com.deadshotmdf.GLC_GUIS.General.Commands.ReloadConfigCommand;
 import com.deadshotmdf.GLC_GUIS.General.Listeners.GUIListener;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import com.deadshotmdf.GLC_GUIS.Shop.OpenShopCommand;
@@ -12,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class GLCGGUIS extends JavaPlugin {
 
-    private Economy economy;
+    private static Economy economy;
     private GuiManager guiManager;
     private ShopManager shopManager;
     private ActionHouseManager actionHouseManager;
@@ -35,6 +36,7 @@ public final class GLCGGUIS extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new GUIListener(guiManager), this);
 
         this.getCommand("shop").setExecutor(new OpenShopCommand(guiManager));
+        this.getCommand("glcguis").setExecutor(new ReloadConfigCommand(guiManager));
 
     }
 
@@ -55,7 +57,7 @@ public final class GLCGGUIS extends JavaPlugin {
         return economy != null;
     }
 
-    public Economy getEconomy() {
+    public static Economy getEconomy() {
         return economy;
     }
 

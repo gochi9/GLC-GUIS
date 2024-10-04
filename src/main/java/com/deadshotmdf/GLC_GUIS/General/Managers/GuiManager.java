@@ -29,7 +29,7 @@ public class GuiManager {
         return guiTemplates.get(name);
     }
 
-    public void openGui(Player player, String guiName, GUI backGUI, String... args) {
+    public void openGui(HumanEntity player, String guiName, GUI backGUI, String... args) {
         GUI gui = guiTemplates.get(guiName.toLowerCase());
 
         if(gui == null){
@@ -40,7 +40,7 @@ public class GuiManager {
         commenceOpen(player, gui, backGUI, args);
     }
 
-    public void commenceOpen(Player player, GUI gui, GUI backGUI, String... args){
+    public void commenceOpen(HumanEntity player, GUI gui, GUI backGUI, String... args){
         UUID uuid = player.getUniqueId();
         GUI newGUI = gui.createInstance(uuid, backGUI, args);
 
