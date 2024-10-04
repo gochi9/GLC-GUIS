@@ -21,10 +21,4 @@ public class ActionHouseManager extends AbstractGUIManager {
         return element;
     }
 
-    @Override
-    protected GUI specifyGUI(boolean perPlayer, GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> mergedPages){
-        System.out.println(title.endsWith("Confirm Purchase"));
-        return title.endsWith("Confirm Purchase") ? new GenericShopTransactionGUI(guiManager, title, size, mergedPages, null) : super.specifyGUI(perPlayer, guiManager, title, size, mergedPages);
-    }
-
 }
