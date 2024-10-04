@@ -6,6 +6,8 @@ api-version: 1.21
 depend:
   - Vault
   - GLCoins-Server
+libraries:
+  - org.reflections:reflections:0.9.12
 commands:
   shop:
     description: Opens the main shop GUI.
