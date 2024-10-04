@@ -185,8 +185,6 @@ public abstract class AbstractGUIManager {
                     elementData.put(headers.get(i), value);
                 }
 
-                elementData.forEach((key, value) -> System.out.println(key + ": " + value));
-
                 GuiElement element = createGuiElementFromData(elementData);
                 if (element == null)
                     continue;
