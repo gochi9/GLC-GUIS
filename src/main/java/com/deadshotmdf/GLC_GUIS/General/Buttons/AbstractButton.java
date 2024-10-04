@@ -9,20 +9,24 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractButton implements GuiElement{
 
-    protected final ItemStack item;
+    protected ItemStack item;
     protected final Object correspondentManager;
     protected final GuiManager guiManager;
     protected final String[] args;
+    protected final Map<String, String> elementData;
 
-    public AbstractButton(@NotNull ItemStack item, Object correspondentManager, GuiManager guiManager, String[] args){
+    public AbstractButton(@NotNull ItemStack item, Object correspondentManager, GuiManager guiManager, String[] args, Map<String, String> elementData){
         this.item = item;
         this.correspondentManager = correspondentManager;
         this.guiManager = guiManager;
         this.args = args;
+        this.elementData = elementData;
     }
 
     @Override
@@ -46,6 +50,8 @@ public abstract class AbstractButton implements GuiElement{
         item.setItemMeta(meta);
         return item;
     }
+
+    public void addExtra(String... extra){}
 
     public abstract void onClick(InventoryClickEvent event, GUI gui, Object... args);
 

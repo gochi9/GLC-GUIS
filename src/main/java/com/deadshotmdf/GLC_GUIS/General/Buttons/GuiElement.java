@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 
 public interface GuiElement {
 
+    void addExtra(String... extra);
     ItemStack getItemStackClone(String[] placeholder, String... replace);
     void onClick(InventoryClickEvent ev, GUI gui, Object... args);
 

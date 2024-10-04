@@ -1,6 +1,7 @@
 package com.deadshotmdf.GLC_GUIS.Shop;
 
 import com.deadshotmdf.GLC_GUIS.General.Buttons.GuiElement;
+import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.AbstractGUIManager;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,6 +18,12 @@ public class ShopManager extends AbstractGUIManager {
     @Override
     protected GuiElement enhanceGuiElement(Map<String, String> extraValues, GuiElement element, String action, String[] args) {
         return element;
+    }
+
+    @Override
+    protected GUI specifyGUI(boolean perPlayer, GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> mergedPages){
+        System.out.println(title.endsWith("Confirm Purchase"));
+        return title.endsWith("Confirm Purchase") ? new GenericShopTransactionGUI(guiManager, title, size, mergedPages, null) : super.specifyGUI(perPlayer, guiManager, title, size, mergedPages);
     }
 
 }

@@ -3,6 +3,7 @@ package com.deadshotmdf.GLC_GUIS.General.Managers;
 import com.deadshotmdf.GLC_GUIS.GUIUtils;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.*;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.Label;
+import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GuiElementsData;
 import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerGUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.SharedGUI;
@@ -102,7 +103,7 @@ public abstract class AbstractGUIManager {
         if(mergedPages.isEmpty())
             mergedPages.put(0, guiElementsData.getDefaultElements());
 
-        guiManager.registerGuiTemplate(guiName.toLowerCase(), perPlayer ? new PerPlayerGUI(guiManager, title, size, mergedPages, null) : new SharedGUI(guiManager, title, size, mergedPages, null));
+        guiManager.registerGuiTemplate(guiName.toLowerCase(), specifyGUI(perPlayer, guiManager, title, size, mergedPages));
 
         plugin.getLogger().info("Loaded GUI: " + guiName + " " + mergedPages.size() + " " + mergedPages.get(0).size());
     }
@@ -241,12 +242,11 @@ public abstract class AbstractGUIManager {
         String actionName = actionParts[0].toUpperCase();
         String[] args = Arrays.copyOfRange(actionParts, 1, actionParts.length);
 
-        AbstractButton button = GUIUtils.loadButton(actionName, item, this, guiManager, args);
-        if (button == null)
-            return new Label(item, this, guiManager, args);
-
         Map<String, String> extraValues = new HashMap<>(elementData);
         extraValues.keySet().removeAll(Arrays.asList("page", "slot", "material", "name", "lore", "action"));
+        AbstractButton button = GUIUtils.loadButton(actionName, item, this, guiManager, extraValues, args);
+        if (button == null)
+            return new Label(item, this, guiManager, args, extraValues);
 
         enhanceGuiElement(extraValues, button, actionName, args);
         return button;
@@ -255,6 +255,10 @@ public abstract class AbstractGUIManager {
     //Override this method to retrieve specific information from a certain type of GUI for specific cases
     protected GuiElement enhanceGuiElement(Map<String, String> extraValues, GuiElement element, String action, String[] args) {
         return element;
+    }
+
+    protected GUI specifyGUI(boolean perPlayer, GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> mergedPages){
+        return perPlayer ? new PerPlayerGUI(guiManager, title, size, mergedPages, null) : new SharedGUI(guiManager, title, size, mergedPages, null);
     }
 
     private ItemStack parseItem(Map<String, String> elementData) {

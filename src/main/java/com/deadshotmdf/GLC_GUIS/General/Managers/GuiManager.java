@@ -1,6 +1,7 @@
 package com.deadshotmdf.GLC_GUIS.General.Managers;
 
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
+import com.deadshotmdf.GLC_GUIS.Shop.GenericShopTransactionGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
@@ -28,7 +29,7 @@ public class GuiManager {
         return guiTemplates.get(name);
     }
 
-    public void openGui(Player player, String guiName) {
+    public void openGui(Player player, String guiName, GUI backGUI, String... args) {
         GUI gui = guiTemplates.get(guiName.toLowerCase());
 
         if(gui == null){
@@ -36,21 +37,25 @@ public class GuiManager {
             return;
         }
 
+        commenceOpen(player, gui, backGUI, args);
+    }
+
+    public void commenceOpen(Player player, GUI gui, GUI backGUI, String... args){
         UUID uuid = player.getUniqueId();
-        gui = gui.createInstance(uuid);
+        GUI newGUI = gui.createInstance(uuid, backGUI, args);
 
         try{removeOpenGui(player, true);}
         catch (Throwable ignored){}
 
-        gui.open(player, 0);
-        openGuis.put(uuid, gui);
+        newGUI.open(player, 0);
+        openGuis.put(uuid, newGUI);
     }
 
     public GUI getOpenGui(UUID uuid) {
         return openGuis.get(uuid);
     }
 
-    public void removeOpenGui(Player player, boolean onCloseEvent) {
+    public void removeOpenGui(HumanEntity player, boolean onCloseEvent) {
         UUID uuid = player.getUniqueId();
         GUI gui = getOpenGui(uuid);
 

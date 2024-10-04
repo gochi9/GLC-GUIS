@@ -20,17 +20,18 @@ public abstract class AbstractGUI implements GUI{
     protected final Map<Integer, Inventory> pageInventories;
     protected final Map<Integer, Map<Integer, GuiElement>> pageElements;
     protected final int totalPages;
-    protected final GUI backGUI;
+    protected GUI backGUI;
     protected String[] placeholders, replacements;
     private boolean changingPage;
+    protected String[] args;
 
-    protected AbstractGUI(GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, GUI backGUI) {
+    protected AbstractGUI(GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, String... args) {
         this.guiManager = guiManager;
         this.title = title;
         this.size = size;
         this.pageInventories = new HashMap<>();
         this.pageElements = pageElements;
-        this.backGUI = backGUI;
+        this.args = args;
 
         int pages = 0;
         if(pageElements.isEmpty() || pageElements.get(0) == null)
@@ -47,12 +48,24 @@ public abstract class AbstractGUI implements GUI{
     }
 
     @Override
+    public void setBackGUI(GUI backGUI){
+        this.backGUI = backGUI;
+    }
+
+    @Override
+    public GUI getBackGUI(){
+        return backGUI;
+    }
+
+    @Override
     public abstract boolean isShared();
 
     @Override
-    public GUI createInstance(UUID player){
-        return isShared() ? this : new PerPlayerGUI(guiManager, title, size, pageElements, backGUI);
+    public GUI createInstance(UUID player, GUI backGUI, String... args){
+        return isShared() ? this : createNewInstance(player, backGUI, args);
     }
+
+    protected abstract GUI createNewInstance(UUID player, GUI backGUI, String... args);
 
     @Override
     public void open(Player player, int page){
@@ -71,7 +84,7 @@ public abstract class AbstractGUI implements GUI{
         int page = getPageByInventory(inventory);
 
         if (page == -1){
-            guiManager.removeOpenGui((Player) ev.getWhoClicked(), false);
+            guiManager.removeOpenGui(ev.getWhoClicked(), false);
             return;
         }
 
@@ -114,10 +127,6 @@ public abstract class AbstractGUI implements GUI{
     @Override
     public int getPageCount() {
         return pageInventories.size();
-    }
-
-    public GUI getBackGUI() {
-        return backGUI;
     }
 
     @Override

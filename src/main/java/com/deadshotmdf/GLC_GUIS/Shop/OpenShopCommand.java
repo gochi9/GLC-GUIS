@@ -20,7 +20,7 @@ public class OpenShopCommand implements CommandExecutor {
             return true;
         }
         Player player = (Player) sender;
-        guiManager.openGui(player, "main_shop");
+        guiManager.openGui(player, "main_shop", null);
         return true;
     }
 }

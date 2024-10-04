@@ -1,7 +1,7 @@
 package com.deadshotmdf.GLC_GUIS;
 
 import com.deadshotmdf.GLC_GUIS.General.Buttons.AbstractButton;
-import com.deadshotmdf.GLC_GUIS.General.Buttons.CommandIdentifier;
+import com.deadshotmdf.GLC_GUIS.General.Buttons.ButtonIdentifier;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.TriFunction;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.apache.poi.ss.usermodel.Cell;
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 public class GUIUtils {
 
-    private static final Map<String, TriFunction<ItemStack, Object, GuiManager, String[], AbstractButton>> buttonMap = new HashMap<>();
+    private static final Map<String, TriFunction<ItemStack, Object, GuiManager, String[], Map<String, String>, AbstractButton>> buttonMap = new HashMap<>();
 
     static{
         Logger logger = Bukkit.getLogger();
@@ -45,7 +45,7 @@ public class GUIUtils {
             if(button.isInterface() || Modifier.isAbstract(button.getModifiers()))
                 continue;
 
-            CommandIdentifier action = button.getAnnotation(CommandIdentifier.class);
+            ButtonIdentifier action = button.getAnnotation(ButtonIdentifier.class);
 
             if(action == null)
                 continue;
@@ -55,10 +55,10 @@ public class GUIUtils {
             if(actionValue == null || actionValue.isBlank())
                 continue;
 
-            buttonMap.put(actionValue, (itemStack, correspondantManager, guiManager, args) -> {
+            buttonMap.put(actionValue, (itemStack, correspondantManager, guiManager, args, map) -> {
                 try {
-                    Constructor<? extends AbstractButton> constructor = button.getConstructor(ItemStack.class, Object.class, GuiManager.class, String[].class);
-                    return constructor.newInstance(itemStack, correspondantManager, guiManager, args);
+                    Constructor<? extends AbstractButton> constructor = button.getConstructor(ItemStack.class, Object.class, GuiManager.class, String[].class, Map.class);
+                    return constructor.newInstance(itemStack, correspondantManager, guiManager, args, map);
                 }
                 catch (Throwable e) {
                     logger.severe("Failed to instantiate action: " + actionValue);
@@ -72,9 +72,15 @@ public class GUIUtils {
         logger.info("Loaded " + buttonMap.size() + " buttons");
     }
 
-    public static AbstractButton loadButton(String actionValue, ItemStack itemStack, Object correspondantManager, GuiManager guiManager, String... args) {
-        TriFunction<ItemStack, Object, GuiManager, String[], AbstractButton> factory = buttonMap.get(actionValue);
-        return factory == null ? null : factory.apply(itemStack, correspondantManager, guiManager, args);
+    public static AbstractButton loadButton(String actionValue, ItemStack itemStack, Object correspondantManager, GuiManager guiManager, Map<String, String> map, String... args) {
+        TriFunction<ItemStack, Object, GuiManager, String[], Map<String, String>, AbstractButton> factory = buttonMap.get(actionValue);
+        return factory == null ? null : factory.apply(itemStack, correspondantManager, guiManager, args, map);
+    }
+
+    public static Integer getIntegerOrDefault(String s, int def){
+        Integer val = getInteger(s);
+
+        return val != null ? val : def;
     }
 
     public static Integer getInteger(String s){
@@ -84,6 +90,29 @@ public class GUIUtils {
         catch (Throwable ignored){
             return null;
         }
+    }
+
+    public static Double getDoubleOrDefault(String s, double def){
+        Double val = getDouble(s);
+
+        return val != null ? val : def;
+    }
+
+    public static Double getDouble(String s){
+        try{
+            return Double.parseDouble(s);
+        }
+        catch (Throwable ignored){
+            return null;
+        }
+    }
+
+    public static String retrieveFrom(String ident, String split, String... args){
+        for(String arg : args)
+            if(arg.startsWith(ident) && arg.split(split).length == 2)
+                return arg.split(ident)[1];
+
+        return " ";
     }
 
     public static String getCellValueAsString(Cell cell) {

@@ -13,11 +13,13 @@ public interface GUI {
     void handleClick(InventoryClickEvent ev);
     void handleClose(InventoryCloseEvent ev);
     void refreshInventory();
-    GUI createInstance(UUID player);
+    public GUI createInstance(UUID player, GUI backGUI, String... args);
     void open(Player player, int page);
     int getPageCount();
     void deletePages();
     int getPageByInventory(Player player);
     int getPageByInventory(Inventory inventory);
+    void setBackGUI(GUI backGUI);
+    GUI getBackGUI();
 
 }
