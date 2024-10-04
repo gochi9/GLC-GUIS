@@ -31,7 +31,7 @@ public class GenericShopTransactionGUI extends PerPlayerGUI {
     public GenericShopTransactionGUI(GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, GUI backGUI, String... args) {
         super(guiManager, title, size, pageElements, backGUI, args);
         this.isBuy = GUIUtils.retrieveFrom("buying", ":", args).equalsIgnoreCase("true");
-        this.material = Material.getMaterial(GUIUtils.retrieveFrom("material", ":", args).substring(1));
+        this.material = Material.getMaterial(GUIUtils.retrieveFrom("material", ":", args));
         this.item_name = GUIUtils.retrieveFrom("item_name", ":", args).substring(1);
         this.buy_value = GUIUtils.getDoubleOrDefault(GUIUtils.retrieveFrom("buy_value", ":", args), 0.0);
         this.sell_value = GUIUtils.getDoubleOrDefault(GUIUtils.retrieveFrom("sell_value", ":", args), 0.0);
@@ -45,10 +45,11 @@ public class GenericShopTransactionGUI extends PerPlayerGUI {
     }
 
     public void changeAmount(int amount, boolean add){
-        Bukkit.broadcastMessage(isBuy + " " + add + " " + max_buy+"");
+        Bukkit.broadcastMessage(isBuy + " " + add + " " + max_buy + " " + this.amount);
         this.amount = Math.max(isBuy ? max_buy : max_sell, this.amount + (add ? amount : -amount));
         this.amount = Math.max(1, this.amount);
         this.item.setAmount(this.amount);
+        Bukkit.broadcastMessage(this.amount+"");
         refreshInventory();
     }
 
