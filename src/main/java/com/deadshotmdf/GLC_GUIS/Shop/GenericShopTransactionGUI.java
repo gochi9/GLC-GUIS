@@ -6,6 +6,7 @@ import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.ReplaceableButton
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerGUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -29,7 +30,7 @@ public class GenericShopTransactionGUI extends PerPlayerGUI {
 
     public GenericShopTransactionGUI(GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, GUI backGUI, String... args) {
         super(guiManager, title, size, pageElements, backGUI, args);
-        this.isBuy = Boolean.parseBoolean(GUIUtils.retrieveFrom("buying", ":", args));
+        this.isBuy = GUIUtils.retrieveFrom("buying", ":", args).equalsIgnoreCase("true");
         this.material = Material.getMaterial(GUIUtils.retrieveFrom("material", ":", args).substring(1));
         this.item_name = GUIUtils.retrieveFrom("item_name", ":", args).substring(1);
         this.buy_value = GUIUtils.getDoubleOrDefault(GUIUtils.retrieveFrom("buy_value", ":", args), 0.0);
@@ -38,20 +39,22 @@ public class GenericShopTransactionGUI extends PerPlayerGUI {
         this.max_sell = GUIUtils.getIntegerOrDefault(GUIUtils.retrieveFrom("max_sell", ":", args), 0);
         this.item = new ItemStack(this.material == null ? Material.GLASS : this.material);
         ItemMeta meta = this.item.getItemMeta();
-        meta.setDisplayName(item_name == null ? " " : item_name);
+        meta.setDisplayName(material != null ? material.toString().toLowerCase() : item_name);
         this.item.setItemMeta(meta);
         this.refreshInventory();
     }
 
     public void changeAmount(int amount, boolean add){
+        Bukkit.broadcastMessage(isBuy + " " + add + " " + max_buy+"");
         this.amount = Math.max(isBuy ? max_buy : max_sell, this.amount + (add ? amount : -amount));
+        this.amount = Math.max(1, this.amount);
         this.item.setAmount(this.amount);
         refreshInventory();
     }
 
     @Override
-    public void handleClick(InventoryClickEvent ev) {
-        super.handleClick(ev);
+    public void handleClick(InventoryClickEvent ev, Object... args) {
+        super.handleClick(ev, isBuy, amount);
         try{refreshInventory();}
         catch (Throwable ignored){}
     }

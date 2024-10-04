@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface GUI {
 
     boolean isShared();
-    void handleClick(InventoryClickEvent ev);
+    public void handleClick(InventoryClickEvent ev, Object... args);
     void handleClose(InventoryCloseEvent ev);
     void refreshInventory();
     public GUI createInstance(UUID player, GUI backGUI, String... args);

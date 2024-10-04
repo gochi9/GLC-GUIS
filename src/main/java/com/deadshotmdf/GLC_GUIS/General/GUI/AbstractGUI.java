@@ -79,7 +79,7 @@ public abstract class AbstractGUI implements GUI{
     }
 
     @Override
-    public void handleClick(InventoryClickEvent ev) {
+    public void handleClick(InventoryClickEvent ev, Object... args) {
         Inventory inventory = ev.getInventory();
         int page = getPageByInventory(inventory);
 
@@ -97,7 +97,7 @@ public abstract class AbstractGUI implements GUI{
         if (element == null)
             return;
 
-        element.onClick(ev, this);
+        element.onClick(ev, this, args);
     }
 
     @Override
