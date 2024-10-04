@@ -2,7 +2,6 @@ package com.deadshotmdf.GLC_GUIS;
 
 import com.deadshotmdf.GLC_GUIS.CSV.CsvCommand;
 import com.deadshotmdf.GLC_GUIS.General.Listeners.GUIListener;
-import com.deadshotmdf.GLC_GUIS.General.Managers.ButtonRegistry;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import com.deadshotmdf.GLC_GUIS.Shop.OpenShopCommand;
 import com.deadshotmdf.GLC_GUIS.Shop.ShopManager;
@@ -15,7 +14,6 @@ public final class GLCGGUIS extends JavaPlugin {
 
     private Economy economy;
     private GuiManager guiManager;
-    private ButtonRegistry buttonRegistry;
     private ShopManager shopManager;;
 
     @Override
@@ -27,7 +25,6 @@ public final class GLCGGUIS extends JavaPlugin {
         }
 
         this.guiManager = new GuiManager();
-        this.buttonRegistry = new ButtonRegistry();
         this.shopManager = new ShopManager(guiManager, this);
 
         this.guiManager.reloadConfig();

@@ -1,9 +1,66 @@
 package com.deadshotmdf.GLC_GUIS;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.deadshotmdf.GLC_GUIS.General.Buttons.AbstractButton;
+import com.deadshotmdf.GLC_GUIS.General.Buttons.CommandIdentifier;
+import com.deadshotmdf.GLC_GUIS.General.Buttons.TriFunction;
+import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+import org.reflections.Reflections;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.util.*;
+import java.util.logging.Logger;
 
 public class GUIUtils {
+
+    private static final Map<String, TriFunction<ItemStack, Object, GuiManager, String[], AbstractButton>> buttonMap = new HashMap<>();
+
+    static{
+        Logger logger = Bukkit.getLogger();
+        Reflections reflections = new Reflections("com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation");
+
+        Set<Class<? extends AbstractButton>> buttons = reflections.getSubTypesOf(AbstractButton.class);
+
+        for (Class<? extends AbstractButton> button : buttons) {
+            if(button.isInterface() || Modifier.isAbstract(button.getModifiers()))
+                continue;
+
+            CommandIdentifier action = button.getAnnotation(CommandIdentifier.class);
+
+            if(action == null)
+                continue;
+
+            String actionValue = action.value();
+
+            if(actionValue == null || actionValue.isBlank())
+                continue;
+
+            buttonMap.put(actionValue, (itemStack, correspondantManager, guiManager, args) -> {
+                try {
+                    Constructor<? extends AbstractButton> constructor = button.getConstructor(ItemStack.class, Object.class, GuiManager.class, String[].class);
+                    return constructor.newInstance(itemStack, correspondantManager, guiManager, args);
+                }
+                catch (Throwable e) {
+                    logger.severe("Failed to instantiate action: " + actionValue);
+                    logger.severe(e.getMessage());
+                    return null;
+                }
+            });
+
+            buttonMap.entrySet().removeIf(entry -> entry.getValue() == null);
+        }
+    }
+
+    public static AbstractButton loadButton(String actionValue, ItemStack itemStack, Object correspondantManager, GuiManager guiManager, String... args) {
+        TriFunction<ItemStack, Object, GuiManager, String[], AbstractButton> factory = buttonMap.get(actionValue);
+
+        if (factory == null)
+            throw new IllegalArgumentException("No button found for action: " + actionValue);
+
+        return factory.apply(itemStack, correspondantManager, guiManager, args);
+    }
 
     public static Integer getInteger(String s){
         try{

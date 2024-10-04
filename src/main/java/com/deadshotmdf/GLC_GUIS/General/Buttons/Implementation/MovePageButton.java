@@ -1,23 +1,22 @@
-package com.deadshotmdf.GLC_GUIS.General.Buttons;
+package com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation;
 
+import com.deadshotmdf.GLC_GUIS.General.Buttons.AbstractButton;
+import com.deadshotmdf.GLC_GUIS.General.Buttons.CommandIdentifier;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
+import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class MovePageButton extends AbstractButton{
+@CommandIdentifier("MOVE_PAGE")
+public class MovePageButton extends AbstractButton {
 
     private final boolean isForward;
 
-    public MovePageButton(@NotNull ItemStack item, Object correspondentManager, boolean isForward) {
-        super(item, correspondentManager);
-        this.isForward = isForward;
-    }
-
-    @Override
-    public ButtonType getButtonType() {
-        return null;
+    public MovePageButton(@NotNull ItemStack item, Object correspondentManager, GuiManager guiManager, String[] args) {
+        super(item, correspondentManager, guiManager, args);
+        this.isForward = args.length > 0 && args[0].equalsIgnoreCase("forward");
     }
 
     @Override

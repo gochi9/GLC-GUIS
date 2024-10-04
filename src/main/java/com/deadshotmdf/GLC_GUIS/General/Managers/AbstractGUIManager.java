@@ -2,6 +2,7 @@ package com.deadshotmdf.GLC_GUIS.General.Managers;
 
 import com.deadshotmdf.GLC_GUIS.GUIUtils;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.*;
+import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.*;
 import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerGUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.SharedGUI;
 import org.bukkit.ChatColor;
@@ -133,28 +134,9 @@ public abstract class AbstractGUIManager {
             return null;
 
         String action = actions.get(0).toUpperCase();
-
-        if(purchasableItem)
-            return new PurchasableButton(item, this);
-
-        if (action.startsWith("OPEN_GUI")) {
-            String[] parts = action.split(" ");
-            if (parts.length < 2) return null;
-            String targetGui = parts[1];
-            return new OpenGUIButton(item, this, guiManager, targetGui);
-        }
-
-        else if(action.startsWith("BACK_PAGE"))
-            return new MovePageButton(item, this,false);
-
-        else if(action.startsWith("NEXT_PAGE"))
-            return new MovePageButton(item, this,true);
-
-        else if (action.equalsIgnoreCase("FILLER"))
-            return new Filler(item);
-
-
-        return new Label(item);
+        String[] parts = action.trim().split("\\s+");
+        AbstractButton button = GUIUtils.loadButton(parts[0], item, this, guiManager, Arrays.copyOfRange(parts, 1, parts.length));
+        return button != null ? button : new Label(item, null, null, null);
     }
 
     protected ItemStack parseItem(ConfigurationSection itemSection) {

@@ -1,6 +1,7 @@
 package com.deadshotmdf.GLC_GUIS.General.Buttons;
 
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
+import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -14,10 +15,14 @@ public abstract class AbstractButton implements GuiElement{
 
     protected final ItemStack item;
     protected final Object correspondentManager;
+    protected final GuiManager guiManager;
+    protected final String[] args;
 
-    public AbstractButton(@NotNull ItemStack item, Object correspondentManager){
+    public AbstractButton(@NotNull ItemStack item, Object correspondentManager, GuiManager guiManager, String[] args){
         this.item = item;
         this.correspondentManager = correspondentManager;
+        this.guiManager = guiManager;
+        this.args = args;
     }
 
     @Override

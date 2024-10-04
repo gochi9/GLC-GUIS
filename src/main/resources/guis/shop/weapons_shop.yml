@@ -29,14 +29,14 @@ gui:
         material: "ARROW"
         name: "&aPrevious Page"
       actions:
-        - "BACK_PAGE"
+        - "MOVE_PAGE forward"
     "50":
       slots: 50
       item:
         material: "ARROW"
         name: "&aNext Page"
       actions:
-        - "NEXT_PAGE"
+        - "MOVE_PAGE back"
   pages:
     "0":
       elements:

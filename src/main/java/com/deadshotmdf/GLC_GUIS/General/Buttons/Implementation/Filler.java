@@ -1,23 +1,23 @@
-package com.deadshotmdf.GLC_GUIS.General.Buttons;
+package com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation;
 
+import com.deadshotmdf.GLC_GUIS.General.Buttons.AbstractButton;
+import com.deadshotmdf.GLC_GUIS.General.Buttons.CommandIdentifier;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
+import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
+@CommandIdentifier("FILLER")
 public class Filler extends AbstractButton {
 
-    public Filler(ItemStack itemStack) {
-        super(itemStack, null);
+    public Filler(@NotNull ItemStack item, Object correspondentManager, GuiManager guiManager, String[] args) {
+        super(item, null, null, null);
 
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setHideTooltip(true);
         item.setItemMeta(itemMeta);
-    }
-
-    @Override
-    public ButtonType getButtonType() {
-        return ButtonType.FILLER;
     }
 
     //Filler doesn't have any name or lore visible so there's no need to keep the parent implementation
