@@ -278,7 +278,9 @@ public abstract class AbstractGUIManager {
 
         String loreStr = elementData.get("lore");
         if (loreStr != null && !loreStr.isEmpty())
-            meta.setLore(Arrays.stream(loreStr.split("\\|"))
+            meta.setLore(Arrays.stream(loreStr.split("\\n|\\|"))
+                    .map(String::trim)
+                    .filter(line -> !line.isEmpty())
                     .map(line -> ChatColor.translateAlternateColorCodes('&', line))
                     .collect(Collectors.toList()));
 
