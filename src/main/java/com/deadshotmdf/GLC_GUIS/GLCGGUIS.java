@@ -18,6 +18,7 @@ public final class GLCGGUIS extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        GUIUtils.getSlots("1");
         if (!setupEconomy()) {
             getLogger().severe("Vault economy not found! Disabling plugin.");
             getServer().getPluginManager().disablePlugin(this);

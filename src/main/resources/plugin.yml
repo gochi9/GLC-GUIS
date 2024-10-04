@@ -7,7 +7,7 @@ depend:
   - Vault
   - GLCoins-Server
 libraries:
-  - org.reflections:reflections:0.9.12
+  - org.reflections:reflections:0.10.2
 commands:
   shop:
     description: Opens the main shop GUI.

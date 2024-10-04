@@ -79,9 +79,6 @@ public abstract class AbstractGUIManager {
         // Parse page-specific elements
         Map<Integer, Map<Integer, GuiElement>> pages = parsePages(guiSection.getConfigurationSection("pages"));
 
-        System.out.println(defaultElements.size() + " " + pages.size());
-        pages.values().forEach(System.out::println);
-
         // Merge default elements with page-specific elements
         Map<Integer, Map<Integer, GuiElement>> mergedPages = mergeDefaultWithPages(defaultElements, pages);
 
