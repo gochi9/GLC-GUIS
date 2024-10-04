@@ -97,7 +97,7 @@ public abstract class AbstractGUIManager {
         if(mergedPages.isEmpty())
             mergedPages.put(0, guiElementsData.getDefaultElements());
 
-        guiManager.registerGuiTemplate(guiName.toLowerCase(), specifyGUI(perPlayer, guiManager, title, size, mergedPages, config.getString("specialType")));
+        guiManager.registerGuiTemplate(guiName.toLowerCase(), specifyGUI(perPlayer, guiManager, title, size, mergedPages, guiSection.getString("specialType")));
 
         plugin.getLogger().info("Loaded GUI: " + guiName + " " + mergedPages.size() + " " + mergedPages.get(0).size());
     }
