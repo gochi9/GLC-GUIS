@@ -2,9 +2,12 @@ package com.deadshotmdf.GLC_GUIS.General.Managers;
 
 import com.deadshotmdf.GLC_GUIS.GUIUtils;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.*;
-import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.*;
+import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.Label;
+import com.deadshotmdf.GLC_GUIS.General.GUI.GuiElementsData;
 import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerGUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.SharedGUI;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -13,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -71,29 +74,69 @@ public abstract class AbstractGUIManager {
         int size = guiSection.getInt("size", 27);
         boolean perPlayer = guiSection.getBoolean("per_player", false);
 
-        //confusing part
+        String excelFileName = guiSection.getString("excel_file_name");
+        if (excelFileName == null || excelFileName.isEmpty()) {
+            plugin.getLogger().warning("Excel file name not defined in " + guiFile.getName());
+            return;
+        }
 
-        // Parse default elements
-        Map<Integer, GuiElement> defaultElements = parseElements(guiSection.getConfigurationSection("default_elements"));
+        File excelFile = new File(guiFile.getParentFile(), excelFileName);
+        if (!excelFile.exists()) {
+            plugin.getLogger().info("Excel file " + excelFileName + " does not exist. Creating default Excel file.");
+            String defaultFormat = guiSection.getString("default_format");
+            if (defaultFormat == null || defaultFormat.isEmpty()) {
+                plugin.getLogger().warning("Default format not defined in " + guiFile.getName() + ". Skipping GUI.");
+                return;
+            }
 
-        // Parse page-specific elements
-        Map<Integer, Map<Integer, GuiElement>> pages = parsePages(guiSection.getConfigurationSection("pages"));
+            createDefaultExcelFile(excelFile, defaultFormat);
+        }
 
-        // Merge default elements with page-specific elements
-        Map<Integer, Map<Integer, GuiElement>> mergedPages = mergeDefaultWithPages(defaultElements, pages);
+        GuiElementsData guiElementsData = parseExcelFile(excelFile);
+
+        Map<Integer, Map<Integer, GuiElement>> mergedPages = mergeDefaultWithPages(
+                guiElementsData.getDefaultElements(),
+                guiElementsData.getPages()
+        );
 
         if(mergedPages.isEmpty())
-            mergedPages.put(0, defaultElements);
+            mergedPages.put(0, guiElementsData.getDefaultElements());
 
-        // Register GUI with GuiManager
         guiManager.registerGuiTemplate(guiName.toLowerCase(), perPlayer ? new PerPlayerGUI(guiManager, title, size, mergedPages, null) : new SharedGUI(guiManager, title, size, mergedPages, null));
 
         plugin.getLogger().info("Loaded GUI: " + guiName + " " + mergedPages.size() + " " + mergedPages.get(0).size());
     }
 
-    private Map<Integer, Map<Integer, GuiElement>> mergeDefaultWithPages(Map<Integer, GuiElement> defaultElements,
-                                                                         Map<Integer, Map<Integer, GuiElement>> pages) {
+    private void createDefaultExcelFile(File excelFile, String defaultFormat) {
+        String[] headers = defaultFormat.split(",");
 
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("GUI Elements");
+
+        Row headerRow = sheet.createRow(0);
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i].trim());
+        }
+
+        try (FileOutputStream fos = new FileOutputStream(excelFile)) {
+            workbook.write(fos);
+        }
+        catch (IOException e) {
+            plugin.getLogger().severe("Error creating Excel file: " + e.getMessage());
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                workbook.close();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private Map<Integer, Map<Integer, GuiElement>> mergeDefaultWithPages(Map<Integer, GuiElement> defaultElements, Map<Integer, Map<Integer, GuiElement>> pages) {
         Map<Integer, Map<Integer, GuiElement>> mergedPages = new LinkedHashMap<>(pages);
 
         for (Integer page : pages.keySet()) {
@@ -112,39 +155,117 @@ public abstract class AbstractGUIManager {
         return mergedPages;
     }
 
-    private GuiElement parseGuiElement(ConfigurationSection section) {
-        if (section == null)
-            return null;
+    private GuiElementsData parseExcelFile(File excelFile) {
+        Map<Integer, GuiElement> defaultElements = new LinkedHashMap<>();
+        Map<Integer, Map<Integer, GuiElement>> pages = new LinkedHashMap<>();
 
-        ConfigurationSection itemSection = section.getConfigurationSection("item");
-        if (itemSection == null)
-            return null;
+        try (FileInputStream fis = new FileInputStream(excelFile);
+             Workbook workbook = WorkbookFactory.create(fis)) {
 
-        boolean purchasableItem = section.getBoolean("purchasableItem", false);
-        ItemStack item = purchasableItem ? new ItemStack(Material.DIRT) : parseItem(itemSection);
+            Sheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            if (!rowIterator.hasNext()) {
+                plugin.getLogger().warning("Excel file " + excelFile.getName() + " is empty.");
+                return new GuiElementsData(defaultElements, pages);
+            }
+
+            Row headerRow = rowIterator.next();
+            List<String> headers = new ArrayList<>();
+            for (Cell cell : headerRow)
+                headers.add(cell.getStringCellValue().trim());
+
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                Map<String, String> elementData = new HashMap<>();
+
+                for (int i = 0; i < headers.size(); i++) {
+                    Cell cell = row.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                    String value = GUIUtils.getCellValueAsString(cell);
+                    elementData.put(headers.get(i), value);
+                }
+
+                elementData.forEach((key, value) -> System.out.println(key + ": " + value));
+
+                GuiElement element = createGuiElementFromData(elementData);
+                if (element == null)
+                    continue;
+
+                int page = parsePageNumber(elementData.get("page"));
+                Set<Integer> slots = GUIUtils.getSlots(elementData.get("slots"));
+
+                if(slots.isEmpty())
+                    slots = GUIUtils.getSlots(elementData.get("slot"));
+
+                if (slots.isEmpty())
+                    continue;
+
+                slots.forEach(slot ->{
+                    if(page < 0)
+                        defaultElements.put(slot, element);
+                    else
+                        pages.computeIfAbsent(page, k -> new LinkedHashMap<>()).put(slot, element);
+                });
+            }
+
+        }
+        catch (Throwable e) {
+            plugin.getLogger().severe("Error reading Excel file: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return new GuiElementsData(defaultElements, pages);
+    }
+
+    private int parsePageNumber(String pageStr) {
+        if (pageStr == null || pageStr.isEmpty() || pageStr.equals("-"))
+            return -1;
+        try {
+            int page = Integer.parseInt(pageStr);
+            return page >= 0 ? page : -1;
+        }
+        catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    private GuiElement createGuiElementFromData(Map<String, String> elementData) {
+        ItemStack item = parseItem(elementData);
 
         if (item == null)
             return null;
 
-        List<String> actions = section.getStringList("actions");
-        if (actions.isEmpty())
+        String actionStr = elementData.get("action");
+        if (actionStr == null || actionStr.isEmpty())
             return null;
 
-        String action = actions.get(0).toUpperCase();
-        String[] parts = action.trim().split("\\s+");
-        AbstractButton button = GUIUtils.loadButton(parts[0], item, this, guiManager, Arrays.copyOfRange(parts, 1, parts.length));
-        return button != null ? button : new Label(item, null, null, null);
+        String[] actionParts = actionStr.split("\\s+");
+        String actionName = actionParts[0].toUpperCase();
+        String[] args = Arrays.copyOfRange(actionParts, 1, actionParts.length);
+
+        AbstractButton button = GUIUtils.loadButton(actionName, item, this, guiManager, args);
+        if (button == null)
+            return new Label(item, this, guiManager, args);
+
+        Map<String, String> extraValues = new HashMap<>(elementData);
+        extraValues.keySet().removeAll(Arrays.asList("page", "slot", "material", "name", "lore", "action"));
+
+        enhanceGuiElement(extraValues, button, actionName, args);
+        return button;
     }
 
-    protected ItemStack parseItem(ConfigurationSection itemSection) {
-        if (itemSection == null)
-            return null;
+    //Override this method to retrieve specific information from a certain type of GUI for specific cases
+    protected GuiElement enhanceGuiElement(Map<String, String> extraValues, GuiElement element, String action, String[] args) {
+        return element;
+    }
 
-        String materialName = itemSection.getString("material", "STONE").toUpperCase();
-        Material material = Material.matchMaterial(materialName);
+    private ItemStack parseItem(Map<String, String> elementData) {
+        String materialName = elementData.getOrDefault("material", "STONE").toUpperCase();
+        Material material = Material.getMaterial(materialName);
+
         if (material == null) {
-            plugin.getLogger().warning("Invalid material: " + materialName + ". Defaulting to STONE.");
-            material = Material.STONE;
+            plugin.getLogger().warning("Invalid material: " + materialName);
+            return null;
         }
 
         ItemStack item = new ItemStack(material);
@@ -153,62 +274,18 @@ public abstract class AbstractGUIManager {
         if (meta == null)
             return item;
 
-        String name = itemSection.getString("name", "");
-        if (!name.isEmpty())
+        String name = elementData.get("name");
+        if (name != null && !name.isEmpty())
             meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
 
-        List<String> lore = itemSection.getStringList("lore");
-        if (!lore.isEmpty())
-            meta.setLore(lore.stream()
+        String loreStr = elementData.get("lore");
+        if (loreStr != null && !loreStr.isEmpty())
+            meta.setLore(Arrays.stream(loreStr.split("\\|"))
                     .map(line -> ChatColor.translateAlternateColorCodes('&', line))
                     .collect(Collectors.toList()));
 
         item.setItemMeta(meta);
-
         return item;
-    }
-
-    private Map<Integer, GuiElement> parseElements(ConfigurationSection section){
-        LinkedHashMap<Integer, GuiElement> elements = new LinkedHashMap<>();
-
-        if(section == null)
-            return elements;
-
-        for(String key : section.getKeys(false)){
-            Set<Integer> slots = GUIUtils.getSlots(section.getString(key + ".slots"));
-
-            if(slots.isEmpty())
-                slots = GUIUtils.getSlots(section.getString(key + ".slot"));
-
-            if(slots.isEmpty())
-                continue;
-
-            GuiElement element = parseGuiElement(section.getConfigurationSection(key));
-
-            if(element != null)
-                slots.forEach(slot -> elements.put(slot, element));
-        }
-
-        return elements;
-    }
-
-    private Map<Integer, Map<Integer, GuiElement>> parsePages(ConfigurationSection pagesSection) {
-        Map<Integer, Map<Integer, GuiElement>> pages = new LinkedHashMap<>();
-
-        if (pagesSection == null)
-            return pages;
-
-        for (String pageKey : pagesSection.getKeys(false)) {
-            int pageNumber = Integer.parseInt(pageKey);
-            ConfigurationSection pageSection = pagesSection.getConfigurationSection(pageKey + ".elements");
-            if (pageSection == null)
-                continue;
-
-            Map<Integer, GuiElement> pageElements = parseElements(pageSection);
-            pages.put(pageNumber, pageElements);
-        }
-
-        return pages;
     }
 
 }

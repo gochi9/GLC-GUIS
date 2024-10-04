@@ -8,6 +8,8 @@ depend:
   - GLCoins-Server
 libraries:
   - org.reflections:reflections:0.10.2
+  - org.apache.poi:poi:5.2.3
+  - org.apache.poi:poi-ooxml:5.2.3
 commands:
   shop:
     description: Opens the main shop GUI.

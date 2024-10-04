@@ -2,9 +2,10 @@ package com.deadshotmdf.GLC_GUIS;
 
 import com.deadshotmdf.GLC_GUIS.General.Buttons.AbstractButton;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.CommandIdentifier;
-import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.OpenGUIButton;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.TriFunction;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.reflections.Reflections;
@@ -83,6 +84,16 @@ public class GUIUtils {
         catch (Throwable ignored){
             return null;
         }
+    }
+
+    public static String getCellValueAsString(Cell cell) {
+        return switch (cell.getCellType()) {
+            case STRING -> cell.getStringCellValue().trim();
+            case NUMERIC -> DateUtil.isCellDateFormatted(cell) ? cell.getDateCellValue().toString() : String.valueOf((int) cell.getNumericCellValue());
+            case BOOLEAN -> String.valueOf(cell.getBooleanCellValue());
+            case FORMULA -> cell.getCellFormula();
+            default -> "";
+        };
     }
 
     public static Set<Integer> getSlots(String from){
