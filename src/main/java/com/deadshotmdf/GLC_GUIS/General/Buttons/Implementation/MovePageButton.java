@@ -27,10 +27,8 @@ public class MovePageButton extends AbstractButton {
             return;
 
         int openPage = gui.getPageByInventory(player);
+        boolean isValid = !(openPage == -1 || (!isForward && openPage == 0) || (isForward && openPage >= gui.getPageCount()));
 
-        if(openPage == -1 || (!isForward && openPage == 0) || (isForward && openPage >= gui.getPageCount()))
-            return;
-
-        gui.open(player, isForward ? ++openPage : --openPage);
+        gui.open(player, isValid ? isForward ? ++openPage : --openPage : 0);
     }
 }
