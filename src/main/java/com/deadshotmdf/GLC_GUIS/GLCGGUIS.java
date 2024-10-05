@@ -36,7 +36,7 @@ public final class GLCGGUIS extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new GUIListener(guiManager), this);
 
         this.getCommand("shop").setExecutor(new OpenShopCommand(guiManager));
-        this.getCommand("glcguis").setExecutor(new ReloadConfigCommand(guiManager));
+        this.getCommand("glcguis").setExecutor(new ReloadConfigCommand(this, guiManager));
 
     }
 
