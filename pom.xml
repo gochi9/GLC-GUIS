@@ -24,6 +24,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>iridiumdevelopment</id>
+            <url>https://nexus.iridiumdevelopment.net/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -32,6 +36,12 @@
             <artifactId>paper-api</artifactId>
             <version>1.21.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.iridium</groupId>
+            <artifactId>IridiumColorAPI</artifactId>
+            <version>1.0.9</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.deadshotmdf</groupId>

@@ -7,6 +7,7 @@ import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GuiElementsData;
 import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerGUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.SharedGUI;
+import com.iridium.iridiumcolorapi.IridiumColorAPI;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.bukkit.ChatColor;
@@ -252,7 +253,7 @@ public abstract class AbstractGUIManager {
     }
 
     protected GUI specifyGUI(boolean perPlayer, GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> mergedPages, String type){
-        return perPlayer ? new PerPlayerGUI(guiManager, title, size, mergedPages, null) : new SharedGUI(guiManager, title, size, mergedPages, null);
+        return perPlayer ? new PerPlayerGUI<>(guiManager, this, title, size, mergedPages, null) : new SharedGUI<>(guiManager, this, title, size, mergedPages, null);
     }
 
     private ItemStack parseItem(Map<String, String> elementData) {
@@ -272,14 +273,14 @@ public abstract class AbstractGUIManager {
 
         String name = elementData.get("name");
         if (name != null && !name.isEmpty())
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', IridiumColorAPI.process(name)));
 
         String loreStr = elementData.get("lore");
         if (loreStr != null && !loreStr.isEmpty())
             meta.setLore(Arrays.stream(loreStr.split("\\n|\\|"))
                     .map(String::trim)
                     .filter(line -> !line.isEmpty())
-                    .map(line -> ChatColor.translateAlternateColorCodes('&', line))
+                    .map(line -> ChatColor.translateAlternateColorCodes('&', IridiumColorAPI.process(line)))
                     .collect(Collectors.toList()));
 
         item.setItemMeta(meta);

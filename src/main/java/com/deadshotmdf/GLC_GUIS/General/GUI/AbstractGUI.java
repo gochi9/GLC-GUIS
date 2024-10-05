@@ -1,6 +1,7 @@
 package com.deadshotmdf.GLC_GUIS.General.GUI;
 
 import com.deadshotmdf.GLC_GUIS.General.Buttons.GuiElement;
+import com.deadshotmdf.GLC_GUIS.General.Managers.AbstractGUIManager;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
@@ -13,9 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public abstract class AbstractGUI implements GUI{
+public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
 
     protected GuiManager guiManager;
+    protected final T correspondentManager;
     protected final String title;
     protected final int size;
     protected final Map<Integer, Inventory> pageInventories;
@@ -26,8 +28,9 @@ public abstract class AbstractGUI implements GUI{
     private boolean changingPage;
     protected String[] args;
 
-    protected AbstractGUI(GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, String... args) {
+    protected AbstractGUI(GuiManager guiManager, T correspondentManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, String... args) {
         this.guiManager = guiManager;
+        this.correspondentManager = correspondentManager;
         this.title = title;
         this.size = size;
         this.pageInventories = new HashMap<>();
