@@ -1,11 +1,9 @@
 package com.deadshotmdf.GLC_GUIS.General.Managers;
 
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
-import com.deadshotmdf.GLC_GUIS.Shop.GenericShopTransactionGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -77,6 +75,12 @@ public class GuiManager {
         openGuis.clear();
         guiTemplates.clear();
         this.managers.forEach(AbstractGUIManager::loadGUIsRecursive);
+    }
+
+    public void refreshInventories(Class<?> cl) {
+        for (GUI gui : guiTemplates.values())
+            if (cl.isAssignableFrom(gui.getClass()))
+                gui.refreshInventory();
     }
 
 }
