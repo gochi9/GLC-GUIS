@@ -3,6 +3,7 @@ package com.deadshotmdf.GLC_GUIS;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -15,7 +16,7 @@ public class ConfigSettings {
         return key != null ? extraMessages.get(key.toLowerCase()) : null;
     }
 
-    public static void sendExtraMessage(Player player, String key) {
+    public static void sendExtraMessage(HumanEntity player, String key) {
         String msg = getExtraMessage(key);
 
         if(msg != null)

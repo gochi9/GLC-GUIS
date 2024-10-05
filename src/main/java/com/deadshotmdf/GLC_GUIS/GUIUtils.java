@@ -110,7 +110,7 @@ public class GUIUtils {
     public static String retrieveFrom(String ident, String split, String... args){
         for(String arg : args)
             if(arg.startsWith(ident) && arg.split(split).length == 2)
-                return arg.split(ident)[1].replace(":", "");
+                return arg.split(split)[1].replace(":", "");
 
         return " ";
     }

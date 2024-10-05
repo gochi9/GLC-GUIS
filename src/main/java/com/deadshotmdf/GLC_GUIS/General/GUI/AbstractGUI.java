@@ -86,9 +86,10 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
     public void handleClick(InventoryClickEvent ev, Object... args) {
         Inventory inventory = ev.getInventory();
         int page = getPageByInventory(inventory);
+        HumanEntity player = ev.getWhoClicked();
 
         if (page == -1){
-            guiManager.removeOpenGui(ev.getWhoClicked(), false);
+            guiManager.removeOpenGui(player, false);
             return;
         }
 
@@ -98,7 +99,7 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
             return;
 
         GuiElement element = elements.get(slot);
-        if (element == null)
+        if (element == null || !element.canClick(player))
             return;
 
         element.onClick(ev, this, args);
