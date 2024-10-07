@@ -1,4 +1,4 @@
-package com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation;
+package com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.Generic;
 
 import com.deadshotmdf.GLC_GUIS.General.Buttons.AbstractButton;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.ButtonIdentifier;
@@ -10,15 +10,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-@ButtonIdentifier("BLACK_MARKET_BUY_ITEM")
-public class BlackMarketItemButton extends AbstractButton {
+//Default button type in case one wasn't present in the config
+@ButtonIdentifier("LABEL")
+public class Label extends AbstractButton {
 
-    public BlackMarketItemButton(@NotNull ItemStack item, Object correspondentManager, GuiManager guiManager, String[] args, Map<String, String> elementData) {
-        super(item, correspondentManager, guiManager, args, elementData);
+    public Label(@NotNull ItemStack item, Object correspondentManager, GuiManager guiManager, String[] args, Map<String, String> elementData) {
+        super(item, null, null, null, null);
     }
 
     @Override
     public void onClick(InventoryClickEvent event, GUI gui, Object... args) {
-
+        // Do jack shit, labels are not clickable.
     }
 }
+

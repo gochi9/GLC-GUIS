@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class SharedGUI<T extends AbstractGUIManager> extends AbstractGUI<T> {
 
-    public SharedGUI(GuiManager guiManager, T correspondentManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, GUI backGUI) {
+    public SharedGUI(GuiManager guiManager, T correspondentManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements) {
         super(guiManager, correspondentManager, title, size, pageElements);
     }
 

@@ -5,6 +5,7 @@ import com.deadshotmdf.GLC_GUIS.General.Buttons.ButtonIdentifier;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.TriFunction;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
@@ -80,7 +81,7 @@ public class GUIUtils {
         return formattedNumber.endsWith(".000") ? formattedNumber.substring(0, formattedNumber.indexOf('.')) : formattedNumber;
     }
 
-    public static UUID getUniqueID(HashMap<UUID, ?> map){
+    public static UUID getUniqueID(Map<UUID, ?> map){
         UUID uuid = UUID.randomUUID();
 
         while (map.containsKey(uuid))
@@ -117,7 +118,7 @@ public class GUIUtils {
 
     public static Double getDouble(String s){
         try{
-            return Double.parseDouble(s);
+            return Double.valueOf(s);
         }
         catch (Throwable ignored){
             return null;
@@ -141,9 +142,12 @@ public class GUIUtils {
     }
 
     public static String getCellValueAsString(Cell cell) {
+        DataFormatter dataFormatter = new DataFormatter();
         return switch (cell.getCellType()) {
             case STRING -> cell.getStringCellValue().trim();
-            case NUMERIC -> DateUtil.isCellDateFormatted(cell) ? cell.getDateCellValue().toString() : String.valueOf((int) cell.getNumericCellValue());
+            case NUMERIC -> DateUtil.isCellDateFormatted(cell)
+                    ? cell.getDateCellValue().toString()
+                    : dataFormatter.formatCellValue(cell);
             case BOOLEAN -> String.valueOf(cell.getBooleanCellValue());
             case FORMULA -> cell.getCellFormula();
             default -> "";

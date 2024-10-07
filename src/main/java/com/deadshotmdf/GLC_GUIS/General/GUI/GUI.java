@@ -11,16 +11,17 @@ import java.util.UUID;
 public interface GUI {
 
     boolean isShared();
-    public void handleClick(InventoryClickEvent ev, Object... args);
+    void handleClick(InventoryClickEvent ev, Object... args);
     void handleClose(InventoryCloseEvent ev);
     void refreshInventory();
-    public GUI createInstance(UUID player, GUI backGUI, String... args);
-    void open(HumanEntity player, int page);
+    GUI createInstance(UUID player, GUI backGUI, String... args);
+    void open(HumanEntity player, int page, boolean onOpen);
     int getPageCount();
     void deletePages();
     int getPageByInventory(Player player);
     int getPageByInventory(Inventory inventory);
     void setBackGUI(GUI backGUI);
     GUI getBackGUI();
+    void forceClose();
 
 }

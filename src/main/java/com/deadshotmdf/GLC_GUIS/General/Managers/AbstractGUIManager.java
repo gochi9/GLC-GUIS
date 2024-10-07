@@ -2,8 +2,7 @@ package com.deadshotmdf.GLC_GUIS.General.Managers;
 
 import com.deadshotmdf.GLC_GUIS.GUIUtils;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.*;
-import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.Label;
-import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.ReplaceableButton;
+import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.Generic.Label;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GuiElementsData;
 import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerGUI;
@@ -11,7 +10,6 @@ import com.deadshotmdf.GLC_GUIS.General.GUI.SharedGUI;
 import com.iridium.iridiumcolorapi.IridiumColorAPI;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -24,13 +22,14 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class AbstractGUIManager {
+public abstract class AbstractGUIManager extends InformationHolder{
 
     protected final GuiManager guiManager;
     protected final JavaPlugin plugin;
     protected final File basePath;
 
-    public AbstractGUIManager(GuiManager guiManager, JavaPlugin plugin, File basePath) {
+    public AbstractGUIManager(GuiManager guiManager, JavaPlugin plugin, File basePath, File dataFile) {
+        super(plugin, dataFile);
         this.guiManager = guiManager;
         this.plugin = plugin;
         this.basePath = basePath;
@@ -257,7 +256,7 @@ public abstract class AbstractGUIManager {
     }
 
     protected GUI specifyGUI(boolean perPlayer, GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> mergedPages, String type){
-        return perPlayer ? new PerPlayerGUI<>(guiManager, this, title, size, mergedPages, null) : new SharedGUI<>(guiManager, this, title, size, mergedPages, null);
+        return perPlayer ? new PerPlayerGUI<>(guiManager, this, title, size, mergedPages, null) : new SharedGUI<>(guiManager, this, title, size, mergedPages);
     }
 
     private ItemStack parseItem(Map<String, String> elementData) {
@@ -290,5 +289,9 @@ public abstract class AbstractGUIManager {
         item.setItemMeta(meta);
         return item;
     }
+
+    public void onReload(){}
+    public void loadInformation(){}
+    public void saveInformation(){}
 
 }

@@ -11,6 +11,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
@@ -66,19 +67,22 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
 
     @Override
     public GUI createInstance(UUID player, GUI backGUI, String... args){
+        this.backGUI = backGUI;
         return isShared() ? this : createNewInstance(player, backGUI, args);
     }
 
     protected abstract GUI createNewInstance(UUID player, GUI backGUI, String... args);
 
     @Override
-    public void open(HumanEntity player, int page){
+    public void open(HumanEntity player, int page, boolean onOpen){
         Inventory inventory = pageInventories.get(page);
 
         if (page < 0 || page >= totalPages || inventory == null)
             return;
 
-        changingPage = true;
+        if(!onOpen)
+            changingPage = true;
+
         player.openInventory(inventory);
     }
 
@@ -112,7 +116,7 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
             return;
         }
 
-        guiManager.removeOpenGui((Player) ev.getPlayer(), true);
+        guiManager.removeOpenGui(ev.getPlayer(), true);
     }
 
     @Override
@@ -156,6 +160,11 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
         }
 
         return -1;
+    }
+
+    @Override
+    public void forceClose(){
+        new HashSet<>(pageInventories.values()).forEach(inv -> new HashSet<>(inv.getViewers()).forEach(HumanEntity::closeInventory));
     }
 
 }

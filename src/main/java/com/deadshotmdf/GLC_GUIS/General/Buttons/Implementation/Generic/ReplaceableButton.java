@@ -1,4 +1,4 @@
-package com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation;
+package com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.Generic;
 
 import com.deadshotmdf.GLC_GUIS.ConfigSettings;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.AbstractButton;

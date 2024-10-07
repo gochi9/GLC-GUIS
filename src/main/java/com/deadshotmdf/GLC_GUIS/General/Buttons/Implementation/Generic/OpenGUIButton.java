@@ -1,4 +1,4 @@
-package com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation;
+package com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.Generic;
 
 import com.deadshotmdf.GLC_GUIS.General.Buttons.AbstractButton;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.ButtonIdentifier;
@@ -23,7 +23,7 @@ public class OpenGUIButton extends AbstractButton {
 
     @Override
     public void onClick(InventoryClickEvent event, GUI gui, Object... args) {
-        guiManager.openGui((Player) event.getWhoClicked(), guiName, gui);
+        guiManager.openGui(event.getWhoClicked(), guiName, gui);
     }
 
 }

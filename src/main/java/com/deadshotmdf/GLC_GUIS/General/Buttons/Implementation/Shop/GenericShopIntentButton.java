@@ -1,4 +1,4 @@
-package com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation;
+package com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.Shop;
 
 import com.deadshotmdf.GLC_GUIS.ConfigSettings;
 import com.deadshotmdf.GLC_GUIS.GUIUtils;
@@ -6,9 +6,7 @@ import com.deadshotmdf.GLC_GUIS.General.Buttons.AbstractButton;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.ButtonIdentifier;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -34,8 +32,8 @@ public class GenericShopIntentButton extends AbstractButton {
         super(item, correspondentManager, guiManager, args, elementData);
         this.purchaseScreen = args.length > 0 ? args[0] : "shop";
         this.material = item.getType();
-        this.buy_value = GUIUtils.getDoubleOrDefault(elementData.get("buy_value"), 0);
-        this.sell_value = GUIUtils.getDoubleOrDefault(elementData.get("sell_value"), 0);
+        this.buy_value = GUIUtils.getDoubleOrDefault(elementData.get("buy_value"), 0.0);
+        this.sell_value = GUIUtils.getDoubleOrDefault(elementData.get("sell_value"), 0.0);
         this.max_buy = GUIUtils.getIntegerOrDefault(elementData.get("max_buy"), 0);
         this.max_sell = GUIUtils.getIntegerOrDefault(elementData.get("max_sell"), 0);
 

@@ -2,14 +2,12 @@ package com.deadshotmdf.GLC_GUIS.Shop;
 
 import com.deadshotmdf.GLC_GUIS.ConfigSettings;
 import com.deadshotmdf.GLC_GUIS.GUIUtils;
-import com.deadshotmdf.GLC_GUIS.General.Buttons.AbstractButton;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.GuiElement;
-import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.GenericShopChangeAmount;
-import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.ReplaceableButton;
+import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.Shop.GenericShopChangeAmount;
+import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.Generic.ReplaceableButton;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerGUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -17,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GenericShopTransactionGUI extends PerPlayerGUI<ShopManager> {
 
@@ -48,7 +45,7 @@ public class GenericShopTransactionGUI extends PerPlayerGUI<ShopManager> {
         meta.setDisplayName(ConfigSettings.color(item_name));
         int maxStack = isBuy ? max_buy : max_sell;
         if(maxStack > 0)
-            meta.setMaxStackSize(Math.max(maxStack, 99));
+            meta.setMaxStackSize(Math.min(maxStack, 99));
 
         this.item.setItemMeta(meta);
         try{this.refreshInventory();}

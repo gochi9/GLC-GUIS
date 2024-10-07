@@ -8,6 +8,7 @@ import org.bukkit.entity.HumanEntity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class ConfigSettings {
@@ -15,6 +16,11 @@ public class ConfigSettings {
     private static String genericShopDisplayItemShowAmount;
     private static String genericShopBuyLore;
     private static String genericShopSellLore;
+
+    //Black market
+    private static int blackMarketSpawnChance;
+    private static long blackMarketStayDuration;
+    private static long blackMarketCooldown;
 
     private static final HashMap<String, String> extraMessages = new HashMap<>();
 
@@ -28,6 +34,19 @@ public class ConfigSettings {
 
     public static String getGenericShopSellLore(double amount){
         return genericShopSellLore.replace("{amount}", s(amount));
+    }
+
+    //Black market
+    public static int getBlackMarketSpawnChance(){
+        return blackMarketSpawnChance;
+    }
+
+    public static long getBlackMarketStayDuration(){
+        return blackMarketStayDuration;
+    }
+
+    public static long getBlackMarketCooldown(){
+        return blackMarketCooldown;
     }
 
     public static String getExtraMessage(String key){
@@ -52,6 +71,11 @@ public class ConfigSettings {
         genericShopDisplayItemShowAmount = color(config.getString("genericShopDisplayItemShowAmount"));
         genericShopBuyLore = color(config.getString("genericShopBuyLore"));
         genericShopSellLore = color(config.getString("genericShopSellLore"));
+
+        //Black market
+        blackMarketSpawnChance = config.getInt("blackMarketSpawnChance");
+        blackMarketStayDuration = TimeUnit.MINUTES.toMillis(config.getInt("blackMarketStayDuration"));
+        blackMarketCooldown = TimeUnit.MINUTES.toMillis(config.getInt("blackMarketCooldown"));
 
         extraMessages.clear();
 

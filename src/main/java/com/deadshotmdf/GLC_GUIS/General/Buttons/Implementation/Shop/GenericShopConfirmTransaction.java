@@ -1,4 +1,4 @@
-package com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation;
+package com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.Shop;
 
 import com.deadshotmdf.GLC_GUIS.GLCGGUIS;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.AbstractButton;
@@ -8,9 +8,7 @@ import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;

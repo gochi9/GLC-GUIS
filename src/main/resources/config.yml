@@ -4,6 +4,15 @@ genericShopDisplayItemShowAmount: '&7Current selected amount: &a{amount}'
 genericShopBuyLore: '&7Buy price: &a{amount}&7$'
 genericShopSellLore: '&7Sell price: &c{amount}&7$'
 
+##################
+## BLACK MARKET ##
+##################
+#%
+blackMarketSpawnChance: 50
+#Minutes
+blackMarketStayDuration: 30
+blackMarketCooldown: 240
+
 #Used for button actions
 extraMessages:
   cannotAccessShopCategory: 'Go to spawn and search for the npc, you poor fuck'

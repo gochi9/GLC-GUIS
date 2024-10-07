@@ -1,4 +1,4 @@
-package com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation;
+package com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.Generic;
 
 import com.deadshotmdf.GLC_GUIS.General.Buttons.AbstractButton;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.ButtonIdentifier;
@@ -29,6 +29,11 @@ public class MovePageButton extends AbstractButton {
         int openPage = gui.getPageByInventory(player);
         boolean isValid = !(openPage == -1 || (!isForward && openPage == 0) || (isForward && openPage >= gui.getPageCount()));
 
-        gui.open(player, isValid ? isForward ? ++openPage : --openPage : 0);
+        GUI backGUI = gui.getBackGUI();
+
+        if(backGUI != null && backGUI.isShared() && (!isForward && openPage == 0))
+            guiManager.commenceOpen(player, backGUI, gui);
+        else
+            gui.open(player, isValid ? isForward ? ++openPage : --openPage : 0, false);
     }
 }

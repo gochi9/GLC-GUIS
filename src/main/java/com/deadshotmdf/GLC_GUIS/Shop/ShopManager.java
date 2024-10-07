@@ -13,7 +13,7 @@ import java.util.Map;
 public class ShopManager extends AbstractGUIManager {
 
     public ShopManager(GuiManager guiManager, JavaPlugin plugin) {
-        super(guiManager, plugin, new File(plugin.getDataFolder(), "guis/shop/"));
+        super(guiManager, plugin, new File(plugin.getDataFolder(), "guis/shop/"), new File(plugin.getDataFolder(), "data/shop.yml"));
     }
 
     @Override

@@ -24,11 +24,6 @@ public class GUIListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    public void onClick(InventoryCreativeEvent ev) {
-        handle((Player) ev.getWhoClicked(), ev, TypeAction.CLICK);
-    }
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onClose(InventoryCloseEvent ev) {
         handle((Player) ev.getPlayer(), ev, TypeAction.CLOSE);
     }

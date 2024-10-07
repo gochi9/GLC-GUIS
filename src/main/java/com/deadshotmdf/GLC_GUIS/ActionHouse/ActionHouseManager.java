@@ -14,7 +14,7 @@ import java.util.Map;
 public class ActionHouseManager extends AbstractGUIManager {
 
     public ActionHouseManager(GuiManager guiManager, JavaPlugin plugin) {
-        super(guiManager, plugin, new File(plugin.getDataFolder(), "guis/ah/"));
+        super(guiManager, plugin, new File(plugin.getDataFolder(), "guis/ah/"), new File(plugin.getDataFolder(), "data/ah.yml"));
     }
 
     @Override

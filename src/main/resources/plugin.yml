@@ -6,6 +6,8 @@ api-version: 1.21
 depend:
   - Vault
   - GLCoins-Server
+softdepend:
+  - Citizens
 libraries:
   - org.reflections:reflections:0.10.2
   - org.apache.poi:poi:5.2.3

@@ -87,7 +87,7 @@ public class AhTestGUI extends PerPlayerGUI<ActionHouseManager> {
     private void redirectFolk(){
         new HashSet<>(this.pageInventories.values()).forEach(inv -> new HashSet<>(inv.getViewers()).forEach(player ->{
             if(getPageByInventory((Player) player) < 0)
-                open(player, 0);
+                open(player, 0, false);
         }));
     }
 }

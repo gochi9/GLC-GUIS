@@ -23,6 +23,10 @@ public class GuiManager {
         guiTemplates.put(name, gui);
     }
 
+    public void unregisterGuiTemplate(String name) {
+        guiTemplates.remove(name);
+    }
+
     public GUI getGuiTemplate(String name) {
         return guiTemplates.get(name);
     }
@@ -45,7 +49,7 @@ public class GuiManager {
         try{removeOpenGui(player, true);}
         catch (Throwable ignored){}
 
-        newGUI.open(player, 0);
+        newGUI.open(player, 0, true);
         openGuis.put(uuid, newGUI);
     }
 
@@ -54,16 +58,10 @@ public class GuiManager {
     }
 
     public void removeOpenGui(HumanEntity player, boolean onCloseEvent) {
-        UUID uuid = player.getUniqueId();
-        GUI gui = getOpenGui(uuid);
-
-        if(gui != null && !gui.isShared())
-            gui.deletePages();
-
         if(!onCloseEvent)
             player.closeInventory();
 
-        openGuis.remove(uuid);
+        openGuis.remove(player.getUniqueId());
     }
 
     public void addManager(AbstractGUIManager manager){
@@ -74,7 +72,10 @@ public class GuiManager {
         Bukkit.getOnlinePlayers().forEach(HumanEntity::closeInventory);
         openGuis.clear();
         guiTemplates.clear();
-        this.managers.forEach(AbstractGUIManager::loadGUIsRecursive);
+        this.managers.forEach(manager -> {
+            manager.onReload();
+            manager.loadGUIsRecursive();
+        });
     }
 
     public void refreshInventories(Class<?> cl) {
