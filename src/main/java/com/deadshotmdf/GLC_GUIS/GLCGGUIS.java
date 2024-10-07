@@ -1,6 +1,7 @@
 package com.deadshotmdf.GLC_GUIS;
 
 import com.deadshotmdf.GLC_GUIS.ActionHouse.ActionHouseManager;
+import com.deadshotmdf.GLC_GUIS.BlackMarket.BlackMarketManager;
 import com.deadshotmdf.GLC_GUIS.General.Commands.ReloadConfigCommand;
 import com.deadshotmdf.GLC_GUIS.General.Listeners.GUIListener;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
@@ -17,6 +18,7 @@ public final class GLCGGUIS extends JavaPlugin {
     private GuiManager guiManager;
     private ShopManager shopManager;
     private ActionHouseManager actionHouseManager;
+    private BlackMarketManager blackMarketManager;
 
     @Override
     public void onEnable() {
@@ -31,6 +33,7 @@ public final class GLCGGUIS extends JavaPlugin {
         this.guiManager = new GuiManager();
         this.shopManager = new ShopManager(guiManager, this);
         this.actionHouseManager = new ActionHouseManager(guiManager, this);
+        this.blackMarketManager = new BlackMarketManager(guiManager, this);
 
         this.guiManager.reloadConfig();
 

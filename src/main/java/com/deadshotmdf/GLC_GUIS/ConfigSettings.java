@@ -4,13 +4,31 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ConfigSettings {
 
+    private static String genericShopDisplayItemShowAmount;
+    private static String genericShopBuyLore;
+    private static String genericShopSellLore;
+
     private static final HashMap<String, String> extraMessages = new HashMap<>();
+
+    public static String getGenericShopDisplayItemShowAmount(int amount){
+        return genericShopDisplayItemShowAmount.replace("{amount}", String.valueOf(amount));
+    }
+
+    public static String getGenericShopBuyLore(double amount){
+        return genericShopBuyLore.replace("{amount}", s(amount));
+    }
+
+    public static String getGenericShopSellLore(double amount){
+        return genericShopSellLore.replace("{amount}", s(amount));
+    }
 
     public static String getExtraMessage(String key){
         return key != null ? extraMessages.get(key.toLowerCase()) : null;
@@ -31,6 +49,10 @@ public class ConfigSettings {
 
         //
 
+        genericShopDisplayItemShowAmount = color(config.getString("genericShopDisplayItemShowAmount"));
+        genericShopBuyLore = color(config.getString("genericShopBuyLore"));
+        genericShopSellLore = color(config.getString("genericShopSellLore"));
+
         extraMessages.clear();
 
         ConfigurationSection section = config.getConfigurationSection("settings");
@@ -48,6 +70,14 @@ public class ConfigSettings {
 
     public static String color(String s){
         return ChatColor.translateAlternateColorCodes('&', s);
+    }
+
+    public static List<String> color(List<String> list) {
+        return list == null || list.isEmpty() ? new ArrayList<>() : list.stream().map(ConfigSettings::color).collect(Collectors.toList());
+    }
+
+    private static String s(Object o){
+        return String.valueOf(o);
     }
 
 }

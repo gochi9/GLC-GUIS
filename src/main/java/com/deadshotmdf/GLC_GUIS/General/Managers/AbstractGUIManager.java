@@ -3,6 +3,7 @@ package com.deadshotmdf.GLC_GUIS.General.Managers;
 import com.deadshotmdf.GLC_GUIS.GUIUtils;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.*;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.Label;
+import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.ReplaceableButton;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GuiElementsData;
 import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerGUI;
@@ -10,6 +11,7 @@ import com.deadshotmdf.GLC_GUIS.General.GUI.SharedGUI;
 import com.iridium.iridiumcolorapi.IridiumColorAPI;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -88,7 +90,8 @@ public abstract class AbstractGUIManager {
             createDefaultExcelFile(excelFile, defaultFormat);
         }
 
-        GuiElementsData guiElementsData = parseExcelFile(excelFile);
+        String specialType = guiSection.getString("specialType");
+        GuiElementsData guiElementsData = parseExcelFile(specialType, excelFile, guiSection.getBoolean("needs_specific_slots", true));
 
         Map<Integer, Map<Integer, GuiElement>> mergedPages = mergeDefaultWithPages(
                 guiElementsData.getDefaultElements(),
@@ -98,7 +101,7 @@ public abstract class AbstractGUIManager {
         if(mergedPages.isEmpty())
             mergedPages.put(0, guiElementsData.getDefaultElements());
 
-        guiManager.registerGuiTemplate(guiName.toLowerCase(), specifyGUI(perPlayer, guiManager, title, size, mergedPages, guiSection.getString("specialType")));
+        guiManager.registerGuiTemplate(guiName.toLowerCase(), specifyGUI(perPlayer, guiManager, title, size, mergedPages, specialType));
 
         plugin.getLogger().info("Loaded GUI: " + guiName + " " + mergedPages.size() + " " + mergedPages.get(0).size());
     }
@@ -151,10 +154,11 @@ public abstract class AbstractGUIManager {
         return mergedPages;
     }
 
-    private GuiElementsData parseExcelFile(File excelFile) {
+    private GuiElementsData parseExcelFile(String specialType, File excelFile, boolean needs_specific_slots) {
         Map<Integer, GuiElement> defaultElements = new LinkedHashMap<>();
         Map<Integer, Map<Integer, GuiElement>> pages = new LinkedHashMap<>();
 
+        int slot_not_needed = 0;
         try (FileInputStream fis = new FileInputStream(excelFile);
              Workbook workbook = WorkbookFactory.create(fis)) {
 
@@ -181,12 +185,12 @@ public abstract class AbstractGUIManager {
                     elementData.put(headers.get(i), value);
                 }
 
-                GuiElement element = createGuiElementFromData(elementData);
+                GuiElement element = createGuiElementFromData(specialType, elementData);
                 if (element == null)
                     continue;
 
                 int page = parsePageNumber(elementData.get("page"));
-                Set<Integer> slots = GUIUtils.getSlots(elementData.get("slots"));
+                Set<Integer> slots = needs_specific_slots ? GUIUtils.getSlots(elementData.get("slots")) : Set.of(++slot_not_needed);
 
                 if(slots.isEmpty())
                     slots = GUIUtils.getSlots(elementData.get("slot"));
@@ -223,13 +227,14 @@ public abstract class AbstractGUIManager {
         }
     }
 
-    private GuiElement createGuiElementFromData(Map<String, String> elementData) {
+    private GuiElement createGuiElementFromData(String specialType, Map<String, String> elementData) {
         ItemStack item = parseItem(elementData);
 
         if (item == null)
             return null;
 
         String actionStr = elementData.get("action");
+
         if (actionStr == null || actionStr.isEmpty())
             return null;
 
@@ -238,17 +243,16 @@ public abstract class AbstractGUIManager {
         String[] args = Arrays.copyOfRange(actionParts, 1, actionParts.length);
 
         Map<String, String> extraValues = new HashMap<>(elementData);
-        extraValues.keySet().removeAll(Arrays.asList("page", "slot", "material", "name", "lore", "action"));
         AbstractButton button = GUIUtils.loadButton(actionName, item, this, guiManager, extraValues, args);
+
         if (button == null)
             return new Label(item, this, guiManager, args, extraValues);
 
-        enhanceGuiElement(extraValues, button, actionName, args);
-        return button;
+        return enhanceGuiElement(specialType, item, extraValues, button, actionName, args);
     }
 
     //Override this method to retrieve specific information from a certain type of GUI for specific cases
-    protected GuiElement enhanceGuiElement(Map<String, String> extraValues, GuiElement element, String action, String[] args) {
+    protected GuiElement enhanceGuiElement(String specialType, ItemStack item, Map<String, String> extraValues, GuiElement element, String action, String[] args) {
         return element;
     }
 
@@ -279,10 +283,10 @@ public abstract class AbstractGUIManager {
         if (loreStr != null && !loreStr.isEmpty())
             meta.setLore(Arrays.stream(loreStr.split("\\n|\\|"))
                     .map(String::trim)
-                    .filter(line -> !line.isEmpty())
                     .map(line -> ChatColor.translateAlternateColorCodes('&', IridiumColorAPI.process(line)))
                     .collect(Collectors.toList()));
 
+        meta.setCustomModelData(1010);
         item.setItemMeta(meta);
         return item;
     }

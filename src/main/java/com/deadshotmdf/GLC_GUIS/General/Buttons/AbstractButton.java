@@ -18,6 +18,8 @@ import java.util.Map;
 public abstract class AbstractButton implements GuiElement{
 
     protected ItemStack item;
+    protected final String name;
+    protected final List<String> lore;
     protected final Object correspondentManager;
     protected final GuiManager guiManager;
     protected final String[] args;
@@ -33,6 +35,15 @@ public abstract class AbstractButton implements GuiElement{
         this.elementData = elementData;
         this.permission = GUIUtils.retrieveFrom("permission", ":", args);
         this.permissionMessage = GUIUtils.retrieveFrom("permissionMessage", ":", args);
+
+        ItemMeta meta = item.getItemMeta();
+        boolean hasItemMeta = item.hasItemMeta();
+        this.name = hasItemMeta ? meta.getDisplayName() : null;
+        this.lore = hasItemMeta ? meta.getLore() : null;
+    }
+
+    public ItemStack getItemStackClone(){
+        return this.item.clone();
     }
 
     @Override
@@ -47,11 +58,11 @@ public abstract class AbstractButton implements GuiElement{
         if(meta == null)
             return item;
 
-        if(meta.hasDisplayName())
-            meta.setDisplayName(StringUtils.replaceEach(meta.getDisplayName(), placeholder, replace));
+        if(name != null)
+            meta.setDisplayName(StringUtils.replaceEach(name, placeholder, replace));
 
-        if(meta.hasLore())
-            meta.setLore(replace(meta.getLore(), placeholder, replace));
+        if(lore != null)
+            meta.setLore(replace(lore, placeholder, replace));
 
         item.setItemMeta(meta);
         return item;
@@ -71,7 +82,11 @@ public abstract class AbstractButton implements GuiElement{
 
     public abstract void onClick(InventoryClickEvent event, GUI gui, Object... args);
 
-    private static List<String> replace(List<String> lore, String[] placeholder, String... replace){
+    public List<String> getLoreClone(){
+        return new ArrayList<>(lore);
+    }
+
+    public static List<String> replace(List<String> lore, String[] placeholder, String... replace){
         List<String> list = new ArrayList<>(lore.size());
 
         for(String s : lore)

@@ -16,11 +16,13 @@ import org.reflections.util.FilterBuilder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.logging.Logger;
 
 public class GUIUtils {
 
+    private static final DecimalFormat df = new DecimalFormat("0.000");
     private static final Map<String, TriFunction<ItemStack, Object, GuiManager, String[], Map<String, String>, AbstractButton>> buttonMap = new HashMap<>();
 
     static{
@@ -72,6 +74,21 @@ public class GUIUtils {
         logger.info("Loaded " + buttonMap.size() + " buttons");
     }
 
+    public static String getDigits(double number) {
+        String formattedNumber = df.format(number);
+
+        return formattedNumber.endsWith(".000") ? formattedNumber.substring(0, formattedNumber.indexOf('.')) : formattedNumber;
+    }
+
+    public static UUID getUniqueID(HashMap<UUID, ?> map){
+        UUID uuid = UUID.randomUUID();
+
+        while (map.containsKey(uuid))
+            uuid = UUID.randomUUID();
+
+        return uuid;
+    }
+
     public static AbstractButton loadButton(String actionValue, ItemStack itemStack, Object correspondantManager, GuiManager guiManager, Map<String, String> map, String... args) {
         TriFunction<ItemStack, Object, GuiManager, String[], Map<String, String>, AbstractButton> factory = buttonMap.get(actionValue);
         return factory == null ? null : factory.apply(itemStack, correspondantManager, guiManager, args, map);
@@ -108,10 +125,18 @@ public class GUIUtils {
     }
 
     public static String retrieveFrom(String ident, String split, String... args){
-        for(String arg : args)
-            if(arg.startsWith(ident) && arg.split(split).length == 2)
-                return arg.split(split)[1].replace(":", "");
+        if(ident == null || split == null || args == null)
+            return " ";
 
+        String prefix = ident + split;
+        for(String arg : args) {
+            if (!arg.startsWith(prefix))
+                continue;
+
+            String[] parts = arg.split(split, 2);
+            if(parts.length == 2)
+                return parts[1];
+        }
         return " ";
     }
 
@@ -131,7 +156,7 @@ public class GUIUtils {
         if(from == null)
             return slots;
 
-        String[] possibleSlots = from.split(",");
+        String[] possibleSlots = from.trim().split(",");
 
         if(possibleSlots.length == 0){
             getSlotsFromDash(from, slots);

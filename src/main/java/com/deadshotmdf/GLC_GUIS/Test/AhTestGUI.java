@@ -40,39 +40,39 @@ public class AhTestGUI extends PerPlayerGUI<ActionHouseManager> {
         first.clear();
 
         //Map<UUID, Transaction> in the manager
-        LinkedHashMap<UUID, Transaction> transactions = correspondentManager.getTransactions();
-
-        int currentPage = 0;
-        Map<Integer, GuiElement> elements = pageElements.get(currentPage);
-
-        if (elements == null)
-            return;
-
-        List<Integer> emptySlots = getEmptySlots(elements);
-        Iterator<Transaction> transactionIterator = transactions.values().iterator();
-        while (transactionIterator.hasNext()) {
-            for (int slot : emptySlots) {
-                if (!transactionIterator.hasNext())
-                    break;
-
-                Transaction transaction = transactionIterator.next();
-
-                if(!transaction.isStillValid())
-                    return;
-
-                elements.put(slot, new AHTransactionButton(transaction.getItem(), correspondentManager, guiManager, null, null, transaction.getSellAmount(), transaction.getGLCoinsSellAmount()));
-            }
-
-            if (!transactionIterator.hasNext())
-                break;
-
-            pageInventories.computeIfAbsent(++currentPage, _ -> Bukkit.createInventory(null, size, title));
-            elements = pageElements.computeIfAbsent(currentPage, _ -> new HashMap<>());
-            elements.putAll(savedTemplate);
-        }
-
-        redirectFolk();
-        super.refreshInventory();
+//        LinkedHashMap<UUID, Transaction> transactions = correspondentManager.getTransactions();
+//
+//        int currentPage = 0;
+//        Map<Integer, GuiElement> elements = pageElements.get(currentPage);
+//
+//        if (elements == null)
+//            return;
+//
+//        List<Integer> emptySlots = getEmptySlots(elements);
+//        Iterator<Transaction> transactionIterator = transactions.values().iterator();
+//        while (transactionIterator.hasNext()) {
+//            for (int slot : emptySlots) {
+//                if (!transactionIterator.hasNext())
+//                    break;
+//
+//                Transaction transaction = transactionIterator.next();
+//
+//                if(!transaction.isStillValid())
+//                    return;
+//
+//                elements.put(slot, new AHTransactionButton(transaction.getItem(), correspondentManager, guiManager, null, null, transaction.getSellAmount(), transaction.getGLCoinsSellAmount()));
+//            }
+//
+//            if (!transactionIterator.hasNext())
+//                break;
+//
+//            pageInventories.computeIfAbsent(++currentPage, _ -> Bukkit.createInventory(null, size, title));
+//            elements = pageElements.computeIfAbsent(currentPage, _ -> new HashMap<>());
+//            elements.putAll(savedTemplate);
+//        }
+//
+//        redirectFolk();
+//        super.refreshInventory();
     }
 
     private List<Integer> getEmptySlots(Map<Integer, GuiElement> elements) {
