@@ -36,21 +36,34 @@ blackMarketSpawnChance: 50
 blackMarketStayDuration: 30
 blackMarketCooldown: 240
 
-#NOTHING ~= 79%
-#ROBBED ~= 10%
-#NOTHING ~= 10%
+percentPriceDropPerItemSold: 0.00125
+
+#NOTHING ~= 80%
+#SCAM ~= 14%
+#ROBBED ~= 3%
 #MUGGED ~= 1%
 #Value of 0 or less disables an event
-eventChances:
-  NOTHING: 10000
-  ROBBED: 1266
-  SCAMMED: 1266
-  MUGGED: 127
+eventChancesStack:
+  NOTHING: 8000
+  SCAM: 1400
+  ROBBED: 300
+  MUGGED: 100
+
+#NOTHING ~= 70%
+#SCAM ~= 21%
+#ROBBED ~= 6%
+#MUGGED ~= 3%
+#Value of 0 or less disables an event
+eventChancesWholeInv:
+  NOTHING: 7000
+  SCAM: 2100
+  ROBBED: 600
+  MUGGED: 300
 
 warnPlayer: '&cThe black market allows you to sell items without taxes. &eCaution, &cwhile selling to the black market you have a chance of being &6scammed, &4robbed, &cor &4mugged &c(lose your whole inventory).'
 
-scammedMinPercent: 5.5
-scammedMaxPercent: 75.4
+scammedMinPercent: 1.5
+scammedMaxPercent: 15.4
 
 npcName: '&1Black market'
 npcSkin: BikMoss

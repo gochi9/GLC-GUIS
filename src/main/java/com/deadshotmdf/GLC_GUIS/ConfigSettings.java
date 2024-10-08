@@ -31,6 +31,7 @@ public class ConfigSettings {
     private static long blackMarketCooldown;
     private static double scammedMinPercent;
     private static double scammedMaxPercent;
+    private static double percentPriceDropPerItemSold;
 
     private static String blackMarketSpawnedTitle;
     private static String blackMarketSpawned;
@@ -109,6 +110,10 @@ public class ConfigSettings {
 
     public static double getScammedMaxPercent(){
         return scammedMaxPercent;
+    }
+
+    public static double getPercentPriceDropPerItemSold(){
+        return percentPriceDropPerItemSold;
     }
 
     public static String getBlackMarketStatusHelpMessage(){
@@ -222,6 +227,7 @@ public class ConfigSettings {
         blackMarketCooldown = TimeUnit.MINUTES.toMillis(config.getInt("blackMarketCooldown"));
         scammedMinPercent = config.getDouble("scammedMinPercent");
         scammedMaxPercent = config.getDouble("scammedMaxPercent");
+        percentPriceDropPerItemSold = config.getDouble("percentPriceDropPerItemSold");
 
         blackMarketStatusHelpMessage = color(config.getString("blackMarketStatusHelpMessage"));
         blackMarketOpen = color(config.getString("blackMarketOpen"));

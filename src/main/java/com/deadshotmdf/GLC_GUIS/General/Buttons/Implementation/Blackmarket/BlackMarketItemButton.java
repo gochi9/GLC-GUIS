@@ -26,7 +26,8 @@ public class BlackMarketItemButton extends AbstractButton {
 
     private final EconomyWrapper economy;
     private final BlackMarketManager blackMarketManager;
-    private final double sell_value;
+    private final double decrease_amount;
+    private double sell_value;
     private Material material;
 
     public BlackMarketItemButton(@NotNull ItemStack item, Object correspondentManager, GuiManager guiManager, String[] args, Map<String, String> elementData) {
@@ -34,6 +35,7 @@ public class BlackMarketItemButton extends AbstractButton {
         this.economy = GLCGGUIS.getEconomy();
         this.blackMarketManager = (BlackMarketManager) correspondentManager;
         this.sell_value = GUIUtils.getDoubleOrDefault(elementData.get("sell_value"), 0.0);
+        this.decrease_amount = sell_value * (ConfigSettings.getPercentPriceDropPerItemSold() / 100);
         String mat = elementData.get("material");
         this.material = Material.getMaterial(mat != null ? mat.toUpperCase() : "DIRT");
         this.material = material != null ? this.material : Material.DIRT;
@@ -62,7 +64,7 @@ public class BlackMarketItemButton extends AbstractButton {
             return;
 
         double totalValue = amountRemoved * sell_value;
-        BlackmarketEvent blackmarketEvent = blackMarketManager.isEvent();
+        BlackmarketEvent blackmarketEvent = blackMarketManager.isEvent(totalValue <= 64);
 
         switch (blackmarketEvent) {
             case NOTHING:
@@ -92,6 +94,12 @@ public class BlackMarketItemButton extends AbstractButton {
                 player.sendMessage(ConfigSettings.getMugged());
                 break;
         }
+
+        this.sell_value = Math.max(0.000, this.sell_value - (amountRemoved * decrease_amount));
+        this.item = getItemStackClone(new String[]{"{blackMarketItemName}", "{blackMarketItemLore}"},
+                IridiumColorAPI.process(ConfigSettings.getBlackMarketItemName(GUIUtils.formatItemName(material.toString()))),
+                IridiumColorAPI.process(ConfigSettings.getBlackMarketLore(sell_value)));
+        gui.refreshInventory();
     }
 
     private int getTotalMaterialAmount(Player player, Material material) {

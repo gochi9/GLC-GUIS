@@ -21,13 +21,13 @@ public class ReloadConfigCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
         if(!sender.hasPermission("glcguis.reload")) {
-            //msg
+            sender.sendMessage(ConfigSettings.getReloadConfig());
             return true;
         }
 
         ConfigSettings.reloadConfig(main);
         this.guiManager.reloadConfig();
-        //msg
+        sender.sendMessage(ConfigSettings.getReloadConfig());
         return true;
     }
 }

@@ -17,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,8 +31,8 @@ public class BlackMarketManager extends AbstractGUIManager {
 
     private final Map<String, Location> npcSpawnPoints;
     private final List<BlackmarketPair> availableLootTable;
-    private final TreeMap<Integer, BlackmarketEvent> blackmarketEvents;
-    private int blackmarketEventsTotal;
+    private final TreeMap<Integer, BlackmarketEvent> blackmarketStackEvents, blackmarketWholeInvEvents;
+    private int blackmarketStackEventsTotal, blackmarketWholeInvEventsTotal;
     private final Random random;
     private BlackMarketTimer blackMarketTimer;
     private BlackMarketGUI gui;
@@ -42,7 +43,8 @@ public class BlackMarketManager extends AbstractGUIManager {
         super(guiManager, plugin, new File(plugin.getDataFolder(), "guis/blackmarket/"), new File(plugin.getDataFolder(), "data/blackmarket.yml"));
         this.npcSpawnPoints = new HashMap<>();
         this.availableLootTable = new LinkedList<>();
-        this.blackmarketEvents = new TreeMap<>();
+        this.blackmarketStackEvents = new TreeMap<>();
+        this.blackmarketWholeInvEvents = new TreeMap<>();
         this.random = new Random();
         loadInformation();
     }
@@ -88,8 +90,8 @@ public class BlackMarketManager extends AbstractGUIManager {
             guiManager.commenceOpen(player, gui, null);
     }
 
-    public BlackmarketEvent isEvent(){
-        BlackmarketEvent ev = randomBlackmarketEvent(-1);
+    public BlackmarketEvent isEvent(boolean stack){
+        BlackmarketEvent ev = randomBlackmarketEvent(-1, stack);
 
         return ev == null ? BlackmarketEvent.NOTHING : ev;
     }
@@ -131,23 +133,14 @@ public class BlackMarketManager extends AbstractGUIManager {
         this.availableLootTable.clear();
         this.blackMarketTimer.runTaskTimer(plugin, 100L, 1200L);
 
-        this.blackmarketEvents.clear();
-        this.blackmarketEventsTotal = 0;
+        this.blackmarketStackEvents.clear();
+        this.blackmarketWholeInvEvents.clear();
+        this.blackmarketStackEventsTotal = 0;
+        this.blackmarketWholeInvEventsTotal = 0;
 
-        ConfigurationSection sec = plugin.getConfig().getConfigurationSection("eventChances");
-
-        if(sec == null)
-            return;
-
-        for(String key : sec.getKeys(false)){
-            BlackmarketEvent ev = BlackmarketEvent.fromString(key);
-            int value = sec.getInt(key);
-
-            if(ev == null || value <= 0 || blackmarketEvents.containsValue(ev))
-                continue;
-
-            blackmarketEvents.put(blackmarketEventsTotal += value, ev);
-        }
+        FileConfiguration config = plugin.getConfig();
+        loadEvents(config.getConfigurationSection("eventChancesStack"), true);
+        loadEvents(config.getConfigurationSection("eventChancesWholeInv"), false);
     }
 
     public NPC getNpc(){
@@ -180,9 +173,25 @@ public class BlackMarketManager extends AbstractGUIManager {
         return npcSpawnPoints;
     }
 
-    private BlackmarketEvent randomBlackmarketEvent(int retries){
-        Map.Entry<Integer, BlackmarketEvent> entry = blackmarketEvents.ceilingEntry(random.nextInt(blackmarketEventsTotal + 1));
-        return entry == null ? retries > 9 ? null : randomBlackmarketEvent(++retries) : entry.getValue();
+    private BlackmarketEvent randomBlackmarketEvent(int retries, boolean stack){
+        Map.Entry<Integer, BlackmarketEvent> entry = (stack ? blackmarketStackEvents : blackmarketWholeInvEvents).ceilingEntry(random.nextInt((stack ? blackmarketStackEventsTotal : blackmarketWholeInvEventsTotal) + 1));
+        return entry == null ? retries > 9 ? null : randomBlackmarketEvent(++retries, stack) : entry.getValue();
+    }
+
+    private void loadEvents(ConfigurationSection sec, boolean stack){
+        if(sec == null)
+            return;
+
+        Map<Integer, BlackmarketEvent> eventMap = stack ? blackmarketStackEvents : blackmarketWholeInvEvents;
+        for(String key : sec.getKeys(false)){
+            BlackmarketEvent ev = BlackmarketEvent.fromString(key);
+            int value = sec.getInt(key);
+
+            if(ev == null || value < 1 || eventMap.containsValue(ev))
+                continue;
+
+            eventMap.put((stack ? (blackmarketStackEventsTotal += value) : (blackmarketWholeInvEventsTotal += value)), ev);
+        }
     }
 
 }
