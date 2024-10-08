@@ -37,6 +37,11 @@ public class ConfigSettings {
     private static String blackMarketLeave;
     private static String npcName;
     private static String npcSkin;
+
+    private static String blackMarketStatusHelpMessage;
+    private static String blackMarketOpen;
+    private static String blackMarketClosed;
+    private static String blackMarketStatus;
     private static String soldItemBlackmarket;
     private static String blackMarketItemName;
     private static String blackMarketLore;
@@ -104,6 +109,22 @@ public class ConfigSettings {
 
     public static double getScammedMaxPercent(){
         return scammedMaxPercent;
+    }
+
+    public static String getBlackMarketStatusHelpMessage(){
+        return blackMarketStatusHelpMessage;
+    }
+
+    public static String getBlackMarketOpen(){
+        return blackMarketOpen;
+    }
+
+    public static String getBlackMarketClosed(){
+        return blackMarketClosed;
+    }
+
+    public static String getBlackMarketStatus(boolean open){
+        return blackMarketStatus.replace("{status}", open ? getBlackMarketOpen() : getBlackMarketClosed());
     }
 
     public static String getBlackMarketSpawnedTitle(){
@@ -201,6 +222,11 @@ public class ConfigSettings {
         blackMarketCooldown = TimeUnit.MINUTES.toMillis(config.getInt("blackMarketCooldown"));
         scammedMinPercent = config.getDouble("scammedMinPercent");
         scammedMaxPercent = config.getDouble("scammedMaxPercent");
+
+        blackMarketStatusHelpMessage = color(config.getString("blackMarketStatusHelpMessage"));
+        blackMarketOpen = color(config.getString("blackMarketOpen"));
+        blackMarketClosed = color(config.getString("blackMarketClosed"));
+        blackMarketStatus = color(config.getString("blackMarketStatus"));
         blackMarketSpawnedTitle = color(config.getString("blackMarketSpawnedTitle"));
         blackMarketSpawned = color(config.getString("blackMarketSpawned"));
         blackMarketLeave = color(config.getString("blackMarketLeave"));

@@ -22,6 +22,11 @@ blackMarketLeave: '&1The black market has left the spawn world. They won`t be ba
 openBlackmarketGUIHelpMessage: '&6/blackmarket open &e- Opens the black market GUI without walking to the NPC.'
 noBlackmarket: '&cThe black market is not currently open'
 
+blackMarketStatusHelpMessage: '&6/blackmarket status &e- Checks whether the black market is spawned or not.'
+blackMarketOpen: '&aOPEN'
+blackMarketClosed: '&cCLOSED'
+blackMarketStatus: '&aThe black market is currently: {status}'
+
 blackMarketItemName: '<GRADIENT:084CFB>{name}</GRADIENT:ADF3FD>'
 blackMarketLore: '&7Sell this item for: &c{value}$'
 

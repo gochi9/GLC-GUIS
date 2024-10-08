@@ -56,9 +56,9 @@ public class BlackMarketManager extends AbstractGUIManager {
             return;
 
         long minutes = TimeUnit.MILLISECONDS.toMinutes(ConfigSettings.getBlackMarketStayDuration());
+        Bukkit.broadcastMessage(ConfigSettings.getBlackMarketSpawned(minutes));
         for(Player player : Bukkit.getOnlinePlayers()) {
             player.sendTitle(ConfigSettings.getBlackMarketSpawnedTitle(), "", 5, 20, 5);
-            player.sendMessage(ConfigSettings.getBlackMarketSpawned(minutes));
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, -0.8f);
         }
 
@@ -80,8 +80,7 @@ public class BlackMarketManager extends AbstractGUIManager {
         if(gui != null)
             gui.stopBlackMarket();
 
-        for(Player player : Bukkit.getOnlinePlayers())
-            player.sendMessage(ConfigSettings.getBlackMarketLeave());
+        Bukkit.broadcastMessage(ConfigSettings.getBlackMarketLeave());
     }
 
     public void openGUI(Player player){
