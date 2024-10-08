@@ -1,8 +1,11 @@
-package com.deadshotmdf.GLC_GUIS.BlackMarket;
+package com.deadshotmdf.GLC_GUIS.BlackMarket.Listeners;
 
+import com.deadshotmdf.GLC_GUIS.BlackMarket.Managers.BlackMarketManager;
+import com.deadshotmdf.GLC_GUIS.ConfigSettings;
 import net.citizensnpcs.api.event.NPCEvent;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -39,7 +42,8 @@ public class NPCListener implements Listener {
         }
 
         warnings.add(uuid);
-        blackMarketManager.warnPlayer(player);
+        player.sendMessage(ConfigSettings.getWarnPlayer());
+        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1f, 1f);
     }
 
 }

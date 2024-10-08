@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,17 @@ public class GenericShopIntentButton extends AbstractButton {
         this.max_buy = GUIUtils.getIntegerOrDefault(elementData.get("max_buy"), 0);
         this.max_sell = GUIUtils.getIntegerOrDefault(elementData.get("max_sell"), 0);
 
+        List<String> lore = this.lore != null ? this.lore : new ArrayList<>();
         String[] placeholders = {"{genericShopBuyLore}", "{genericShopSellLore}"};
+
+        if(lore.contains(placeholders[0]) && buy_value <= 0.000)
+            lore.remove(placeholders[0]);
+
+        if(lore.contains(placeholders[1]) && sell_value <= 0.000)
+            lore.remove(placeholders[1]);
+
+        this.lore = lore;
+
         String[] replacement = {buy_value > 0.000 ? ConfigSettings.getGenericShopBuyLore(buy_value) : "", sell_value > 0.000 ? ConfigSettings.getGenericShopSellLore(sell_value) : ""};
         this.item = getItemStackClone(placeholders, replacement);
     }

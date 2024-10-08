@@ -18,8 +18,8 @@ import java.util.Map;
 public abstract class AbstractButton implements GuiElement{
 
     protected ItemStack item;
-    protected final String name;
-    protected final List<String> lore;
+    protected String name;
+    protected List<String> lore;
     protected final Object correspondentManager;
     protected final GuiManager guiManager;
     protected final String[] args;

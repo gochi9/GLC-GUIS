@@ -1,4 +1,4 @@
-package com.deadshotmdf.GLC_GUIS.BlackMarket;
+package com.deadshotmdf.GLC_GUIS.BlackMarket.Managers;
 
 import com.deadshotmdf.GLC_GUIS.ConfigSettings;
 import org.bukkit.scheduler.BukkitRunnable;

@@ -1,8 +1,9 @@
 package com.deadshotmdf.GLC_GUIS;
 
 import com.deadshotmdf.GLC_GUIS.ActionHouse.ActionHouseManager;
-import com.deadshotmdf.GLC_GUIS.BlackMarket.BlackMarketManager;
-import com.deadshotmdf.GLC_GUIS.BlackMarket.NPCListener;
+import com.deadshotmdf.GLC_GUIS.BlackMarket.Commands.BlackmarketCommand;
+import com.deadshotmdf.GLC_GUIS.BlackMarket.Managers.BlackMarketManager;
+import com.deadshotmdf.GLC_GUIS.BlackMarket.Listeners.NPCListener;
 import com.deadshotmdf.GLC_GUIS.General.Commands.ReloadConfigCommand;
 import com.deadshotmdf.GLC_GUIS.General.Listeners.GUIListener;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
@@ -46,7 +47,7 @@ public final class GLCGGUIS extends JavaPlugin {
 
         this.getCommand("shop").setExecutor(new OpenShopCommand(guiManager));
         this.getCommand("glcguis").setExecutor(new ReloadConfigCommand(this, guiManager));
-
+        this.getCommand("blackmarket").setExecutor(new BlackmarketCommand(this, blackMarketManager));
     }
 
     @Override
@@ -66,7 +67,7 @@ public final class GLCGGUIS extends JavaPlugin {
         return economy != null;
     }
 
-    public static Economy getEconomy() {
+    public static EconomyWrapper getEconomy() {
         return economy;
     }
 

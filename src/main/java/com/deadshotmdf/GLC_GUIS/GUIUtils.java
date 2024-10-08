@@ -25,6 +25,7 @@ public class GUIUtils {
 
     private static final DecimalFormat df = new DecimalFormat("0.000");
     private static final Map<String, TriFunction<ItemStack, Object, GuiManager, String[], Map<String, String>, AbstractButton>> buttonMap = new HashMap<>();
+    private static final Random random = new Random();
 
     static{
         Logger logger = Bukkit.getLogger();
@@ -141,6 +142,19 @@ public class GUIUtils {
         return " ";
     }
 
+    public static String formatItemName(String material) {
+        if(material == null)
+            return "";
+
+        StringBuilder result = new StringBuilder();
+
+        for (String word : material.toLowerCase().split("_"))
+            if (!word.isEmpty())
+                result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1));
+
+        return result.toString();
+    }
+
     public static String getCellValueAsString(Cell cell) {
         DataFormatter dataFormatter = new DataFormatter();
         return switch (cell.getCellType()) {
@@ -180,6 +194,21 @@ public class GUIUtils {
         }
 
         return slots;
+    }
+
+    public static double getRandomDouble(double m, double mx) {
+        if(m == mx)
+            return m;
+
+        double min = Math.min(m, mx);
+        double max = Math.max(m, mx);
+        return min + (max - min) * random.nextDouble();
+    }
+
+    public static <K, V> V getRandomValue(Map<K, V> map) {
+        ArrayList<V> values = new ArrayList<>(map.values());
+        int randomIndex = random.nextInt(values.size());
+        return values.get(randomIndex);
     }
 
     private static void getSlotsFromDash(String dash, Set<Integer> slots){

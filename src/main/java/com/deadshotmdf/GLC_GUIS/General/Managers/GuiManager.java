@@ -28,11 +28,11 @@ public class GuiManager {
     }
 
     public GUI getGuiTemplate(String name) {
-        return guiTemplates.get(name);
+        return guiTemplates.get(name != null ? name.toLowerCase() : "NULL");
     }
 
     public void openGui(HumanEntity player, String guiName, GUI backGUI, String... args) {
-        GUI gui = guiTemplates.get(guiName.toLowerCase());
+        GUI gui = getGuiTemplate(guiName);
 
         if(gui == null){
             player.sendMessage(ChatColor.RED + "GUI not found: " + guiName);

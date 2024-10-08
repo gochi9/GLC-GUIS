@@ -17,3 +17,4 @@ commands:
     description: Opens the main example GUI.
     usage: /shop
   glcguis:
+  blackmarket:

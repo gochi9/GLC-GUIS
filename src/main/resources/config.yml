@@ -1,4 +1,11 @@
 
+reloadConfig: '&aYou have reloaded the config'
+noPermission: '&4You do not have the permission to execute this command'
+
+noAvailableCommands: '&cYou have no available commands.'
+invalidCommand: '&cInvalid command. Use &6/blackmarket help &cfor available commands.'
+playersOnly: '&cOnly players can use this command.'
+consoleOnly: '&cOnly the console can use this command.'
 
 genericShopDisplayItemShowAmount: '&7Current selected amount: &a{amount}'
 genericShopBuyLore: '&7Buy price: &a{amount}&7$'
@@ -7,11 +14,46 @@ genericShopSellLore: '&7Sell price: &c{amount}&7$'
 ##################
 ## BLACK MARKET ##
 ##################
+
+blackMarketSpawnedTitle: '&1Black market available'
+blackMarketSpawned: '&1The black market has spawned &csomewhere &1inside the spawn world. The market is operational for {minutes} minutes'
+blackMarketLeave: '&1The black market has left the spawn world. They won`t be back for a couple of hours.'
+
+openBlackmarketGUIHelpMessage: '&6/blackmarket open &e- Opens the black market GUI without walking to the NPC.'
+noBlackmarket: '&cThe black market is not currently open'
+
+blackMarketItemName: '<GRADIENT:084CFB>{name}</GRADIENT:ADF3FD>'
+blackMarketLore: '&7Sell this item for: &c{value}$'
+
 #%
 blackMarketSpawnChance: 50
 #Minutes
 blackMarketStayDuration: 30
 blackMarketCooldown: 240
+
+#NOTHING ~= 79%
+#ROBBED ~= 10%
+#NOTHING ~= 10%
+#MUGGED ~= 1%
+#Value of 0 or less disables an event
+eventChances:
+  NOTHING: 10000
+  ROBBED: 1266
+  SCAMMED: 1266
+  MUGGED: 127
+
+warnPlayer: '&cThe black market allows you to sell items without taxes. &eCaution, &cwhile selling to the black market you have a chance of being &6scammed, &4robbed, &cor &4mugged &c(lose your whole inventory).'
+
+scammedMinPercent: 5.5
+scammedMaxPercent: 75.4
+
+npcName: '&1Black market'
+npcSkin: BikMoss
+soldItemBlackmarket: '&7You have sold {amount} items to the black market for {value}$'
+
+robbed: '&cThe sketchy dealer &6ran off &cafter inspecting your goods. You were &4not able &cto catch up to him.'
+scammed: '&eAfter inspecting the money, you realize that &6{percent}%({value}) &eof it was fake. The person that you sold the items to &6claims to know nothing &eabout it.'
+mugged: '&cAfter selling your items, you felt the presence of &4multiple armed thugs. &cYou had no choice but to give up your inventory to survive.'
 
 #Used for button actions
 extraMessages:
