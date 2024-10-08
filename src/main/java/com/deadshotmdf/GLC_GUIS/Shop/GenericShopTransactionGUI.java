@@ -93,7 +93,7 @@ public class GenericShopTransactionGUI extends PerPlayerGUI<ShopManager> {
     }
 
     private boolean noLongerUseful(GenericShopChangeAmount button){
-        return ((button.isAdd() && (this.amount + button.getValue()) > (isBuy ? this.max_buy : max_sell)) || (!button.isAdd() && this.amount <= 1));
+        return ((button.isAdd() && (this.amount + button.getValue()) > (isBuy ? this.max_buy : max_sell)) || (!button.isAdd() && button.getValue() >= this.amount));
     }
 
 }

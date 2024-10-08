@@ -58,7 +58,7 @@ soldItemBlackmarket: '&7You have sold {amount} items to the black market for {va
 
 robbed: '&cThe sketchy dealer &6ran off &cafter inspecting your goods. You were &4not able &cto catch up to him.'
 scammed: '&eAfter inspecting the money, you realize that &6{percent}%({value}) &eof it was fake. The person that you sold the items to &6claims to know nothing &eabout it.'
-mugged: '&cAfter selling your items, you felt the presence of &4multiple armed thugs. &cYou had no choice but to give up your inventory to survive.'
+mugged: '&cAfter selling your items, you felt the presence of &4multiple armed thugs. &cYou had no choice but to give up your money you just made, and your inventory to survive.'
 
 #Used for button actions
 extraMessages:
