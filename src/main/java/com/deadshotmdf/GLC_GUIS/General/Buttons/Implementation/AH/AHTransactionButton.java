@@ -87,7 +87,10 @@ public class AHTransactionButton extends AbstractButton {
             pay(whoClicked, GLCGGUIS.getEconomy().getBalance((OfflinePlayer) whoClicked), price, true);
     }
 
-    private void pay(HumanEntity player, double balance, double toPay, boolean normalPay){
+    private void pay(HumanEntity player, Double balance, double toPay, boolean normalPay){
+        if(balance == null)
+            return;
+
         if(!transaction.isStillValid()){
             player.sendMessage(ConfigSettings.getTransactionNoLonger());
             return;

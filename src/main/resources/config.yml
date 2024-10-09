@@ -83,6 +83,13 @@ itemBought: '&aSomeone bought one of your items for {value}$ / {glcoins} GLCoins
 boughtItem: '&aYou`ve bought the listen item for {value}$ / {glcoins} GLCoins'
 notEnoughFunds: '&cYou don`t {needed} for the current selected price. Balance: {balance}'
 
+ahSellHelpMessage: '&6/ah sell [sell_value] [glcoins] &e- Lists the current item in your main hand in the auction house.'
+ahSellSyntax: '&cUse - /ah sell [sell_value] [glcoins]'
+ahSellMustHoldItem: '&7AH - &cYou must hold an item in your main hand'
+ahSellInvalidPries: '&7AH - &cYou cannot have both values for sell_value and glcoins at 0.000 or lower'
+ahSellNoMoreSpace: '&7AH - &cYou have too many items listed in the auction house currently'
+ahSellListed: '&7AH - &aYou have successfully listed your item'
+
 transactionNoLonger: '&cThis item is no longer available'
 
 #Minutes

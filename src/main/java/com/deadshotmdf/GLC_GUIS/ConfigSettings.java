@@ -62,6 +62,12 @@ public class ConfigSettings {
     private static String boughtItem;
     private static String notEnoughFunds;
     private static String transactionNoLonger;
+    private static String ahSellHelpMessage;
+    private static String ahSellSyntax;
+    private static String ahSellMustHoldItem;
+    private static String ahSellInvalidPries;
+    private static String ahSellNoMoreSpace;
+    private static String ahSellListed;
     private static List<String> ahListingItemLore;
     private static List<String> ahListingItemBuyer;
     private static List<String> ahListingItemPublisher;
@@ -226,6 +232,30 @@ public class ConfigSettings {
         return transactionNoLonger;
     }
 
+    public static String getAHSellHelpMessage(){
+        return ahSellHelpMessage;
+    }
+
+    public static String getAHSellSyntax(){
+        return ahSellSyntax;
+    }
+
+    public static String getAHSellMustHoldItem(){
+        return ahSellMustHoldItem;
+    }
+
+    public static String getAHSellInvalidPries(){
+        return ahSellInvalidPries;
+    }
+
+    public static String getAHSellNoMoreSpace(){
+        return ahSellNoMoreSpace;
+    }
+
+    public static String getAHSellListed(){
+        return ahSellListed;
+    }
+
     public static List<String> getAhListingItemLore(){
         return ahListingItemLore;
     }
@@ -306,6 +336,12 @@ public class ConfigSettings {
         boughtItem = color(config.getString("boughtItem"));
         notEnoughFunds = color(config.getString("notEnoughFunds"));
         transactionNoLonger = color(config.getString("transactionNoLonger"));
+        ahSellHelpMessage = color(config.getString("ahSellHelpMessage"));
+        ahSellSyntax = color(config.getString("ahSellSyntax"));
+        ahSellMustHoldItem = color(config.getString("ahSellMustHoldItem"));
+        ahSellInvalidPries = color(config.getString("ahSellInvalidPries"));
+        ahSellNoMoreSpace = color(config.getString("ahSellNoMoreSpace"));
+        ahSellListed = color(config.getString("ahSellListed"));
         ahListingItemLore = color(config.getStringList("ahListingItemLore"));
         ahListingItemBuyer = color(config.getStringList("ahListingItemBuyer"));
         ahListingItemPublisher = color(config.getStringList("ahListingItemPublisher"));

@@ -4,10 +4,15 @@ import com.deadshotmdf.GLC_GUIS.General.Buttons.AbstractButton;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.ButtonIdentifier;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.TriFunction;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.Node;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
@@ -225,6 +230,33 @@ public class GUIUtils {
         ArrayList<V> values = new ArrayList<>(map.values());
         int randomIndex = random.nextInt(values.size());
         return values.get(randomIndex);
+    }
+
+    public static int getHighestPermissionNumber(Player player, String permissionStart) {
+        if(player.isOp())
+            return 99;
+
+        String prefix = permissionStart.endsWith(".") ? permissionStart : permissionStart + ".";
+        LuckPerms luckPerms = LuckPermsProvider.get();
+
+        User user = luckPerms.getPlayerAdapter(Player.class).getUser(player);
+        if (user == null)
+            return 0;
+
+        int highestNumber = 0;
+        for (Node node : user.getNodes()) {
+            if (!node.getKey().startsWith(prefix))
+                continue;
+
+            String suffix = node.getKey().substring(prefix.length());
+            try {
+                int number = Integer.parseInt(suffix);
+                if (number > highestNumber)
+                    highestNumber = number;
+            }
+            catch (NumberFormatException ignorede) {}
+        }
+        return highestNumber;
     }
 
     private static void getSlotsFromDash(String dash, Set<Integer> slots){

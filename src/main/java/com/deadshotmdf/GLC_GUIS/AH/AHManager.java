@@ -49,7 +49,7 @@ public class AHManager extends AbstractGUIManager {
         transactions.put(id, transaction);
         player.getInventory().setItemInMainHand(null);
         onAHUpdate();
-        //msg
+        player.sendMessage(ConfigSettings.getAHSellListed());
     }
 
     public void itemRemoveExpire(AHTransaction transaction, boolean expire){
@@ -129,7 +129,7 @@ public class AHManager extends AbstractGUIManager {
         this.config.set("ah", null);
         this.config.set("player_stash", null);
 
-        new HashMap<>(transactions).values().forEach(transaction -> {
+        new LinkedHashMap<>(transactions).values().forEach(transaction -> {
             if(transaction == null || !transaction.isStillValid() || !transaction.doesExist())
                 return;
 

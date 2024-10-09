@@ -17,9 +17,11 @@ public abstract class GLCGUICommand<T extends AbstractGUIManager> implements Com
 
     public final static List<String> EMPTY = Collections.emptyList();
 
+    protected final T manager;
     protected final HashMap<String, SubCommand> subCommands;
 
     public GLCGUICommand(GLCGGUIS main, T manager) {
+        this.manager = manager;
         this.subCommands = new HashMap<>();
     }
 
