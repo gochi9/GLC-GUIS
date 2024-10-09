@@ -11,6 +11,7 @@ import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import com.deadshotmdf.gLCoins_Server.GLCoinsS;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -47,6 +48,10 @@ public class AHTransactionButton extends AbstractButton {
         this.lore = this.lore != null ? this.lore : new LinkedList<>();
         this.lore.addAll(ConfigSettings.getAhListingItemLore());
         this.lore.addAll(isPublisher ? ConfigSettings.getAhListingItemPublisher() : ConfigSettings.getAhListingItemBuyer());
+
+        if(!isPublisher && Bukkit.getPlayer(viewer).hasPermission("glcguis.ahremoveothers"))
+            this.lore.addAll(ConfigSettings.getAhListingItemPublisher());
+
         this.item = getItemStackClone(placeholders, GUIUtils.convertMillisToDate(transaction.getExpire()), transaction.getSellAmount()+"", transaction.getGLCoinsSellAmount()+"");
     }
 
@@ -60,12 +65,16 @@ public class AHTransactionButton extends AbstractButton {
 
         ClickType click = ev.getClick();
 
-        if(isPublisher){
+        if(isPublisher || whoClicked.hasPermission("glcguis.ahremoveothers")){
             if(click != ClickType.RIGHT)
                 return;
 
-            if(transaction.isStillValid())
+            if(transaction.isStillValid()){
                 ahManager.itemRemoveExpire(transaction, false);
+
+                if(!isPublisher)
+                    whoClicked.sendMessage(ConfigSettings.getRemovedListing(Bukkit.getOfflinePlayer(transaction.getPublisher()).getName()));
+            }
             else
                 whoClicked.sendMessage(ConfigSettings.getTransactionNoLonger());
 

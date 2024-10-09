@@ -91,6 +91,7 @@ ahSellNoMoreSpace: '&7AH - &cYou have too many items listed in the auction house
 ahSellListed: '&7AH - &aYou have successfully listed your item'
 
 ahConfirm: '&7AH - &aPress again to confirm'
+removedListing: '&aSuccessfully removed {player}`s item'
 
 transactionNoLonger: '&cThis item is no longer available'
 

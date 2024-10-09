@@ -69,6 +69,7 @@ public class ConfigSettings {
     private static String ahSellNoMoreSpace;
     private static String ahSellListed;
     private static String ahConfirm;
+    private static String removedListing;
     private static List<String> ahListingItemLore;
     private static List<String> ahListingItemBuyer;
     private static List<String> ahListingItemPublisher;
@@ -262,6 +263,10 @@ public class ConfigSettings {
         return ahConfirm;
     }
 
+    public static String getRemovedListing(String player){
+        return removedListing.replace("{player}", player);
+    }
+
     public static List<String> getAhListingItemLore(){
         return ahListingItemLore;
     }
@@ -353,6 +358,7 @@ public class ConfigSettings {
         ahSellNoMoreSpace = color(config.getString("ahSellNoMoreSpace"));
         ahSellListed = color(config.getString("ahSellListed"));
         ahConfirm = color(config.getString("ahConfirm"));
+        removedListing = color(config.getString("removedListing"));
         ahListingItemLore = color(config.getStringList("ahListingItemLore"));
         ahListingItemBuyer = color(config.getStringList("ahListingItemBuyer"));
         ahListingItemPublisher = color(config.getStringList("ahListingItemPublisher"));
