@@ -68,6 +68,7 @@ public class ConfigSettings {
     private static String ahSellInvalidPries;
     private static String ahSellNoMoreSpace;
     private static String ahSellListed;
+    private static String ahConfirm;
     private static List<String> ahListingItemLore;
     private static List<String> ahListingItemBuyer;
     private static List<String> ahListingItemPublisher;
@@ -256,6 +257,10 @@ public class ConfigSettings {
         return ahSellListed;
     }
 
+    public static String getAHConfirm() {
+        return ahConfirm;
+    }
+
     public static List<String> getAhListingItemLore(){
         return ahListingItemLore;
     }
@@ -342,6 +347,7 @@ public class ConfigSettings {
         ahSellInvalidPries = color(config.getString("ahSellInvalidPries"));
         ahSellNoMoreSpace = color(config.getString("ahSellNoMoreSpace"));
         ahSellListed = color(config.getString("ahSellListed"));
+        ahConfirm = color(config.getString("ahConfirm"));
         ahListingItemLore = color(config.getStringList("ahListingItemLore"));
         ahListingItemBuyer = color(config.getStringList("ahListingItemBuyer"));
         ahListingItemPublisher = color(config.getStringList("ahListingItemPublisher"));

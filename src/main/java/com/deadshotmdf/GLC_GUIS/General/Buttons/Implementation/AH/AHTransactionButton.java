@@ -32,6 +32,7 @@ public class AHTransactionButton extends AbstractButton {
     private final AHTransaction transaction;
     private final UUID viewer;
     private boolean isPublisher;
+    private long left, shift_right;
 
     public AHTransactionButton(@NotNull ItemStack item, Object correspondentManager, GuiManager guiManager, String[] args, Map<String, String> elementData) {
         super(item, correspondentManager, guiManager, args, elementData);
@@ -39,7 +40,7 @@ public class AHTransactionButton extends AbstractButton {
         this.transaction = ahManager.getTransaction(GUIUtils.getUUID(elementData.get("transaction_id")));
         this.viewer = GUIUtils.getUUID(elementData.get("viewer"));
 
-        if(transaction == null)
+        if(transaction == null || viewer == null)
             return;
 
         this.isPublisher = viewer.equals(transaction.getPublisher());
@@ -75,6 +76,17 @@ public class AHTransactionButton extends AbstractButton {
 
         if(!isGLCoinsPay && click != ClickType.LEFT)
             return;
+
+        long current = System.currentTimeMillis();
+        if((isGLCoinsPay && shift_right - current <= 0) || (!isGLCoinsPay && left - current <= 0)){
+            if(isGLCoinsPay)
+                shift_right = current + 3000;
+            else
+                left = current + 3000;
+
+            whoClicked.sendMessage(ConfigSettings.getAHConfirm());
+            return;
+        }
 
         double price = transaction.getGLCoinsSellAmount();
         double glcoins = transaction.getGLCoinsSellAmount();
