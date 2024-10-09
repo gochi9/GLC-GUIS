@@ -72,6 +72,7 @@ public class ConfigSettings {
     private static List<String> ahListingItemLore;
     private static List<String> ahListingItemBuyer;
     private static List<String> ahListingItemPublisher;
+    private static List<String> ahSortLore;
 
     private static final HashMap<String, String> extraMessages = new HashMap<>();
 
@@ -273,6 +274,10 @@ public class ConfigSettings {
         return ahListingItemPublisher;
     }
 
+    public static List<String> getAHSortLore(){
+        return ahSortLore;
+    }
+
     //
 
     public static String getExtraMessage(String key){
@@ -351,6 +356,7 @@ public class ConfigSettings {
         ahListingItemLore = color(config.getStringList("ahListingItemLore"));
         ahListingItemBuyer = color(config.getStringList("ahListingItemBuyer"));
         ahListingItemPublisher = color(config.getStringList("ahListingItemPublisher"));
+        ahSortLore = config.getStringList("ahSortLore");
 
         extraMessages.clear();
 

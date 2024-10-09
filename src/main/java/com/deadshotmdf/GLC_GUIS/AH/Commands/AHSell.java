@@ -33,7 +33,7 @@ public class AHSell extends SubCommand<AHManager> {
         double sell_price = Math.max(GUIUtils.getDoubleOrDefault(args[1], 0.000), 0.000);
         double glcoins = args.length > 2 ? Math.max(GUIUtils.getDoubleOrDefault(args[2], 0.000), 0.000) : 0.000;
 
-        if(sell_price <= 0.000 || glcoins <= 0.000){
+        if(sell_price <= 0.000 && glcoins <= 0.000){
             player.sendMessage(ConfigSettings.getAHSellInvalidPries());
             return;
         }

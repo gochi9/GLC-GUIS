@@ -114,6 +114,14 @@ ahListingItemPublisher:
   - ' '
   - '&cRight click to retrieve'
 
+ahSortLore:
+  - 'PRICE_MAX'
+  - 'PRICE_MIN'
+  - 'GLCOINS_PRICE_MAX'
+  - 'GLCOINS_PRICE_MIN'
+  - 'NEWEST_ITEMS'
+  - 'OLDEST_ITEMS'
+
 #Used for button actions
 extraMessages:
   cannotAccessShopCategory: 'Go to spawn and search for the npc, you poor fuck'
