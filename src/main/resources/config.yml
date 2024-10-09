@@ -73,6 +73,38 @@ robbed: '&cThe sketchy dealer &6ran off &cafter inspecting your goods. You were 
 scammed: '&eAfter inspecting the money, you realize that &6{percent}%({value}) &eof it was fake. The person that you sold the items to &6claims to know nothing &eabout it.'
 mugged: '&cAfter selling your items, you felt the presence of &4multiple armed thugs. &cYou had no choice but to give up your money you just made, and your inventory to survive.'
 
+
+###################
+## AUCTION HOUSE ##
+###################
+
+itemExpired: '&cOne of your items expired'
+itemBought: '&aSomeone bought one of your items for {value}$ / {glcoins} GLCoins'
+boughtItem: '&aYou`ve bought the listen item for {value}$ / {glcoins} GLCoins'
+notEnoughFunds: '&cYou don`t {needed} for the current selected price. Balance: {balance}'
+
+transactionNoLonger: '&cThis item is no longer available'
+
+#Minutes
+#720 minutes = 12 hours
+ahItemExpireTime: 720
+
+#The lore that will be displayed at the bottom of the original item's lore
+ahListingItemLore:
+  - ' '
+  - '&cExpires on: {date}'
+  - '&7Price: &a{price}$ &7(Left click)'
+  - '&7GLCoins: &b{glcoins} &7(Shift right click)'
+
+#These ones will be displayed under ahListingItemLore, message depending on if you're a buyer, or the person who posted the item
+ahListingItemBuyer:
+  - ' '
+  - '&aLeft click to buy'
+
+ahListingItemPublisher:
+  - ' '
+  - '&cRight click to retrieve'
+
 #Used for button actions
 extraMessages:
   cannotAccessShopCategory: 'Go to spawn and search for the npc, you poor fuck'

@@ -23,7 +23,7 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
     protected final int size;
     protected final Map<Integer, Inventory> pageInventories;
     protected final Map<Integer, Map<Integer, GuiElement>> pageElements;
-    protected final int totalPages;
+    protected UUID viewer;
     protected GUI backGUI;
     protected String[] placeholders, replacements;
     private boolean changingPage;
@@ -48,8 +48,6 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
             pageInventories.put(entry.getKey(), inv);
             ++pages;
         }
-
-        this.totalPages = Math.max(1, pages);
     }
 
     @Override
@@ -77,13 +75,14 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
     public void open(HumanEntity player, int page, boolean onOpen){
         Inventory inventory = pageInventories.get(page);
 
-        if (page < 0 || page >= totalPages || inventory == null)
+        if (page < 0 || page >= getPageCount() || inventory == null)
             return;
 
         if(!onOpen)
             changingPage = true;
 
         player.openInventory(inventory);
+        changingPage = false;
     }
 
     @Override

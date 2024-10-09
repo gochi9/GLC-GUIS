@@ -10,7 +10,6 @@ import com.deadshotmdf.GLC_GUIS.General.Buttons.ButtonIdentifier;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import com.deadshotmdf.gLCoins_Server.EconomyWrapper;
-import com.iridium.iridiumcolorapi.IridiumColorAPI;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -39,10 +38,7 @@ public class BlackMarketItemButton extends AbstractButton {
         String mat = elementData.get("material");
         this.material = Material.getMaterial(mat != null ? mat.toUpperCase() : "DIRT");
         this.material = material != null ? this.material : Material.DIRT;
-
-        this.item = getItemStackClone(new String[]{"{blackMarketItemName}", "{blackMarketItemLore}"},
-                IridiumColorAPI.process(ConfigSettings.getBlackMarketItemName(GUIUtils.formatItemName(material.toString()))),
-                IridiumColorAPI.process(ConfigSettings.getBlackMarketLore(sell_value)));
+        updateLore();
     }
 
     @Override
@@ -96,9 +92,7 @@ public class BlackMarketItemButton extends AbstractButton {
         }
 
         this.sell_value = Math.max(0.000, this.sell_value - (amountRemoved * decrease_amount));
-        this.item = getItemStackClone(new String[]{"{blackMarketItemName}", "{blackMarketItemLore}"},
-                IridiumColorAPI.process(ConfigSettings.getBlackMarketItemName(GUIUtils.formatItemName(material.toString()))),
-                IridiumColorAPI.process(ConfigSettings.getBlackMarketLore(sell_value)));
+        updateLore();
         gui.refreshInventory();
     }
 
@@ -139,5 +133,11 @@ public class BlackMarketItemButton extends AbstractButton {
             break;
         }
         return amountRemoved;
+    }
+
+    private void updateLore(){
+        this.item = getItemStackClone(new String[]{"{blackMarketItemName}", "{blackMarketItemLore}"},
+                ConfigSettings.color(GUIUtils.formatItemName(material.toString())),
+                ConfigSettings.getBlackMarketLore(sell_value));
     }
 }

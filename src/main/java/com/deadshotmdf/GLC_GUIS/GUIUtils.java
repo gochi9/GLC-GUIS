@@ -18,6 +18,7 @@ import org.reflections.util.FilterBuilder;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -26,6 +27,7 @@ public class GUIUtils {
     private static final DecimalFormat df = new DecimalFormat("0.000");
     private static final Map<String, TriFunction<ItemStack, Object, GuiManager, String[], Map<String, String>, AbstractButton>> buttonMap = new HashMap<>();
     private static final Random random = new Random();
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
 
     static{
         Logger logger = Bukkit.getLogger();
@@ -80,6 +82,15 @@ public class GUIUtils {
         String formattedNumber = df.format(number);
 
         return formattedNumber.endsWith(".000") ? formattedNumber.substring(0, formattedNumber.indexOf('.')) : formattedNumber;
+    }
+
+    public static UUID getUUID(String id){
+        try{
+            return UUID.fromString(id);
+        }
+        catch (Throwable ignored){
+            return null;
+        }
     }
 
     public static UUID getUniqueID(Map<UUID, ?> map){
@@ -166,6 +177,11 @@ public class GUIUtils {
             case FORMULA -> cell.getCellFormula();
             default -> "";
         };
+    }
+
+    public static String convertMillisToDate(long milliseconds) {
+        Date date = new Date(milliseconds);
+        return dateFormat.format(date);
     }
 
     public static Set<Integer> getSlots(String from){

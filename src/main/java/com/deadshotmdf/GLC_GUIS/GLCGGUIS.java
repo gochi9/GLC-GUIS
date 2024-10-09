@@ -1,5 +1,6 @@
 package com.deadshotmdf.GLC_GUIS;
 
+import com.deadshotmdf.GLC_GUIS.AH.AHCommand;
 import com.deadshotmdf.GLC_GUIS.AH.AHManager;
 import com.deadshotmdf.GLC_GUIS.ActionHouse.ActionHouseManager;
 import com.deadshotmdf.GLC_GUIS.BlackMarket.Commands.BlackmarketCommand;
@@ -49,11 +50,13 @@ public final class GLCGGUIS extends JavaPlugin {
         this.getCommand("shop").setExecutor(new OpenShopCommand(guiManager));
         this.getCommand("glcguis").setExecutor(new ReloadConfigCommand(this, guiManager));
         this.getCommand("blackmarket").setExecutor(new BlackmarketCommand(this, blackMarketManager));
+        this.getCommand("ah").setExecutor(new AHCommand(actionHouseManager));
     }
 
     @Override
     public void onDisable() {
         this.blackMarketManager.saveInformation();
+        this.actionHouseManager.saveInformation();
     }
 
     private boolean setupEconomy() {

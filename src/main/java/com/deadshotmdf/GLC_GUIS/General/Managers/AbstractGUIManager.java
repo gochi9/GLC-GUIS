@@ -1,5 +1,6 @@
 package com.deadshotmdf.GLC_GUIS.General.Managers;
 
+import com.deadshotmdf.GLC_GUIS.ConfigSettings;
 import com.deadshotmdf.GLC_GUIS.GUIUtils;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.*;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.Generic.Label;
@@ -67,7 +68,7 @@ public abstract class AbstractGUIManager extends InformationHolder{
             return;
         }
 
-        String title = ChatColor.translateAlternateColorCodes('&', guiSection.getString("title", "Default Title"));
+        String title = ConfigSettings.color(guiSection.getString("title", "Default Title"));
         int size = guiSection.getInt("size", 27);
         boolean perPlayer = guiSection.getBoolean("per_player", false);
 
@@ -256,7 +257,7 @@ public abstract class AbstractGUIManager extends InformationHolder{
     }
 
     protected GUI specifyGUI(boolean perPlayer, GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> mergedPages, String type){
-        return perPlayer ? new PerPlayerGUI<>(guiManager, this, title, size, mergedPages, null) : new SharedGUI<>(guiManager, this, title, size, mergedPages);
+        return perPlayer ? new PerPlayerGUI<>(guiManager, this, title, size, mergedPages, null, null) : new SharedGUI<>(guiManager, this, title, size, mergedPages);
     }
 
     private ItemStack parseItem(Map<String, String> elementData) {
@@ -276,13 +277,13 @@ public abstract class AbstractGUIManager extends InformationHolder{
 
         String name = elementData.get("name");
         if (name != null && !name.isEmpty())
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', IridiumColorAPI.process(name)));
+            meta.setDisplayName(ConfigSettings.color(name));
 
         String loreStr = elementData.get("lore");
         if (loreStr != null && !loreStr.isEmpty())
             meta.setLore(Arrays.stream(loreStr.split("\\n|\\|"))
                     .map(String::trim)
-                    .map(line -> ChatColor.translateAlternateColorCodes('&', IridiumColorAPI.process(line)))
+                    .map(ConfigSettings::color)
                     .collect(Collectors.toList()));
 
         meta.setCustomModelData(1010);

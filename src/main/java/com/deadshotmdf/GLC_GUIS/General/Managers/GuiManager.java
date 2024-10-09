@@ -78,10 +78,14 @@ public class GuiManager {
         });
     }
 
-    public void refreshInventories(Class<?> cl) {
-        for (GUI gui : guiTemplates.values())
-            if (cl.isAssignableFrom(gui.getClass()))
-                gui.refreshInventory();
+    public void refreshInventories(Class<?>... cls) {
+        if(cls.length == 0)
+            return;
+
+        for (GUI gui : openGuis.values())
+            for(Class<?> cl : cls)
+                if (cl.isAssignableFrom(gui.getClass()))
+                    gui.refreshInventory();
     }
 
 }

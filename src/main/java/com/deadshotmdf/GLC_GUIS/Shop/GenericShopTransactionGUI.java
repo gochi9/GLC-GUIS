@@ -30,8 +30,8 @@ public class GenericShopTransactionGUI extends PerPlayerGUI<ShopManager> {
     private final int max_sell;
     private int amount;
 
-    public GenericShopTransactionGUI(GuiManager guiManager, ShopManager correspondentManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, GUI backGUI, String... args) {
-        super(guiManager, correspondentManager, title, size, pageElements, backGUI, args);
+    public GenericShopTransactionGUI(GuiManager guiManager, ShopManager correspondentManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, GUI backGUI, UUID viewer, String... args) {
+        super(guiManager, correspondentManager, title, size, pageElements, backGUI, viewer, args);
         this.isBuy = GUIUtils.retrieveFrom("buying", ":", args).equalsIgnoreCase("true");
         this.material = Material.getMaterial(GUIUtils.retrieveFrom("material", ":", args));
         this.item_name = GUIUtils.retrieveFrom("item_name", ":", args);
@@ -89,7 +89,7 @@ public class GenericShopTransactionGUI extends PerPlayerGUI<ShopManager> {
 
     @Override
     protected GUI createNewInstance(UUID player, GUI backGUI, String... args) {
-        return new GenericShopTransactionGUI(guiManager, correspondentManager, title, size, pageElements, backGUI, args);
+        return new GenericShopTransactionGUI(guiManager, correspondentManager, title, size, pageElements, backGUI, player, args);
     }
 
     private boolean noLongerUseful(GenericShopChangeAmount button){

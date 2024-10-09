@@ -1,5 +1,6 @@
 package com.deadshotmdf.GLC_GUIS;
 
+import com.iridium.iridiumcolorapi.IridiumColorAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -52,6 +53,18 @@ public class ConfigSettings {
     private static String robbed;
     private static String scammed;
     private static String mugged;
+
+    //AH
+    private static long ahItemExpireTime;
+
+    private static String itemExpired;
+    private static String itemBought;
+    private static String boughtItem;
+    private static String notEnoughFunds;
+    private static String transactionNoLonger;
+    private static List<String> ahListingItemLore;
+    private static List<String> ahListingItemBuyer;
+    private static List<String> ahListingItemPublisher;
 
     private static final HashMap<String, String> extraMessages = new HashMap<>();
 
@@ -188,6 +201,43 @@ public class ConfigSettings {
         return mugged;
     }
 
+    //AH
+    public static long getAhItemExpireTime(){
+        return ahItemExpireTime;
+    }
+
+    public static String getItemExpired(){
+        return itemExpired;
+    }
+
+    public static String getItemBought(double value, double glcoins){
+        return itemBought.replace("{value}", GUIUtils.getDigits(value)).replace("{glcoins}", GUIUtils.getDigits(glcoins));
+    }
+
+    public static String getBoughtItem(double value, double glcoins){
+        return boughtItem.replace("{value}", GUIUtils.getDigits(value)).replace("{glcoins}", GUIUtils.getDigits(glcoins));
+    }
+
+    public static String getNotEnoughFunds(double needed, double balance){
+        return notEnoughFunds.replace("{needed}", GUIUtils.getDigits(needed)).replace("{balance}", GUIUtils.getDigits(balance));
+    }
+
+    public static String getTransactionNoLonger(){
+        return transactionNoLonger;
+    }
+
+    public static List<String> getAhListingItemLore(){
+        return ahListingItemLore;
+    }
+
+    public static List<String> getAhListingItemBuyer(){
+        return ahListingItemBuyer;
+    }
+
+    public static List<String> getAhListingItemPublisher(){
+        return ahListingItemPublisher;
+    }
+
     //
 
     public static String getExtraMessage(String key){
@@ -248,6 +298,18 @@ public class ConfigSettings {
         scammed = color(config.getString("scammed"));
         mugged = color(config.getString("mugged"));
 
+        //AH
+        long expire = config.getLong("ahItemExpireTime");
+        ahItemExpireTime = TimeUnit.MINUTES.toMillis(Math.max(1, expire));
+        itemExpired = color(config.getString("itemExpired"));
+        itemBought = color(config.getString("itemBought"));
+        boughtItem = color(config.getString("boughtItem"));
+        notEnoughFunds = color(config.getString("notEnoughFunds"));
+        transactionNoLonger = color(config.getString("transactionNoLonger"));
+        ahListingItemLore = color(config.getStringList("ahListingItemLore"));
+        ahListingItemBuyer = color(config.getStringList("ahListingItemBuyer"));
+        ahListingItemPublisher = color(config.getStringList("ahListingItemPublisher"));
+
         extraMessages.clear();
 
         ConfigurationSection section = config.getConfigurationSection("settings");
@@ -264,7 +326,7 @@ public class ConfigSettings {
     }
 
     public static String color(String s){
-        return ChatColor.translateAlternateColorCodes('&', s);
+        return IridiumColorAPI.process(ChatColor.translateAlternateColorCodes('&', s));
     }
 
     public static List<String> color(List<String> list) {
