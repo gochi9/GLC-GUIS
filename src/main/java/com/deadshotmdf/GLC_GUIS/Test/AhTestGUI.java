@@ -18,6 +18,7 @@ public class AhTestGUI extends PerPlayerGUI<ActionHouseManager> {
     public AhTestGUI(GuiManager guiManager, ActionHouseManager correspondentManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, GUI backGUI, String... args) {
         super(guiManager, correspondentManager, title, size, pageElements, backGUI, args);
         this.savedTemplate = pageElements.get(0);
+        this.backGUI = null;
     }
 
     @Override

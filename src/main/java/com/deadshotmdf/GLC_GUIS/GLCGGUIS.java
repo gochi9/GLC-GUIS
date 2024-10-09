@@ -74,4 +74,8 @@ public final class GLCGGUIS extends JavaPlugin {
     public GuiManager getGuiManager(){
         return guiManager;
     }
+
+    public ShopManager shopManager(){
+        return shopManager;
+    }
 }
