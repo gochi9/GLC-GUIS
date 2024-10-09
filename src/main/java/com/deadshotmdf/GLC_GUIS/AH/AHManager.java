@@ -4,11 +4,15 @@ import com.deadshotmdf.GLC_GUIS.AH.Objects.AHMainGUI;
 import com.deadshotmdf.GLC_GUIS.AH.Objects.AHPlayerStashGUI;
 import com.deadshotmdf.GLC_GUIS.AH.Objects.AhSharedGUI;
 import com.deadshotmdf.GLC_GUIS.ConfigSettings;
+import com.deadshotmdf.GLC_GUIS.GLCGGUIS;
 import com.deadshotmdf.GLC_GUIS.GUIUtils;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.GuiElement;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.AbstractGUIManager;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
+import com.deadshotmdf.gLCoins_Server.EconomyWrapper;
+import com.deadshotmdf.gLCoins_Server.GLCoinsS;
+import com.deadshotmdf.glccoinscommon.ModifyType;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.HumanEntity;
@@ -67,7 +71,8 @@ public class AHManager extends AbstractGUIManager {
             return;
 
         boolean buy = buyer != null;
-        Player seller = Bukkit.getPlayer(transaction.getPublisher());
+        UUID publisher = transaction.getPublisher();
+        Player seller = Bukkit.getPlayer(publisher);
 
         if(buy && buyer.isOnline())
             buyer.sendMessage(ConfigSettings.getBoughtItem(sell_amount, glcoins));
@@ -75,7 +80,19 @@ public class AHManager extends AbstractGUIManager {
         if(seller != null && seller.isOnline() && (buy || onExpire))
             seller.sendMessage(buy ? ConfigSettings.getItemBought(sell_amount, glcoins) : ConfigSettings.getItemExpired());
 
-        UUID uuid = buy ? buyer.getUniqueId() : transaction.getPublisher();
+        UUID uuid = buy ? buyer.getUniqueId() : publisher;
+
+        EconomyWrapper economy = GLCGGUIS.getEconomy();
+        if(buy){
+            if(sell_amount > 0.000){
+                economy.withdrawPlayer(buyer, sell_amount);
+                economy.depositPlayer(Bukkit.getOfflinePlayer(publisher), sell_amount);
+            }
+            if(glcoins > 0.000){
+                GLCoinsS.getDatabase().modifyEntryAsync(buyer.getUniqueId(), glcoins, ModifyType.REMOVE, null);
+                GLCoinsS.getDatabase().modifyEntryAsync(publisher, glcoins, ModifyType.ADD, null);
+            }
+        }
 
         transactions.remove(transaction.getTransactionID());
         transaction.setNoLongerValid();
