@@ -22,7 +22,7 @@ public class BackButton extends AbstractButton {
     @Override
     public void onClick(InventoryClickEvent ev, GUI gui, Object... args) {
         if(gui.getBackGUI() != null)
-            guiManager.commenceOpen((Player)ev.getWhoClicked(), gui.getBackGUI(), gui);
+            guiManager.commenceOpen((Player)ev.getWhoClicked(), gui.getBackGUI(), gui.getBackGUI().getBackGUI());
         else
             guiManager.removeOpenGui(ev.getWhoClicked(), false);
     }
