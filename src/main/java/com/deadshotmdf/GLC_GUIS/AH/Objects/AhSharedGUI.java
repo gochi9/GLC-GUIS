@@ -109,7 +109,7 @@ public abstract class AhSharedGUI extends PerPlayerGUI<AHManager> {
         pageInventories.entrySet().removeIf(k -> k.getKey() > finalPage);
         super.refreshInventory();
         redirectFolk();
-        updateTitle();
+        updateTitle(getPageCount());
     }
 
     private Comparator<AHTransaction> getComparator(SortType sortType) {

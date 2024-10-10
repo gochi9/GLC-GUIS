@@ -77,6 +77,7 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
     public void open(HumanEntity player, int page, boolean onOpen){
         Inventory inventory = pageInventories.get(page);
 
+        int max = getPageCount();
         if (page < 0 || page >= getPageCount() || inventory == null)
             return;
 
@@ -85,7 +86,7 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
 
         player.openInventory(inventory);
         changingPage = false;
-        updateTitle();
+        updateTitle(max);
     }
 
     @Override
@@ -169,9 +170,8 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
         new HashSet<>(pageInventories.values()).forEach(inv -> new HashSet<>(inv.getViewers()).forEach(HumanEntity::closeInventory));
     }
 
-    public void updateTitle(){
-        int max = getPageCount();
-        if(isShared() || viewer == null || max <= 1)
+    public void updateTitle(Integer max){
+        if(isShared() || viewer == null || (max != null ? max : (max = getPageCount())) < 0)
             return;
 
         Player player = Bukkit.getPlayer(viewer);
@@ -181,7 +181,7 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
 
         int page = getPageByInventory(player);
 
-        if(page++ == -1)
+        if(page++ < -1)
             return;
 
         try{
