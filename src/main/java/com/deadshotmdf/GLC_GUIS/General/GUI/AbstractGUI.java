@@ -4,11 +4,13 @@ import com.deadshotmdf.GLC_GUIS.General.Buttons.GuiElement;
 import com.deadshotmdf.GLC_GUIS.General.Managers.AbstractGUIManager;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,15 +40,15 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
         this.pageElements = pageElements;
         this.args = args;
 
-        int pages = 0;
         if(pageElements.isEmpty() || pageElements.get(0) == null)
             pageInventories.put(0, Bukkit.createInventory(null, size, title));
 
+        int page = 1;
+        int maxPage = pageElements.size();
         for(Map.Entry<Integer, Map<Integer, GuiElement>> entry : pageElements.entrySet()){
-            Inventory inv = Bukkit.createInventory(null, size, title);
+            Inventory inv = Bukkit.createInventory(null, size, maxPage == 1 ? title : title + ChatColor.GRAY + " (" + page++ + "/" + maxPage + ")");
             entry.getValue().forEach((slot, element) -> inv.setItem(slot, element.getItemStackClone(null)));
             pageInventories.put(entry.getKey(), inv);
-            ++pages;
         }
     }
 
@@ -83,6 +85,7 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
 
         player.openInventory(inventory);
         changingPage = false;
+        updateTitle();
     }
 
     @Override
@@ -164,6 +167,29 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
     @Override
     public void forceClose(){
         new HashSet<>(pageInventories.values()).forEach(inv -> new HashSet<>(inv.getViewers()).forEach(HumanEntity::closeInventory));
+    }
+
+    public void updateTitle(){
+        int max = getPageCount();
+        if(isShared() || viewer == null || max <= 1)
+            return;
+
+        Player player = Bukkit.getPlayer(viewer);
+
+        if(player == null || !player.isOnline())
+            return;
+
+        int page = getPageByInventory(player);
+
+        if(page++ == -1)
+            return;
+
+        try{
+            InventoryView view = player.getOpenInventory();
+            String title = view.getOriginalTitle();
+            view.setTitle(title + ChatColor.GRAY + " (" + page + "/" + max + ")");
+        }
+        catch(Throwable ignored){}
     }
 
 }
