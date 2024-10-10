@@ -166,7 +166,7 @@ public class GUIUtils {
 
         for (String word : material.toLowerCase().split("_"))
             if (!word.isEmpty())
-                result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1));
+                result.append(" ").append(Character.toUpperCase(word.charAt(0))).append(word.substring(1));
 
         return result.toString();
     }

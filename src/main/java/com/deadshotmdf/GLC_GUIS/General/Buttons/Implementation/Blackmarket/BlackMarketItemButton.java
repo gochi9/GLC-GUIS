@@ -137,7 +137,7 @@ public class BlackMarketItemButton extends AbstractButton {
 
     private void updateLore(){
         this.item = getItemStackClone(new String[]{"{blackMarketItemName}", "{blackMarketItemLore}"},
-                ConfigSettings.color(GUIUtils.formatItemName(material.toString())),
+                ConfigSettings.getBlackMarketItemName(GUIUtils.formatItemName(material.toString())),
                 ConfigSettings.getBlackMarketLore(sell_value));
     }
 }

@@ -179,7 +179,7 @@ public class ConfigSettings {
     }
 
     public static String getBlackMarketItemName(String name){
-        return blackMarketItemName.replace("{name}", name);
+        return color(blackMarketItemName.replace("{name}", name));
     }
 
     public static String getBlackMarketLore(double value){
@@ -334,7 +334,7 @@ public class ConfigSettings {
         npcName = color(config.getString("npcName"));
         npcSkin = color(config.getString("npcSkin"));
         soldItemBlackmarket = color(config.getString("soldItemBlackmarket"));
-        blackMarketItemName = color(config.getString("blackMarketItemName"));
+        blackMarketItemName = config.getString("blackMarketItemName");
         blackMarketLore = color(config.getString("blackMarketLore"));
         openBlackmarketGUIHelpMessage = color(config.getString("openBlackmarketGUIHelpMessage"));
         noBlackmarket = color(config.getString("noBlackmarket"));

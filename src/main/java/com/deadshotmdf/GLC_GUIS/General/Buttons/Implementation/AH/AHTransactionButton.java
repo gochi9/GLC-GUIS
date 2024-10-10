@@ -65,7 +65,7 @@ public class AHTransactionButton extends AbstractButton {
 
         ClickType click = ev.getClick();
 
-        if(isPublisher || whoClicked.hasPermission("glcguis.ahremoveothers")){
+        if(isPublisher || (click == ClickType.RIGHT && whoClicked.hasPermission("glcguis.ahremoveothers"))){
             if(click != ClickType.RIGHT)
                 return;
 
@@ -86,8 +86,11 @@ public class AHTransactionButton extends AbstractButton {
         if(!isGLCoinsPay && click != ClickType.LEFT)
             return;
 
+        double price = transaction.getSellAmount();
+        double glcoins = transaction.getGLCoinsSellAmount();
+
         long current = System.currentTimeMillis();
-        if((isGLCoinsPay && shift_right - current <= 0) || (!isGLCoinsPay && left - current <= 0)){
+        if((isGLCoinsPay && glcoins > 0.000 && shift_right - current <= 0) || (!isGLCoinsPay && price > 0.000 && left - current <= 0)){
             if(isGLCoinsPay)
                 shift_right = current + 3000;
             else
@@ -97,8 +100,6 @@ public class AHTransactionButton extends AbstractButton {
             return;
         }
 
-        double price = transaction.getGLCoinsSellAmount();
-        double glcoins = transaction.getGLCoinsSellAmount();
         if(isGLCoinsPay && glcoins <= 0.000 || !isGLCoinsPay && price <= 0.000)
             return;
 

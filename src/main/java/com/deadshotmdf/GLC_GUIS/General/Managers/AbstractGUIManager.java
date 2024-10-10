@@ -190,13 +190,16 @@ public abstract class AbstractGUIManager extends InformationHolder{
                     continue;
 
                 int page = parsePageNumber(elementData.get("page"));
-                Set<Integer> slots = needs_specific_slots ? GUIUtils.getSlots(elementData.get("slots")) : Set.of(++slot_not_needed);
+                Set<Integer> slots = GUIUtils.getSlots(elementData.get("slots"));
 
                 if(slots.isEmpty())
                     slots = GUIUtils.getSlots(elementData.get("slot"));
 
                 if (slots.isEmpty())
-                    continue;
+                    if(needs_specific_slots)
+                        slots = Set.of(++slot_not_needed);
+                    else
+                        continue;
 
                 slots.forEach(slot ->{
                     if(page < 0)
