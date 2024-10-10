@@ -8,6 +8,7 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -166,9 +167,10 @@ public class GUIUtils {
 
         for (String word : material.toLowerCase().split("_"))
             if (!word.isEmpty())
-                result.append(" ").append(Character.toUpperCase(word.charAt(0))).append(word.substring(1));
+                result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
 
-        return result.toString();
+        String res = result.toString();
+        return StringUtils.substring(res, 0, res.length() - 1);
     }
 
     public static String getCellValueAsString(Cell cell) {
