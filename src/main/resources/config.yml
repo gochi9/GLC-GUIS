@@ -133,6 +133,12 @@ loaderHologramLines:
   - '&6Chunk Loader'
   - '&eTime left: &a{left}'
 
+chunkCollectorItemName: '&6{name} - &7[{amount}/{maxAmount}]'
+chunkCollectorItemLore:
+  - ' '
+  - '&6Withdraw - &7(Left Click)'
+  - '&6Sell - &a{sell}$ &6 - &7(Right Click)'
+
 #Used for button actions
 extraMessages:
   cannotAccessShopCategory: 'Go to spawn and search for the npc, you poor fuck'

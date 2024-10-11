@@ -7,16 +7,15 @@ import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.AH.AHPlayerStashR
 import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.AH.AHSort;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.AH.AHTransactionButton;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
-import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerGUI;
+import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerPagedGUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public abstract class AhSharedGUI extends PerPlayerGUI<AHManager> {
+public abstract class AhSharedGUI extends PerPlayerPagedGUI<AHManager, AHTransaction> {
 
     private final Map<Integer, GuiElement> savedTemplate;
     private SortType currentSortType = SortType.NEWEST_ITEMS;
@@ -43,73 +42,45 @@ public abstract class AhSharedGUI extends PerPlayerGUI<AHManager> {
     }
 
     @Override
-    public void refreshInventory() {
+    protected void beforeRefreshInventory() {
         savedTemplate.values().forEach(guiElement -> {
-            if(guiElement instanceof AHSort ahSort)
+            if (guiElement instanceof AHSort ahSort)
                 ahSort.updateLore(this);
         });
-        this.pageElements.clear();
-        this.pageElements.put(0, new HashMap<>(savedTemplate));
-        Inventory first = pageInventories.get(0);
+    }
 
-        deletePages();
-
-        this.pageInventories.put(0, first != null ? first : (first = Bukkit.createInventory(null, size, title)));
-        first.clear();
-
+    @Override
+    protected List<AHTransaction> getItemsToDisplay() {
         boolean isMain = isMainAHGUI();
         List<AHTransaction> transactions = new ArrayList<>(isMain ? correspondentManager.getTransactions().values() : correspondentManager.getPlayerStash(viewer));
 
-        int currentPage = 0;
-        Map<Integer, GuiElement> elements = pageElements.get(currentPage);
-
-        if (elements == null)
-            return;
-
-        List<Integer> emptySlots = getEmptySlots(elements);
         transactions.removeIf(transaction -> (isMain && !transaction.isStillValid()) || (!isMain && !transaction.doesExist()));
 
-        SortType sortType = getCurrentSortType();
-
-        Comparator<AHTransaction> comparator = getComparator(sortType);
+        Comparator<AHTransaction> comparator = getComparator(currentSortType);
         if (comparator != null)
             transactions.sort(comparator);
 
-        Iterator<AHTransaction> transactionIterator = transactions.iterator();
-        while (transactionIterator.hasNext()) {
-            for (int slot : emptySlots) {
-                if (!transactionIterator.hasNext())
-                    break;
+        return transactions;
+    }
 
-                AHTransaction transaction = transactionIterator.next();
+    @Override
+    protected GuiElement createGuiElement(AHTransaction transaction) {
+        boolean isMain = isMainAHGUI();
 
-                if (transaction == null)
-                    continue;
+        ItemStack item = transaction.getItem().clone();
+        Map<String, String> info = Map.of("transaction_id", transaction.getTransactionID().toString(), "viewer", viewer.toString());
 
-                ItemStack item = transaction.getItem().clone();
-                Map<String, String> info = Map.of("transaction_id", transaction.getTransactionID().toString(), "viewer", viewer.toString());
-                GuiElement guiElement = isMain ? new AHTransactionButton(item, correspondentManager, guiManager, null, info) : new AHPlayerStashRetrive(item, correspondentManager, guiManager, null, info);
+        GuiElement guiElement = isMain ? new AHTransactionButton(item, correspondentManager, guiManager, null, info) : new AHPlayerStashRetrive(item, correspondentManager, guiManager, null, info);
 
-                if (guiElement instanceof AHPlayerStashRetrive button)
-                    button.setTransaction(transaction);
+        if (guiElement instanceof AHPlayerStashRetrive button)
+            button.setTransaction(transaction);
 
-                elements.put(slot, guiElement);
-            }
+        return guiElement;
+    }
 
-            if (!transactionIterator.hasNext())
-                break;
-
-            pageInventories.computeIfAbsent(++currentPage, _ -> Bukkit.createInventory(null, size, title));
-            elements = pageElements.computeIfAbsent(currentPage, _ -> new HashMap<>());
-            elements.putAll(savedTemplate);
-            emptySlots = getEmptySlots(elements);
-        }
-
-        int finalPage = currentPage;
-        pageInventories.entrySet().removeIf(k -> k.getKey() > finalPage);
-        super.refreshInventory();
+    @Override
+    protected void afterRefreshInventory() {
         redirectFolk();
-        updateTitle(getPageCount());
     }
 
     private Comparator<AHTransaction> getComparator(SortType sortType) {
@@ -125,15 +96,6 @@ public abstract class AhSharedGUI extends PerPlayerGUI<AHManager> {
             case NEWEST_ITEMS -> Comparator.comparingLong(AHTransaction::getExpire).reversed();
             case OLDEST_ITEMS -> Comparator.comparingLong(AHTransaction::getExpire);
         };
-    }
-
-    private List<Integer> getEmptySlots(Map<Integer, GuiElement> elements) {
-        List<Integer> emptySlots = new LinkedList<>();
-        for (int i = 0; i < size; i++)
-            if (!elements.containsKey(i))
-                emptySlots.add(i);
-
-        return emptySlots;
     }
 
     private void redirectFolk() {

@@ -26,6 +26,10 @@ public class ShopManager extends AbstractGUIManager {
         return prices.get(material);
     }
 
+    public EnumMap<Material, Double> getPrices() {
+        return prices;
+    }
+
     @Override
     protected GuiElement enhanceGuiElement(String specialType, ItemStack item, Map<String, String> extraValues, GuiElement element, String action, String[] args) {
         if(item == null)

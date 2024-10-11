@@ -46,7 +46,7 @@ public final class GLCGGUIS extends JavaPlugin {
         this.shopManager = new ShopManager(guiManager, this);
         this.actionHouseManager = new AHManager(guiManager, this);
         this.blackMarketManager = new BlackMarketManager(guiManager, this);
-        this.specialBlocksManager = new SpecialBlocksManager(guiManager, this);
+        this.specialBlocksManager = new SpecialBlocksManager(guiManager, this, this.shopManager.getPrices());
 
         this.guiManager.reloadConfig();
 

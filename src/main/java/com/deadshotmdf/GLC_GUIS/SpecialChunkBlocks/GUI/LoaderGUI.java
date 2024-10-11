@@ -30,7 +30,7 @@ public class LoaderGUI extends PerPlayerGUI<SpecialBlocksManager> {
 
     @Override
     protected GUI createNewInstance(UUID player, GUI backGUI, Object... args) {
-        return new LoaderGUI(guiManager, correspondentManager, title, size, new HashMap<>(pageElements), backGUI, player, args);
+        return new LoaderGUI(guiManager, correspondentManager, title, size, pageElements, backGUI, player, args);
     }
 
     @Override

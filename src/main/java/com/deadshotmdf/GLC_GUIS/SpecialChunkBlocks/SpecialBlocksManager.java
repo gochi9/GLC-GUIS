@@ -8,6 +8,7 @@ import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.AbstractGUIManager;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.API.SpecialBlockRemoveEvent;
+import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.GUI.CollectorGUI;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.GUI.LoaderGUI;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Misc.ChunkPair;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Misc.SpecialBlockUtils;
@@ -15,20 +16,14 @@ import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocks.ChunkLoader;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocks.SpecialBlockType;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocks.SpecialChunkBlock;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Timers.LoaderTimer;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -38,15 +33,17 @@ public class SpecialBlocksManager extends AbstractGUIManager {
     private final NamespacedKey specialKey, loaderKey;
     private final Map<Location, SpecialChunkBlock> blocks;
     private final HashSet<ChunkPair> loadedChunks;
+    private final EnumMap<Material, Double> sellValues;
     private GiveableSpecialChunkBlock loader, collector;
     private GUI loaderGUI, collectorGUI;
 
-    public SpecialBlocksManager(GuiManager guiManager, JavaPlugin plugin) {
+    public SpecialBlocksManager(GuiManager guiManager, JavaPlugin plugin, EnumMap<Material, Double> sellValues) {
         super(guiManager, plugin, new File(plugin.getDataFolder(), "guis/specialblocks/"), new File(plugin.getDataFolder(), "data/specialblocks.yml"));
         this.blocks = new ConcurrentHashMap<>();
         this.specialKey = new NamespacedKey(plugin, "itf4if-3ffd-g3t-t3yp33e_plg445in");
         this.loaderKey = new NamespacedKey(plugin, "l0ade3er-k33kyd-plgguin43jf-34rf");
         this.loadedChunks = new HashSet<>();
+        this.sellValues = sellValues;
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, new LoaderTimer(plugin, this, blocks), 20L, 20L);
         loadInformation();
     }
@@ -162,9 +159,13 @@ public class SpecialBlocksManager extends AbstractGUIManager {
     protected GUI specifyGUI(boolean perPlayer, GuiManager guiManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> mergedPages, String type){
         return switch (type != null ? type.toUpperCase() : "null") {
             case "CHUNK_LOADER" -> (loaderGUI = new LoaderGUI(guiManager, this, title, size, mergedPages, null, null));
-          //  case "AH_PLAYER_STASH" -> (player_stash = new AHPlayerStashGUI(guiManager, this, title, size, mergedPages, null, null));
+            case "CHUNK_COLLECTOR" -> (collectorGUI = new CollectorGUI(guiManager, this, title, size, mergedPages, null, null));
             default -> super.specifyGUI(perPlayer, guiManager, title, size, mergedPages, type);
         };
+    }
+
+    public EnumMap<Material, Double> getPrices(){
+        return sellValues;
     }
 
     @Override

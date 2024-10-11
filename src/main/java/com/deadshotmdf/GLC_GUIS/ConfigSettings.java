@@ -87,6 +87,9 @@ public class ConfigSettings {
     private static String timeLeftFormat;
     private static List<String> loaderHologramLines;
 
+    private static String chunkCollectorItemName;
+    private static List<String> chunkCollectorItemLore;
+
     private static final HashMap<String, String> extraMessages = new HashMap<>();
 
     public static String getReloadConfig(){
@@ -322,6 +325,16 @@ public class ConfigSettings {
 
     public static List<String> getLoaderHologramLines(int totalSeconds) {
         return replaceList(loaderHologramLines, loaderHologramPlaceholder, getTimeLeftFormat(totalSeconds));
+    }
+
+    public static String getChunkCollectorItemName(String name, int amount, int maxAmount){
+        return chunkCollectorItemName.replace("{name}", name).replace("{amount}", s(amount)).replace("{maxAmount}", s(maxAmount));
+    }
+
+    private static final String[] chunkCollectorItemLorePlaceholder = {"{sell}"};
+
+    public static List<String> getChunkCollectorItemLore(double sell){
+        return replaceList(chunkCollectorItemLore, chunkCollectorItemLorePlaceholder, GUIUtils.getDigits(sell));
     }
 
     //

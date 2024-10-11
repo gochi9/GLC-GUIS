@@ -22,7 +22,6 @@ public class AHPlayerStashGUI extends AhSharedGUI {
 
     @Override
     protected GUI createNewInstance(UUID uuid, GUI backGUI, Object... args) {
-        return new AHPlayerStashGUI(guiManager, correspondentManager, title, size, new HashMap<>(pageElements), backGUI, uuid, args);
+        return new AHPlayerStashGUI(guiManager, correspondentManager, title, size, pageElements, backGUI, uuid, args);
     }
-
 }
