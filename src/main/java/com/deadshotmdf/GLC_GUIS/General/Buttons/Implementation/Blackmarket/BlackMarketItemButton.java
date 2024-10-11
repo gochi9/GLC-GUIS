@@ -74,7 +74,7 @@ public class BlackMarketItemButton extends AbstractButton {
                 player.sendMessage(ConfigSettings.getRobbed());
                 break;
 
-            case SCAMMED:
+            case SCAM:
                 double percentReceived = GUIUtils.getRandomDouble(ConfigSettings.getScammedMinPercent(), ConfigSettings.getScammedMaxPercent());
                 double moneyReceived = totalValue * (percentReceived / 100.0);
                 player.sendMessage(ConfigSettings.getSoldItemBlackmarket(amountRemoved, totalValue));

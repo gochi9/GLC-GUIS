@@ -1,12 +1,18 @@
 package com.deadshotmdf.GLC_GUIS;
 
 import com.iridium.iridiumcolorapi.IridiumColorAPI;
-import org.bukkit.Bukkit;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.HumanEntity;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,8 +63,7 @@ public class ConfigSettings {
 
     //AH
     private static long ahItemExpireTime;
-
-    private static String itemExpired;
+    private static String itemAHExpired;
     private static String itemBought;
     private static String boughtItem;
     private static String notEnoughFunds;
@@ -75,6 +80,12 @@ public class ConfigSettings {
     private static List<String> ahListingItemBuyer;
     private static List<String> ahListingItemPublisher;
     private static List<String> ahSortLore;
+
+    //Special Chunk Blocks
+    private static String itemExpired;
+    private static String dateFormat;
+    private static String timeLeftFormat;
+    private static List<String> loaderHologramLines;
 
     private static final HashMap<String, String> extraMessages = new HashMap<>();
 
@@ -216,8 +227,8 @@ public class ConfigSettings {
         return ahItemExpireTime;
     }
 
-    public static String getItemExpired(){
-        return itemExpired;
+    public static String getItemAHExpired(){
+        return itemAHExpired;
     }
 
     public static String getItemBought(double value, double glcoins){
@@ -284,6 +295,35 @@ public class ConfigSettings {
         return ahSortLore;
     }
 
+    //Special Chunk Block
+    public static String getItemExpired(){
+        return itemExpired;
+    }
+
+    public static String getDateFormat() {
+        return dateFormat;
+    }
+
+    public static String getTimeLeftFormat(int totalSeconds) {
+        Duration duration = Duration.ofSeconds(totalSeconds);
+
+        long days = duration.toDays();
+        duration = duration.minusDays(days);
+
+        long hours = duration.toHours();
+        duration = duration.minusHours(hours);
+
+        long minutes = duration.toMinutes();
+        long seconds = duration.minusMinutes(minutes).getSeconds();
+        return timeLeftFormat.replace("{days}", s(days)).replace("{hours}", s(hours)).replace("{minutes}", s(minutes)).replace("{seconds}", s(seconds));
+    }
+
+    private static final String[] loaderHologramPlaceholder = {"{left}"};
+
+    public static List<String> getLoaderHologramLines(int totalSeconds) {
+        return replaceList(loaderHologramLines, loaderHologramPlaceholder, getTimeLeftFormat(totalSeconds));
+    }
+
     //
 
     public static String getExtraMessage(String key){
@@ -347,7 +387,7 @@ public class ConfigSettings {
         //AH
         long expire = config.getLong("ahItemExpireTime");
         ahItemExpireTime = TimeUnit.MINUTES.toMillis(Math.max(1, expire));
-        itemExpired = color(config.getString("itemExpired"));
+        itemAHExpired = color(config.getString("itemAHExpired"));
         itemBought = color(config.getString("itemBought"));
         boughtItem = color(config.getString("boughtItem"));
         notEnoughFunds = color(config.getString("notEnoughFunds"));
@@ -364,6 +404,12 @@ public class ConfigSettings {
         ahListingItemBuyer = color(config.getStringList("ahListingItemBuyer"));
         ahListingItemPublisher = color(config.getStringList("ahListingItemPublisher"));
         ahSortLore = config.getStringList("ahSortLore");
+
+        //Special Chunk Blocks
+        itemExpired = color(config.getString("itemExpired"));
+        dateFormat = color(config.getString("dateFormat"));
+        timeLeftFormat = color(config.getString("timeLeftFormat"));
+        loaderHologramLines = config.getStringList("loaderHologramLines");
 
         extraMessages.clear();
 
@@ -386,6 +432,30 @@ public class ConfigSettings {
 
     public static List<String> color(List<String> list) {
         return list == null || list.isEmpty() ? new ArrayList<>() : list.stream().map(ConfigSettings::color).collect(Collectors.toList());
+    }
+
+    public static List<String> replaceList(List<String> list, String[] placeholder, String... replacement){
+        List<String> newList = new ArrayList<>(list.size());
+
+        for(String s : list)
+            newList.add(color(StringUtils.replaceEach(s, placeholder, replacement)));
+
+        return newList;
+    }
+
+    public static String formatDate(long milliseconds) {
+        String defaultFormat = "dd/MM/yyyy-HH:mm:ss";
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
+            LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(milliseconds), ZoneId.systemDefault());
+            return dateTime.format(formatter);
+        }
+        catch (IllegalArgumentException | DateTimeParseException e) {
+            System.err.println("Invalid date format: " + dateFormat + ". Using default format: " + defaultFormat);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(defaultFormat);
+            LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(milliseconds), ZoneId.systemDefault());
+            return dateTime.format(formatter);
+        }
     }
 
     private static String s(Object o){

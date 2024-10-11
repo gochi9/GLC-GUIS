@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class AHMainGUI extends AhSharedGUI{
 
-    public AHMainGUI(GuiManager guiManager, AHManager correspondentManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, GUI backGUI, UUID viewer, String... args) {
+    public AHMainGUI(GuiManager guiManager, AHManager correspondentManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, GUI backGUI, UUID viewer, Object... args) {
         super(guiManager, correspondentManager, title, size, pageElements, backGUI, viewer, args);
     }
 
@@ -21,7 +21,7 @@ public class AHMainGUI extends AhSharedGUI{
     }
 
     @Override
-    protected GUI createNewInstance(UUID uuid, GUI backGUI, String... args) {
+    protected GUI createNewInstance(UUID uuid, GUI backGUI, Object... args) {
         return new AHMainGUI(guiManager, correspondentManager, title, size, new HashMap<>(pageElements), backGUI, uuid, args);
     }
 }

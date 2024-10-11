@@ -22,7 +22,7 @@ public abstract class AhSharedGUI extends PerPlayerGUI<AHManager> {
     private SortType currentSortType = SortType.NEWEST_ITEMS;
 
     public AhSharedGUI(GuiManager guiManager, AHManager correspondentManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, GUI
-            backGUI, UUID viewer, String... args) {
+            backGUI, UUID viewer, Object... args) {
         super(guiManager, correspondentManager, title, size, pageElements, backGUI, viewer, args);
         this.savedTemplate = new HashMap<>(pageElements.get(0));
         this.backGUI = null;

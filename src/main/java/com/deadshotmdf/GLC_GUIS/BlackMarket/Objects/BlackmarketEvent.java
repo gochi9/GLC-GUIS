@@ -4,7 +4,7 @@ public enum BlackmarketEvent {
 
     NOTHING,
     ROBBED,
-    SCAMMED,
+    SCAM,
     MUGGED;
 
     public static BlackmarketEvent fromString(String s){
@@ -14,7 +14,7 @@ public enum BlackmarketEvent {
         return switch (s.toUpperCase()) {
             case "NOTHING" -> NOTHING;
             case "ROBBED" -> ROBBED;
-            case "SCAMMED" -> SCAMMED;
+            case "SCAM" -> SCAM;
             case "MUGGED" -> MUGGED;
             default -> null;
         };

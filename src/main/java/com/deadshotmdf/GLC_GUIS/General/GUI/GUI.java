@@ -14,7 +14,7 @@ public interface GUI {
     void handleClick(InventoryClickEvent ev, Object... args);
     void handleClose(InventoryCloseEvent ev);
     void refreshInventory();
-    GUI createInstance(UUID player, GUI backGUI, String... args);
+    GUI createInstance(UUID player, GUI backGUI, Object... args);
     void open(HumanEntity player, int page, boolean onOpen);
     int getPageCount();
     void deletePages();

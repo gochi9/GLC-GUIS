@@ -10,6 +10,12 @@ import com.deadshotmdf.GLC_GUIS.General.Listeners.GUIListener;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import com.deadshotmdf.GLC_GUIS.Shop.OpenShopCommand;
 import com.deadshotmdf.GLC_GUIS.Shop.ShopManager;
+import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Commands.GiveChunkLoaderCommand;
+import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Listeners.BlockPlaceLis;
+import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Listeners.CancelSpecialBlockInteraction;
+import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Listeners.CheckExpiredLoaderInvLis;
+import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Listeners.SpecialBlockRightClick;
+import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocksManager;
 import com.deadshotmdf.gLCoins_Server.EconomyWrapper;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -24,6 +30,7 @@ public final class GLCGGUIS extends JavaPlugin {
     private ShopManager shopManager;
     private AHManager actionHouseManager;
     private BlackMarketManager blackMarketManager;
+    private SpecialBlocksManager specialBlocksManager;
 
     @Override
     public void onEnable() {
@@ -39,23 +46,29 @@ public final class GLCGGUIS extends JavaPlugin {
         this.shopManager = new ShopManager(guiManager, this);
         this.actionHouseManager = new AHManager(guiManager, this);
         this.blackMarketManager = new BlackMarketManager(guiManager, this);
+        this.specialBlocksManager = new SpecialBlocksManager(guiManager, this);
 
         this.guiManager.reloadConfig();
 
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new GUIListener(guiManager), this);
         pm.registerEvents(new NPCListener(blackMarketManager), this);
+        pm.registerEvents(new CancelSpecialBlockInteraction(specialBlocksManager), this);
+        pm.registerEvents(new BlockPlaceLis(this, specialBlocksManager), this);
+        pm.registerEvents(new CheckExpiredLoaderInvLis(specialBlocksManager), this);
+        pm.registerEvents(new GUIListener(guiManager), this);
+        pm.registerEvents(new SpecialBlockRightClick(specialBlocksManager), this);
 
         this.getCommand("shop").setExecutor(new OpenShopCommand(guiManager));
         this.getCommand("glcguis").setExecutor(new GenericGUISCommand(this, null, guiManager));
         this.getCommand("blackmarket").setExecutor(new BlackmarketCommand(this, blackMarketManager));
         this.getCommand("ah").setExecutor(new AHCommand(this, actionHouseManager));
+        this.getCommand("giveloader").setExecutor(new GiveChunkLoaderCommand(specialBlocksManager));
     }
 
     @Override
     public void onDisable() {
-        this.blackMarketManager.saveInformation();
-        this.actionHouseManager.saveInformation();
+        guiManager.saveAll();
     }
 
     private boolean setupEconomy() {
@@ -74,11 +87,4 @@ public final class GLCGGUIS extends JavaPlugin {
         return economy;
     }
 
-    public GuiManager getGuiManager(){
-        return guiManager;
-    }
-
-    public ShopManager shopManager(){
-        return shopManager;
-    }
 }

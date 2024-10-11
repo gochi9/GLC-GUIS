@@ -17,7 +17,7 @@ public class SharedGUI<T extends AbstractGUIManager> extends AbstractGUI<T> {
     public boolean isShared() { return true; }
 
     @Override
-    protected GUI createNewInstance(UUID player, GUI backGUI, String... args) {
+    protected GUI createNewInstance(UUID player, GUI backGUI, Object... args) {
         return this;
     }
 

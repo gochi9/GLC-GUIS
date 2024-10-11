@@ -13,8 +13,11 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
@@ -143,13 +146,13 @@ public class GUIUtils {
         }
     }
 
-    public static String retrieveFrom(String ident, String split, String... args){
+    public static String retrieveFrom(String ident, String split, Object... args){
         if(ident == null || split == null || args == null)
             return " ";
 
         String prefix = ident + split;
-        for(String arg : args) {
-            if (!arg.startsWith(prefix))
+        for(Object a : args) {
+            if (!(a instanceof String arg) || !arg.startsWith(prefix))
                 continue;
 
             String[] parts = arg.split(split, 2);
@@ -217,6 +220,22 @@ public class GUIUtils {
         }
 
         return slots;
+    }
+
+    public static Object retrieveMark(ItemStack item, NamespacedKey key, PersistentDataType type){
+        if(item == null)
+            return null;
+
+        ItemMeta meta = item.getItemMeta();
+
+        if(meta == null)
+            return null;
+
+        try{
+            return meta.getPersistentDataContainer().get(key, type);
+        }catch(Throwable e){
+            return null;
+        }
     }
 
     public static double getRandomDouble(double m, double mx) {

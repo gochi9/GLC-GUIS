@@ -11,6 +11,6 @@ public class GenericGUISCommand extends GLCGUICommand<AbstractGUIManager> {
     public GenericGUISCommand(GLCGGUIS main, AbstractGUIManager manager, GuiManager guiManager) {
         super(main, manager);
         this.subCommands.put("glcopengui", new OpenGUI(manager, guiManager, "", CommandType.CONSOLE, 2, "/glcguis glcopengui [player] [gui]", "/glcguis glcopengui [player] [gui]"));
-        this.subCommands.put("reload", new ReloadConfig(main, manager, "glcguis.reload", CommandType.BOTH, 0, "/glcguis reload", ""));
+        this.subCommands.put("reload", new ReloadConfig(main, manager, guiManager, "glcguis.reload", CommandType.BOTH, 0, "/glcguis reload", ""));
     }
 }

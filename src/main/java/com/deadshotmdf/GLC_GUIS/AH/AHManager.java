@@ -78,7 +78,7 @@ public class AHManager extends AbstractGUIManager {
             buyer.sendMessage(ConfigSettings.getBoughtItem(sell_amount, glcoins));
 
         if(seller != null && seller.isOnline() && (buy || onExpire))
-            seller.sendMessage(buy ? ConfigSettings.getItemBought(sell_amount, glcoins) : ConfigSettings.getItemExpired());
+            seller.sendMessage(buy ? ConfigSettings.getItemBought(sell_amount, glcoins) : ConfigSettings.getItemAHExpired());
 
         UUID uuid = buy ? buyer.getUniqueId() : publisher;
 

@@ -4,10 +4,12 @@ import com.deadshotmdf.GLC_GUIS.ConfigSettings;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.apache.commons.lang3.StringUtils;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -41,13 +43,19 @@ public abstract class AbstractButton implements GuiElement{
         this.lore = hasItemMeta ? meta.getLore() : null;
     }
 
+    @Override
     public ItemStack getItemStackClone(){
         return this.item.clone();
     }
 
     @Override
     public ItemStack getItemStackClone(String[] placeholder, String... replace) {
-        ItemStack item = this.item.clone();
+        return getItemStackClone(null, placeholder, replace);
+    }
+
+    @Override
+    public ItemStack getItemStackClone(ItemStack clone, String[] placeholder, String... replace) {
+        ItemStack item = clone != null ? clone.clone() : this.item.clone();
 
         if(placeholder == null || replace == null || placeholder.length == 0 || replace.length == 0 || placeholder.length != replace.length)
             return item;
@@ -65,6 +73,25 @@ public abstract class AbstractButton implements GuiElement{
 
         item.setItemMeta(meta);
         return item;
+    }
+
+    @Override
+    public ItemStack getItemStackMarkedAndReplaced(NamespacedKey key, PersistentDataType type, Object value, String[] placeholder, String... replace){
+        ItemStack item = this.item.clone();
+
+        ItemMeta meta = item.getItemMeta();
+
+        if(meta == null || key == null || type == null || value == null)
+            return item;
+
+        meta.getPersistentDataContainer().set(key, type, value);
+        item.setItemMeta(meta);
+        return getItemStackClone(item, placeholder, replace);
+    }
+
+    @Override
+    public void addInitialMark(NamespacedKey key, PersistentDataType type, Object value){
+        this.item = getItemStackMarkedAndReplaced(key, type, value, null);
     }
 
     public void addExtra(String... extra){}

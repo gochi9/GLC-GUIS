@@ -29,9 +29,9 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
     protected GUI backGUI;
     protected String[] placeholders, replacements;
     private boolean changingPage;
-    protected String[] args;
+    protected final Object[] args;
 
-    protected AbstractGUI(GuiManager guiManager, T correspondentManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, String... args) {
+    protected AbstractGUI(GuiManager guiManager, T correspondentManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, Object... args) {
         this.guiManager = guiManager;
         this.correspondentManager = correspondentManager;
         this.title = title;
@@ -66,12 +66,12 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
     public abstract boolean isShared();
 
     @Override
-    public GUI createInstance(UUID player, GUI backGUI, String... args){
+    public GUI createInstance(UUID player, GUI backGUI, Object... args){
         this.backGUI = backGUI;
         return isShared() ? this : createNewInstance(player, backGUI, args);
     }
 
-    protected abstract GUI createNewInstance(UUID player, GUI backGUI, String... args);
+    protected abstract GUI createNewInstance(UUID player, GUI backGUI, Object... args);
 
     @Override
     public void open(HumanEntity player, int page, boolean onOpen){

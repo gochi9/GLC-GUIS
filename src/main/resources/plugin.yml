@@ -7,8 +7,8 @@ depend:
   - Vault
   - GLCoins-Server
   - LuckPerms
-softdepend:
   - Citizens
+  - DecentHolograms
 libraries:
   - org.reflections:reflections:0.10.2
   - org.apache.poi:poi:5.2.3
@@ -20,3 +20,4 @@ commands:
   glcguis:
   blackmarket:
   ah:
+  giveloader:

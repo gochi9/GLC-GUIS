@@ -78,7 +78,7 @@ mugged: '&cAfter selling your items, you felt the presence of &4multiple armed t
 ## AUCTION HOUSE ##
 ###################
 
-itemExpired: '&cOne of your items expired'
+itemAHExpired: '&cOne of your items expired'
 itemBought: '&aSomeone bought one of your items for {value}$ / {glcoins} GLCoins'
 boughtItem: '&aYou`ve bought the listen item for {value}$ / {glcoins} GLCoins'
 notEnoughFunds: '&cYou don`t {needed} for the current selected price. Balance: {balance}'
@@ -122,6 +122,16 @@ ahSortLore:
   - 'GLCOINS_PRICE_MIN'
   - 'NEWEST_ITEMS'
   - 'OLDEST_ITEMS'
+
+##########################
+## SPECIAL CHUNK BLOCKS ##
+##########################
+itemExpired: '&cThis item has expired and has been removed from your inventory'
+dateFormat: 'dd/MM/yyyy-HH:mm:ss'
+timeLeftFormat: '{days}:{hours}:{minutes}:{seconds}'
+loaderHologramLines:
+  - '&6Chunk Loader'
+  - '&eTime left: &a{left}'
 
 #Used for button actions
 extraMessages:

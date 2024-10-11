@@ -31,7 +31,7 @@ public class GuiManager {
         return guiTemplates.get(name != null ? name.toLowerCase() : "NULL");
     }
 
-    public void openGui(HumanEntity player, String guiName, GUI backGUI, String... args) {
+    public void openGui(HumanEntity player, String guiName, GUI backGUI, Object... args) {
         GUI gui = getGuiTemplate(guiName);
 
         if(gui == null){
@@ -42,8 +42,12 @@ public class GuiManager {
         commenceOpen(player, gui, backGUI, args);
     }
 
-    public void commenceOpen(HumanEntity player, GUI gui, GUI backGUI, String... args){
+    public void commenceOpen(HumanEntity player, GUI gui, GUI backGUI, Object... args){
         UUID uuid = player.getUniqueId();
+
+        if(gui == null)
+            return;
+
         GUI newGUI = gui.createInstance(uuid, backGUI, args);
 
         try{removeOpenGui(player, true);}
@@ -75,6 +79,13 @@ public class GuiManager {
         this.managers.forEach(manager -> {
             manager.onReload();
             manager.loadGUIsRecursive();
+        });
+    }
+
+    public void saveAll(){
+        this.managers.forEach(manager -> {
+            try{manager.saveInformation();}
+            catch (Throwable ignored){}
         });
     }
 
