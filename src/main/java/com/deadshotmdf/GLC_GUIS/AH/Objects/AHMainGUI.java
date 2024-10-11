@@ -5,7 +5,6 @@ import com.deadshotmdf.GLC_GUIS.General.Buttons.GuiElement;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,6 +21,6 @@ public class AHMainGUI extends AhSharedGUI {
 
     @Override
     protected GUI createNewInstance(UUID uuid, GUI backGUI, Object... args) {
-        return new AHMainGUI(guiManager, correspondentManager, title, size, new HashMap<>(pageElements), backGUI, uuid, args);
+        return new AHMainGUI(guiManager, correspondentManager, title, size, pageElements, backGUI, uuid, args);
     }
 }

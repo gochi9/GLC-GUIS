@@ -22,7 +22,7 @@ public class CollectorGUI extends PerPlayerPagedGUI<SpecialBlocksManager, Map.En
         super(guiManager, correspondentManager, title, size, pageElements, backGUI, viewer, args);
         this.chunkHopper = args.length > 0 ? (ChunkHopper) args[0] : null;
 
-        if(this.chunkHopper != null)
+        if(this.chunkHopper != null && this.viewer != null)
             refreshInventory();
     }
 
