@@ -1,7 +1,6 @@
 package com.deadshotmdf.GLC_GUIS.General.Buttons;
 
 import com.deadshotmdf.GLC_GUIS.ConfigSettings;
-import com.deadshotmdf.GLC_GUIS.GUIUtils;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.apache.commons.lang3.StringUtils;
@@ -33,8 +32,8 @@ public abstract class AbstractButton implements GuiElement{
         this.guiManager = guiManager;
         this.args = args;
         this.elementData = elementData;
-        this.permission = GUIUtils.retrieveFrom("permission", ":", args);
-        this.permissionMessage = GUIUtils.retrieveFrom("permissionMessage", ":", args);
+        this.permission = elementData != null ? elementData.get("permission") : null;
+        this.permissionMessage = elementData != null ? elementData.get("permissionMessage") : null;
 
         ItemMeta meta = item.getItemMeta();
         boolean hasItemMeta = item.hasItemMeta();
@@ -72,7 +71,7 @@ public abstract class AbstractButton implements GuiElement{
 
     @Override
     public boolean canClick(HumanEntity player){
-        boolean canClick = permission == null || player.hasPermission(permission);
+        boolean canClick = permission == null || permission.isBlank() || player.hasPermission(permission);
 
         if(!canClick && permissionMessage != null)
             ConfigSettings.sendExtraMessage(player, permissionMessage);

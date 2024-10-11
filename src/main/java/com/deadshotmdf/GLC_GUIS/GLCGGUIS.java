@@ -5,7 +5,7 @@ import com.deadshotmdf.GLC_GUIS.AH.Commands.AHCommand;
 import com.deadshotmdf.GLC_GUIS.BlackMarket.Commands.BlackmarketCommand;
 import com.deadshotmdf.GLC_GUIS.BlackMarket.Managers.BlackMarketManager;
 import com.deadshotmdf.GLC_GUIS.BlackMarket.Listeners.NPCListener;
-import com.deadshotmdf.GLC_GUIS.General.Commands.ReloadConfigCommand;
+import com.deadshotmdf.GLC_GUIS.General.Commands.Implementation.GenericGUISCommand;
 import com.deadshotmdf.GLC_GUIS.General.Listeners.GUIListener;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import com.deadshotmdf.GLC_GUIS.Shop.OpenShopCommand;
@@ -47,7 +47,7 @@ public final class GLCGGUIS extends JavaPlugin {
         pm.registerEvents(new NPCListener(blackMarketManager), this);
 
         this.getCommand("shop").setExecutor(new OpenShopCommand(guiManager));
-        this.getCommand("glcguis").setExecutor(new ReloadConfigCommand(this, guiManager));
+        this.getCommand("glcguis").setExecutor(new GenericGUISCommand(this, null, guiManager));
         this.getCommand("blackmarket").setExecutor(new BlackmarketCommand(this, blackMarketManager));
         this.getCommand("ah").setExecutor(new AHCommand(this, actionHouseManager));
     }

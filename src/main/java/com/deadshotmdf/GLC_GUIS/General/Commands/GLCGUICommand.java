@@ -3,6 +3,7 @@ package com.deadshotmdf.GLC_GUIS.General.Commands;
 import com.deadshotmdf.GLC_GUIS.ConfigSettings;
 import com.deadshotmdf.GLC_GUIS.GLCGGUIS;
 import com.deadshotmdf.GLC_GUIS.General.Managers.AbstractGUIManager;
+import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,11 +18,19 @@ public abstract class GLCGUICommand<T extends AbstractGUIManager> implements Com
 
     public final static List<String> EMPTY = Collections.emptyList();
 
+    protected final GLCGGUIS main;
     protected final T manager;
+    protected final GuiManager guiManager;
     protected final HashMap<String, SubCommand> subCommands;
 
     public GLCGUICommand(GLCGGUIS main, T manager) {
+        this(main, manager, null);
+    }
+
+    public GLCGUICommand(GLCGGUIS main, T manager, GuiManager guiManager) {
+        this.main = main;
         this.manager = manager;
+        this.guiManager = guiManager;
         this.subCommands = new HashMap<>();
     }
 

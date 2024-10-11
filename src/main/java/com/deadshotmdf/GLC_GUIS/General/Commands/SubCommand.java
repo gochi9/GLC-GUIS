@@ -1,7 +1,9 @@
 package com.deadshotmdf.GLC_GUIS.General.Commands;
 
 import com.deadshotmdf.GLC_GUIS.ConfigSettings;
+import com.deadshotmdf.GLC_GUIS.GLCGGUIS;
 import com.deadshotmdf.GLC_GUIS.General.Managers.AbstractGUIManager;
+import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -10,7 +12,9 @@ import java.util.List;
 
 public abstract class SubCommand<T extends AbstractGUIManager> {
 
+    protected final GLCGGUIS main;
     protected final T manager;
+    protected final GuiManager guiManager;
     private final String permission;
     private final CommandType commandType;
     private final int argsRequired;
@@ -18,7 +22,13 @@ public abstract class SubCommand<T extends AbstractGUIManager> {
     private final String commandWrongSyntax;
 
     public SubCommand(T manager, String permission, CommandType commandType, int argsRequired, String commandHelpMessage, String commandWrongSyntax) {
+        this(null, manager, null, permission, commandType, argsRequired, commandHelpMessage, commandWrongSyntax);
+    }
+
+    public SubCommand(GLCGGUIS main, T manager, GuiManager guiManager, String permission, CommandType commandType, int argsRequired, String commandHelpMessage, String commandWrongSyntax){
+        this.main = main;
         this.manager = manager;
+        this.guiManager = guiManager;
         this.permission = permission;
         this.commandType = commandType;
         this.argsRequired = ++argsRequired;

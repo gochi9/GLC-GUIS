@@ -1,6 +1,7 @@
 package com.deadshotmdf.GLC_GUIS;
 
 import com.iridium.iridiumcolorapi.IridiumColorAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -366,7 +367,7 @@ public class ConfigSettings {
 
         extraMessages.clear();
 
-        ConfigurationSection section = config.getConfigurationSection("settings");
+        ConfigurationSection section = config.getConfigurationSection("extraMessages");
 
         if(section == null)
             return;
