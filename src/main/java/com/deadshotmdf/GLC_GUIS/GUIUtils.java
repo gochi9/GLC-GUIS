@@ -253,18 +253,23 @@ public class GUIUtils {
         return values.get(randomIndex);
     }
 
-    public static int getHighestPermissionNumber(Player player, String permissionStart) {
-        if(player.isOp())
+    public static int getHighestPermissionNumber(Player player, UUID uuid, String permissionStart) {
+        int highestNumber = 0;
+
+        if((player == null && uuid == null) || permissionStart == null)
+            return highestNumber;
+
+        if((player != null ? player : Bukkit.getOfflinePlayer(uuid)).isOp())
             return 99;
 
         String prefix = permissionStart.endsWith(".") ? permissionStart : permissionStart + ".";
         LuckPerms luckPerms = LuckPermsProvider.get();
 
-        User user = luckPerms.getPlayerAdapter(Player.class).getUser(player);
-        if (user == null)
-            return 0;
+        User user = player != null ? luckPerms.getPlayerAdapter(Player.class).getUser(player) : luckPerms.getUserManager().getUser(uuid);
 
-        int highestNumber = 0;
+        if(user == null)
+            return highestNumber;
+
         for (Node node : user.getNodes()) {
             if (!node.getKey().startsWith(prefix))
                 continue;

@@ -12,6 +12,7 @@ import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.GUI.CollectorGUI;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.GUI.LoaderGUI;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Misc.ChunkPair;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Misc.SpecialBlockUtils;
+import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocks.ChunkHopper;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocks.ChunkLoader;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocks.SpecialBlockType;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocks.SpecialChunkBlock;
@@ -30,20 +31,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SpecialBlocksManager extends AbstractGUIManager {
 
     public final static String[] loaderPlaceholers = new String[]{"{date}"};
-    private final NamespacedKey specialKey, loaderKey;
     private final Map<Location, SpecialChunkBlock> blocks;
+    private final HashMap<ChunkPair, ChunkHopper> collectors;
     private final HashSet<ChunkPair> loadedChunks;
     private final EnumMap<Material, Double> sellValues;
-    private GiveableSpecialChunkBlock loader, collector;
+    private final NamespacedKey specialKey, loaderKey;
+    private GiveableSpecialChunkBlock loaderItem, collectorItem;
     private GUI loaderGUI, collectorGUI;
 
     public SpecialBlocksManager(GuiManager guiManager, JavaPlugin plugin, EnumMap<Material, Double> sellValues) {
         super(guiManager, plugin, new File(plugin.getDataFolder(), "guis/specialblocks/"), new File(plugin.getDataFolder(), "data/specialblocks.yml"));
         this.blocks = new ConcurrentHashMap<>();
-        this.specialKey = new NamespacedKey(plugin, "itf4if-3ffd-g3t-t3yp33e_plg445in");
-        this.loaderKey = new NamespacedKey(plugin, "l0ade3er-k33kyd-plgguin43jf-34rf");
+        this.collectors = new HashMap<>();
         this.loadedChunks = new HashSet<>();
         this.sellValues = sellValues;
+        this.specialKey = new NamespacedKey(plugin, "itf4if-3ffd-g3t-t3yp33e_plg445in");
+        this.loaderKey = new NamespacedKey(plugin, "l0ade3er-k33kyd-plgguin43jf-34rf");
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, new LoaderTimer(plugin, this, blocks), 20L, 20L);
         loadInformation();
     }
@@ -68,12 +71,29 @@ public class SpecialBlocksManager extends AbstractGUIManager {
         return blocks;
     }
 
-    public ItemStack getLoaderItem(long cooldown){
-        return loader.getItemStackMarkedAndReplaced(loaderKey, PersistentDataType.LONG, cooldown, loaderPlaceholers, ConfigSettings.formatDate(cooldown));
+    public void addPlayerItem(Player player, Location location, ItemStack item){
+        HashMap<Integer, ItemStack> remains =  player.getInventory().addItem(item);
+
+        if(!remains.isEmpty())
+            remains.values().forEach(remain -> player.getWorld().dropItem(location, remain));
+    }
+
+    ////////////////////////////////
+    // CHUNK LOADER SECTION START //
+    ////////////////////////////////
+    ////////////////////////////////
+    // CHUNK LOADER SECTION START //
+    ////////////////////////////////
+    ////////////////////////////////
+    // CHUNK LOADER SECTION START //
+    ////////////////////////////////
+
+    public ItemStack getLoaderItem(long cooldown) {
+        return loaderItem.getItemStackMarkedAndReplaced(loaderKey, PersistentDataType.LONG, cooldown, loaderPlaceholers, ConfigSettings.formatDate(cooldown));
     }
 
     public void removeLoader(Location location, ChunkLoader block) {
-        block.removeChunk(plugin, true);
+        block.removeBlock(plugin, true);
         removeBlock(location);
         loadedChunks.remove(new ChunkPair(location.getChunk()));
         Bukkit.getPluginManager().callEvent(new SpecialBlockRemoveEvent(block.getOwner(), SpecialBlockType.LOADER, location));
@@ -104,15 +124,7 @@ public class SpecialBlocksManager extends AbstractGUIManager {
 
         long cooldown = loader.getRawCooldown();
         removeLoader(location, loader);
-        UUID uuid = player.getUniqueId();
-        addPlayerItem(player, cooldown, location, uuid);
-    }
-
-    public void addPlayerItem(Player player, long cooldown, Location location, UUID uuid){
-        HashMap<Integer, ItemStack> remains =  player.getInventory().addItem(getLoaderItem(cooldown));
-
-        if(!remains.isEmpty())
-            remains.values().forEach(remain -> player.getWorld().dropItem(location, remain).setOwner(uuid));
+        addPlayerItem(player, location, getLoaderItem(cooldown));
     }
 
     public boolean isLoaderItemExpired(Player sender, ItemStack itemStack){
@@ -129,6 +141,92 @@ public class SpecialBlocksManager extends AbstractGUIManager {
         return false;
     }
 
+    //////////////////////////////
+    // CHUNK LOADER SECTION END //
+    //////////////////////////////
+    //////////////////////////////
+    // CHUNK LOADER SECTION END //
+    //////////////////////////////
+    //////////////////////////////
+    // CHUNK LOADER SECTION END //
+    //////////////////////////////
+
+    ///////////////////////////////////
+    // CHUNK COLLECTOR SECTION START //
+    ///////////////////////////////////
+    ///////////////////////////////////
+    // CHUNK COLLECTOR SECTION START //
+    ///////////////////////////////////
+    ///////////////////////////////////
+    // CHUNK COLLECTOR SECTION START //
+    ///////////////////////////////////
+
+    public void placeCollector(Location location, UUID uuid){
+        if(blocks.containsKey(location) || chunkHasCollector(location))
+            return;
+
+        ChunkHopper collector = new ChunkHopper(uuid, location, new EnumMap<>(Material.class));
+        addSpecialBlock(location, collector);
+        collectors.put(new ChunkPair(location.getChunk()), collector);
+    }
+
+    public boolean chunkHasCollector(Location location){
+        return collectors.containsKey(new ChunkPair(location.getChunk()));
+    }
+
+    //The event that calls this needs to be LOW priority
+    public boolean addItem(ChunkHopper collector, ItemStack item, Location location){
+        if(collector == null || item == null || location == null)
+            return false;
+
+        int maxAmount = GUIUtils.getHighestPermissionNumber(null, collector.getOwner(), "glcguis.chunkcollectorcollectsize.");
+
+        if(maxAmount == 0)
+            return false;
+
+        EnumMap<Material, Integer> values = collector.getValues();
+        Material material = item.getType();
+        int amount = values.getOrDefault(material, 0);
+
+        if(amount >= maxAmount)
+            return false;
+
+        int toADD = amount + item.getAmount();
+
+        if(toADD <= maxAmount){
+            values.put(material, toADD);
+            updateCollectorGUI(collector);
+            return true;
+        }
+
+        values.put(material, maxAmount);
+        location.getWorld().dropItemNaturally(location, new ItemStack(material, maxAmount - toADD));
+        updateCollectorGUI(collector);
+        return true;
+    }
+
+    public void onRightClickCollector(Location location, Player player, ChunkHopper block) {
+        if(block.getOwner().equals(player.getUniqueId()))
+            guiManager.commenceOpen(player, collectorGUI, null, location, block);
+    }
+
+    private void updateCollectorGUI(ChunkHopper collector){
+        GUI collectorGUI = collector.getCollectorGUI();
+
+        if(collectorGUI != null)
+            collectorGUI.refreshInventory();
+    }
+
+    /////////////////////////////////
+    // CHUNK COLLECTOR SECTION END //
+    /////////////////////////////////
+    /////////////////////////////////
+    // CHUNK COLLECTOR SECTION END //
+    /////////////////////////////////
+    /////////////////////////////////
+    // CHUNK COLLECTOR SECTION END //
+    /////////////////////////////////
+
     @Override
     protected GuiElement enhanceGuiElement(String specialType, ItemStack item, Map<String, String> extraValues, GuiElement element, String action, String[] args) {
         if(!action.equalsIgnoreCase("GIVE_SPECIAL_CHUNK_BLOCK"))
@@ -143,10 +241,10 @@ public class SpecialBlocksManager extends AbstractGUIManager {
 
         switch (type) {
             case LOADER:
-                loader = (GiveableSpecialChunkBlock) element;
+                loaderItem = (GiveableSpecialChunkBlock) element;
                 break;
             case COLLECTOR:
-                collector = (GiveableSpecialChunkBlock) element;
+                collectorItem = (GiveableSpecialChunkBlock) element;
                 break;
             default:
                 return element;
@@ -172,20 +270,17 @@ public class SpecialBlocksManager extends AbstractGUIManager {
     public void saveInformation(){
         AtomicInteger i = new AtomicInteger(0);
         config.set("loaders", null);
+        config.set("collectors", null);
         saveC();
         new HashMap<>(getBlocks()).forEach((k, v) ->{
-            if(!(v instanceof ChunkLoader loader))
-                return;
-
-            String path = "loaders." + i.getAndIncrement();
-            config.set(path + ".cooldown", loader.getRawCooldown());
-            config.set(path + ".owner", loader.getOwner().toString());
-            config.set(path + ".location", k);
-            loader.removeChunk(plugin, false);
+            try{saveSpecialBlock(i, v, k);}
+            catch(Throwable e){e.printStackTrace();}
         });
 
         saveC();
         loadedChunks.clear();
+        collectors.clear();
+        blocks.clear();
     }
 
     @Override
@@ -203,6 +298,27 @@ public class SpecialBlocksManager extends AbstractGUIManager {
             addSpecialBlock(location, new ChunkLoader(owner, plugin, cooldown, location));
             loadedChunks.add(new ChunkPair(location.getChunk()));
         }
+    }
+
+    private void saveSpecialBlock(AtomicInteger i, SpecialChunkBlock specialChunkBlock, Location k){
+        if(specialChunkBlock == null)
+            return;
+
+        boolean isLoader = specialChunkBlock instanceof ChunkLoader;
+
+        if(!isLoader)
+            ((ChunkHopper)specialChunkBlock).trimUselessInfo();
+
+        String path = (isLoader ? "loaders." : "collectors.") + i.getAndIncrement();
+        config.set(path + ".owner", specialChunkBlock.getOwner().toString());
+        config.set(path + ".location", k);
+        config.set(path + (isLoader ? ".cooldown" : ".items"), isLoader ? ((ChunkLoader)specialChunkBlock).getCooldown() : ((ChunkHopper)specialChunkBlock).getValues());
+
+        specialChunkBlock.removeBlock(plugin, false);
+    }
+
+    private void loadCollector(){
+
     }
 
 }

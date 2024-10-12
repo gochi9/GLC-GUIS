@@ -76,7 +76,8 @@ public class ChunkLoader implements SpecialChunkBlock{
             DHAPI.setHologramLine(hologram, i, lines.get(i));
     }
 
-    public void removeChunk(JavaPlugin main, boolean removeBlock){
+    @Override
+    public void removeBlock(JavaPlugin main, boolean removeBlock){
         if(removeBlock)
             location.getBlock().setType(Material.AIR);
         killFakeNPC(main);

@@ -25,7 +25,7 @@ public class RemoveLoader extends AbstractButton {
 
     @Override
     public void onClick(InventoryClickEvent ev, GUI gui, Object... args) {
-        if(!(args[0] instanceof Location location))
+        if(args.length == 0 || !(args[0] instanceof Location location))
             return;
 
         Player player = (Player) ev.getWhoClicked();

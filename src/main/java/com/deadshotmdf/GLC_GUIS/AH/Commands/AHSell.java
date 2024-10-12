@@ -21,7 +21,7 @@ public class AHSell extends SubCommand<AHManager> {
         Player player = (Player) sender;
 
         int limit = manager.getListingsPlayer(player.getUniqueId());
-        int max = GUIUtils.getHighestPermissionNumber(player, "glcguis.ahlistings.");
+        int max = GUIUtils.getHighestPermissionNumber(player, null, "glcguis.ahlistings.");
 
         ItemStack item = player.getInventory().getItemInMainHand();
 

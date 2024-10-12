@@ -10,6 +10,8 @@ import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocks.ChunkHopper;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocksManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -22,8 +24,16 @@ public class CollectorGUI extends PerPlayerPagedGUI<SpecialBlocksManager, Map.En
         super(guiManager, correspondentManager, title, size, pageElements, backGUI, viewer, args);
         this.chunkHopper = args.length > 0 ? (ChunkHopper) args[0] : null;
 
-        if(this.chunkHopper != null && this.viewer != null)
-            refreshInventory();
+        if(this.chunkHopper == null || this.viewer == null)
+            return;
+
+        refreshInventory();
+        chunkHopper.setGUI(this);
+    }
+
+    @Override
+    public void handleClick(InventoryClickEvent ev, Object... args) {
+        super.handleClick(ev, this.args);
     }
 
     @Override
@@ -40,10 +50,18 @@ public class CollectorGUI extends PerPlayerPagedGUI<SpecialBlocksManager, Map.En
     protected GuiElement createGuiElement(Map.Entry<Material, Double> entry) {
         Material material = entry.getKey();
         int amount = chunkHopper.getValues().getOrDefault(material, 0);
-        int maxAmount = GUIUtils.getHighestPermissionNumber(Bukkit.getPlayer(viewer), "glcguis.chunkcollectorcollectsize.");
+        int maxAmount = GUIUtils.getHighestPermissionNumber(Bukkit.getPlayer(viewer), viewer, "glcguis.chunkcollectorcollectsize.");
 
         CollectorItemDisplay collectorItemDisplay = new CollectorItemDisplay(new ItemStack(material), correspondentManager, guiManager, null, null);
         collectorItemDisplay.setInfo(material, amount, maxAmount, entry.getValue() * amount);
         return collectorItemDisplay;
+    }
+
+    @Override
+    public void handleClose(InventoryCloseEvent ev){
+        super.handleClose(ev);
+
+        if(chunkHopper != null)
+            chunkHopper.setGUI(null);
     }
 }
