@@ -8,6 +8,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryCreativeEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class GUIListener implements Listener {
@@ -16,6 +17,16 @@ public class GUIListener implements Listener {
 
     public GUIListener(GuiManager guiManager) {
         this.guiManager = guiManager;
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onCreative(InventoryCreativeEvent ev){
+        handle((Player) ev.getWhoClicked(), ev, TypeAction.NOT_SUPPORTED);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onDrag(InventoryDragEvent ev){
+        handle((Player) ev.getWhoClicked(), ev, TypeAction.NOT_SUPPORTED);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -50,7 +61,7 @@ public class GUIListener implements Listener {
                 gui.handleClose((InventoryCloseEvent) ev);
                 break;
             case LEAVE:
-                guiManager.removeOpenGui(player, false);
+                guiManager.removeOpenGui(player);
                 break;
         }
     }
@@ -59,6 +70,7 @@ public class GUIListener implements Listener {
 
 enum TypeAction{
 
+    NOT_SUPPORTED,
     CLICK,
     CLOSE,
     LEAVE;

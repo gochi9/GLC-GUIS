@@ -50,7 +50,7 @@ public class GuiManager {
 
         GUI newGUI = gui.createInstance(uuid, backGUI, args);
 
-        try{removeOpenGui(player, true);}
+        try{removeOpenGui(player);}
         catch (Throwable ignored){}
 
         newGUI.open(player, 0, true);
@@ -61,10 +61,7 @@ public class GuiManager {
         return openGuis.get(uuid);
     }
 
-    public void removeOpenGui(HumanEntity player, boolean onCloseEvent) {
-        if(!onCloseEvent)
-            player.closeInventory();
-
+    public void removeOpenGui(HumanEntity player) {
         openGuis.remove(player.getUniqueId());
     }
 

@@ -28,7 +28,7 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
     protected UUID viewer;
     protected GUI backGUI;
     protected String[] placeholders, replacements;
-    private boolean changingPage;
+ //   private boolean changingPage;
     protected final Object[] args;
 
     protected AbstractGUI(GuiManager guiManager, T correspondentManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, Object... args) {
@@ -81,11 +81,11 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
         if (page < 0 || page >= getPageCount() || inventory == null)
             return;
 
-        if(!onOpen)
-            changingPage = true;
+//        if(!onOpen)
+//            changingPage = true;
 
         player.openInventory(inventory);
-        changingPage = false;
+   //     changingPage = false;
         updateTitle(max);
     }
 
@@ -96,7 +96,9 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
         HumanEntity player = ev.getWhoClicked();
 
         if (page == -1){
-            guiManager.removeOpenGui(player, false);
+     //       changingPage = false;
+            player.closeInventory();
+            guiManager.removeOpenGui(player);
             return;
         }
 
@@ -114,12 +116,12 @@ public abstract class AbstractGUI<T extends AbstractGUIManager> implements GUI{
 
     @Override
     public void handleClose(InventoryCloseEvent ev) {
-        if(changingPage){
-            changingPage = false;
+        if(/*changingPage ||*/ ev.getReason() == InventoryCloseEvent.Reason.OPEN_NEW){
+            //changingPage = false;
             return;
         }
 
-        guiManager.removeOpenGui(ev.getPlayer(), true);
+        guiManager.removeOpenGui(ev.getPlayer());
     }
 
     @Override
