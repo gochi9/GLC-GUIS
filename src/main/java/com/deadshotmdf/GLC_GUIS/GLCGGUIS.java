@@ -2,6 +2,8 @@ package com.deadshotmdf.GLC_GUIS;
 
 import com.deadshotmdf.GLC_GUIS.AH.AHManager;
 import com.deadshotmdf.GLC_GUIS.AH.Commands.AHCommand;
+import com.deadshotmdf.GLC_GUIS.BankGUI.BankGUICMD;
+import com.deadshotmdf.GLC_GUIS.BankGUI.BankGUIManager;
 import com.deadshotmdf.GLC_GUIS.BlackMarket.Commands.BlackmarketCommand;
 import com.deadshotmdf.GLC_GUIS.BlackMarket.Managers.BlackMarketManager;
 import com.deadshotmdf.GLC_GUIS.BlackMarket.Listeners.NPCListener;
@@ -28,6 +30,7 @@ public final class GLCGGUIS extends JavaPlugin {
     private AHManager actionHouseManager;
     private BlackMarketManager blackMarketManager;
     private SpecialBlocksManager specialBlocksManager;
+    private BankGUIManager bankGUIManager;
 
     @Override
     public void onEnable() {
@@ -44,6 +47,7 @@ public final class GLCGGUIS extends JavaPlugin {
         this.actionHouseManager = new AHManager(guiManager, this);
         this.blackMarketManager = new BlackMarketManager(guiManager, this);
         this.specialBlocksManager = new SpecialBlocksManager(guiManager, this, this.shopManager.getPrices());
+        this.bankGUIManager = new BankGUIManager(guiManager, this);
 
         this.guiManager.reloadConfig();
 
@@ -62,6 +66,7 @@ public final class GLCGGUIS extends JavaPlugin {
         this.getCommand("blackmarket").setExecutor(new BlackmarketCommand(this, blackMarketManager));
         this.getCommand("ah").setExecutor(new AHCommand(this, actionHouseManager));
         this.getCommand("giveloader").setExecutor(new GiveChunkLoaderCommand(specialBlocksManager));
+        this.getCommand("openbankgui").setExecutor(new BankGUICMD(bankGUIManager));
     }
 
     @Override

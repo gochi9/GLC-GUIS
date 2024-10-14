@@ -9,9 +9,7 @@ import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.*;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -177,14 +175,36 @@ public class GUIUtils {
     }
 
     public static String getCellValueAsString(Cell cell) {
+        if(cell == null)
+            return "";
+
         DataFormatter dataFormatter = new DataFormatter();
+        FormulaEvaluator evaluator = cell.getSheet().getWorkbook().getCreationHelper().createFormulaEvaluator();
+        CellValue cellValue = evaluator.evaluate(cell);
+
         return switch (cell.getCellType()) {
             case STRING -> cell.getStringCellValue().trim();
             case NUMERIC -> DateUtil.isCellDateFormatted(cell)
                     ? cell.getDateCellValue().toString()
                     : dataFormatter.formatCellValue(cell);
             case BOOLEAN -> String.valueOf(cell.getBooleanCellValue());
-            case FORMULA -> cell.getCellFormula();
+            case FORMULA -> switch (cellValue.getCellType()) {
+                case STRING -> cellValue.getStringValue();
+
+                case NUMERIC -> {
+                    if (DateUtil.isCellDateFormatted(cell)) {
+                        yield cell.getDateCellValue().toString();
+                    } else {
+                        yield dataFormatter.formatCellValue(cell, evaluator);
+                    }
+                }
+
+                case BOOLEAN -> String.valueOf(cellValue.getBooleanValue());
+
+                case ERROR -> FormulaError.forInt(cellValue.getErrorValue()).getString();
+
+                default -> "";
+            };
             default -> "";
         };
     }

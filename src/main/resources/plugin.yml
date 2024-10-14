@@ -21,3 +21,5 @@ commands:
   blackmarket:
   ah:
   giveloader:
+  openbankgui:
+    permission: "Nobody.should.have.this"
