@@ -4,6 +4,7 @@ import com.deadshotmdf.GLC_GUIS.General.Buttons.AbstractButton;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.ButtonIdentifier;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
+import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocks.SpecialBlockType;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocksManager;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -13,14 +14,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-@ButtonIdentifier("LOADER_REMOVE")
+@ButtonIdentifier("REMOVE_SPECIAL_BLOCK")
 public class RemoveLoader extends AbstractButton {
 
     private final SpecialBlocksManager specialBlocksManager;
+    private final SpecialBlockType specialBlockType;
 
     public RemoveLoader(@NotNull ItemStack item, Object correspondentManager, GuiManager guiManager, String[] args, Map<String, String> elementData) {
         super(item, correspondentManager, guiManager, args, elementData);
         this.specialBlocksManager = (SpecialBlocksManager) correspondentManager;
+        this.specialBlockType = args.length > 0 ? SpecialBlockType.getSpecialBlockType(args[0]) : SpecialBlockType.LOADER;
     }
 
     @Override
@@ -31,6 +34,10 @@ public class RemoveLoader extends AbstractButton {
         Player player = (Player) ev.getWhoClicked();
         ev.getInventory().clear();
         player.closeInventory();
-        specialBlocksManager.retakeLoader(player, location);
+
+        if(specialBlockType == SpecialBlockType.LOADER)
+            specialBlocksManager.retakeLoader(player, location);
+        else
+            specialBlocksManager.removeCollector(player, location);
     }
 }

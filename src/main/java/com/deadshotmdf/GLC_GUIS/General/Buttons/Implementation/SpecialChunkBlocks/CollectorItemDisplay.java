@@ -11,6 +11,7 @@ import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocks.ChunkHopper;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocksManager;
 import com.deadshotmdf.gLCoins_Server.EconomyWrapper;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -23,6 +24,8 @@ import java.util.Map;
 @ButtonIdentifier("COLLECTOR_ITEM_DISPLAY")
 public class CollectorItemDisplay extends AbstractButton {
 
+    private final static String[] dummy = {"{t}"};
+
     private final SpecialBlocksManager specialBlocksManager;
     private ChunkHopper chunkHopper;
 
@@ -34,15 +37,15 @@ public class CollectorItemDisplay extends AbstractButton {
     public void setInfo(Material material, int amount, int maxAmount, double sell) {
         this.name = ConfigSettings.getChunkCollectorItemName(GUIUtils.formatItemName(material.toString()), amount, maxAmount);
         this.lore = ConfigSettings.getChunkCollectorItemLore(sell);
-        this.item = getItemStackClone(null);
+        this.item = getItemStackClone(dummy, dummy);
     }
 
     @Override
     public void onClick(InventoryClickEvent ev, GUI gui, Object... args) {
-        if(chunkHopper == null && args.length == 0)
+        if(chunkHopper == null && args.length < 2)
             return;
 
-        if(args[0] instanceof ChunkHopper hopper)
+        if(args[1] instanceof ChunkHopper hopper)
             this.chunkHopper = hopper;
 
         if(chunkHopper == null || item == null)
@@ -57,7 +60,9 @@ public class CollectorItemDisplay extends AbstractButton {
         Player player = (Player) ev.getWhoClicked();
         switch (ev.getClick()){
             case LEFT:
-                specialBlocksManager.addPlayerItem(player, player.getLocation(), new ItemStack(material, Math.min(amount, 64)));
+                int itemAmount = Math.min(amount, 64);
+                specialBlocksManager.addPlayerItem(player, player.getLocation(), new ItemStack(material, itemAmount));
+                chunkHopper.getValues().put(material, Math.max(amount - itemAmount, 0));
                 break;
             case RIGHT:
                 EconomyWrapper economy = GLCGGUIS.getEconomy();

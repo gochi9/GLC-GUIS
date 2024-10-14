@@ -87,6 +87,7 @@ public class ConfigSettings {
     private static String timeLeftFormat;
     private static List<String> loaderHologramLines;
 
+    private static List<String> collectorHologramLines;
     private static String chunkCollectorItemName;
     private static List<String> chunkCollectorItemLore;
 
@@ -327,6 +328,10 @@ public class ConfigSettings {
         return replaceList(loaderHologramLines, loaderHologramPlaceholder, getTimeLeftFormat(totalSeconds));
     }
 
+    public static List<String> getCollectorHologramLines(){
+        return collectorHologramLines;
+    }
+
     public static String getChunkCollectorItemName(String name, int amount, int maxAmount){
         return chunkCollectorItemName.replace("{name}", name).replace("{amount}", s(amount)).replace("{maxAmount}", s(maxAmount));
     }
@@ -423,6 +428,10 @@ public class ConfigSettings {
         dateFormat = color(config.getString("dateFormat"));
         timeLeftFormat = color(config.getString("timeLeftFormat"));
         loaderHologramLines = config.getStringList("loaderHologramLines");
+
+        collectorHologramLines = color(config.getStringList("collectorHologramLines"));
+        chunkCollectorItemName = color(config.getString("chunkCollectorItemName"));
+        chunkCollectorItemLore = color(config.getStringList("chunkCollectorItemLore"));
 
         extraMessages.clear();
 

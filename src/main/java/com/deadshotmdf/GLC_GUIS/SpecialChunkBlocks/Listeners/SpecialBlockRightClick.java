@@ -44,8 +44,9 @@ public class SpecialBlockRightClick implements Listener {
 
         Player player = ev.getPlayer();
         if(specialChunkBlock instanceof ChunkLoader loader)
-            specialBlocksManager.onRightClickLoader(block.getLocation(), player, loader);
-        else if(specialChunkBlock instanceof ChunkHopper collector);
+            specialBlocksManager.onRightClickLoader(location, player, loader);
+        else if(specialChunkBlock instanceof ChunkHopper collector)
+            specialBlocksManager.onRightClickCollector(location, player, collector);
 
         ev.setCancelled(true);
         ev.setUseInteractedBlock(Event.Result.DENY);

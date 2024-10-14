@@ -11,10 +11,7 @@ import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
 import com.deadshotmdf.GLC_GUIS.Shop.OpenShopCommand;
 import com.deadshotmdf.GLC_GUIS.Shop.ShopManager;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Commands.GiveChunkLoaderCommand;
-import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Listeners.BlockPlaceLis;
-import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Listeners.CancelSpecialBlockInteraction;
-import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Listeners.CheckExpiredLoaderInvLis;
-import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Listeners.SpecialBlockRightClick;
+import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Listeners.*;
 import com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocksManager;
 import com.deadshotmdf.gLCoins_Server.EconomyWrapper;
 import net.milkbowl.vault.economy.Economy;
@@ -58,6 +55,7 @@ public final class GLCGGUIS extends JavaPlugin {
         pm.registerEvents(new CheckExpiredLoaderInvLis(specialBlocksManager), this);
         pm.registerEvents(new GUIListener(guiManager), this);
         pm.registerEvents(new SpecialBlockRightClick(specialBlocksManager), this);
+        pm.registerEvents(new ItemSpawnLis(specialBlocksManager), this);
 
         this.getCommand("shop").setExecutor(new OpenShopCommand(guiManager));
         this.getCommand("glcguis").setExecutor(new GenericGUISCommand(this, null, guiManager));

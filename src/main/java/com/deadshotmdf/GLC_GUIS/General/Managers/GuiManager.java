@@ -16,7 +16,7 @@ public class GuiManager {
     public GuiManager() {
         this.guiTemplates = new HashMap<>();
         this.openGuis = new HashMap<>();
-        this.managers = new HashSet<>();
+        this.managers = new LinkedHashSet<>();
     }
 
     public void registerGuiTemplate(String name, GUI gui) {

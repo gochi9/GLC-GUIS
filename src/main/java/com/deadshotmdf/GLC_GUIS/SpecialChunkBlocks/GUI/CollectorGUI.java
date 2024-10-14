@@ -3,6 +3,7 @@ package com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.GUI;
 import com.deadshotmdf.GLC_GUIS.GUIUtils;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.GuiElement;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.SpecialChunkBlocks.CollectorItemDisplay;
+import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.SpecialChunkBlocks.CollectorSellAll;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerPagedGUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
@@ -22,7 +23,7 @@ public class CollectorGUI extends PerPlayerPagedGUI<SpecialBlocksManager, Map.En
 
     public CollectorGUI(GuiManager guiManager, SpecialBlocksManager correspondentManager, String title, int size, Map<Integer, Map<Integer, GuiElement>> pageElements, GUI backGUI, UUID viewer, Object... args) {
         super(guiManager, correspondentManager, title, size, pageElements, backGUI, viewer, args);
-        this.chunkHopper = args.length > 0 ? (ChunkHopper) args[0] : null;
+        this.chunkHopper = args.length > 0 ? (ChunkHopper) args[1] : null;
 
         if(this.chunkHopper == null || this.viewer == null)
             return;
@@ -55,6 +56,17 @@ public class CollectorGUI extends PerPlayerPagedGUI<SpecialBlocksManager, Map.En
         CollectorItemDisplay collectorItemDisplay = new CollectorItemDisplay(new ItemStack(material), correspondentManager, guiManager, null, null);
         collectorItemDisplay.setInfo(material, amount, maxAmount, entry.getValue() * amount);
         return collectorItemDisplay;
+    }
+
+    private final static String[] placeholder = {"{value}"};
+
+    @Override
+    protected void afterRefreshInventory() {
+        String[] replacement = {GUIUtils.getDigits(correspondentManager.getSellAllValue(chunkHopper))};
+        pageElements.forEach((page, map) -> map.forEach((slot, button) -> {
+            if(button instanceof CollectorSellAll collectorSellAll)
+                pageInventories.get(page).setItem(slot, collectorSellAll.getItemStackClone(placeholder, replacement));
+        }));
     }
 
     @Override

@@ -1,13 +1,16 @@
 package com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.SpecialBlocks;
 
+import com.deadshotmdf.GLC_GUIS.ConfigSettings;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
+import eu.decentsoftware.holograms.api.holograms.HologramPage;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.UUID;
 
 public class ChunkHopper implements SpecialChunkBlock{
@@ -50,7 +53,19 @@ public class ChunkHopper implements SpecialChunkBlock{
 
     @Override
     public void updateHologram() {
+        if(hologram == null)
+            return;
 
+        HologramPage page = hologram.getPage(0);
+        List<String> hologramLine = ConfigSettings.getCollectorHologramLines();
+
+        if(page.getLines().size() < hologramLine.size()){
+            hologramLine.forEach(line -> DHAPI.addHologramLine(hologram, line));
+            return;
+        }
+
+        for(int i = 0; i < hologramLine.size(); i++)
+            DHAPI.setHologramLine(hologram, i, hologramLine.get(i));
     }
 
     @Override

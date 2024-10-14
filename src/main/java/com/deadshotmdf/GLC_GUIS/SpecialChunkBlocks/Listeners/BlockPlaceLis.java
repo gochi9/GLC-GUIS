@@ -38,15 +38,18 @@ public class BlockPlaceLis implements Listener {
             return;
 
         SpecialBlockType specialBlockType = SpecialBlockType.getSpecialBlockType(possibleValidType);
+        Location location = ev.getBlock().getLocation();
 
         if(specialBlockType == null)
             return;
 
         Player player = ev.getPlayer();
-        Location location = ev.getBlock().getLocation();
 
-        boolean remove;
-        if(specialBlockType == SpecialBlockType.LOADER && ((remove = manager.isLoaderItemExpired(player, item)) || manager.isChunkLoaded(location))){
+        boolean remove = false;
+
+        if((specialBlockType == SpecialBlockType.COLLECTOR && manager.getChunkCollector(location) != null) ||
+                (specialBlockType == SpecialBlockType.LOADER && ((remove = manager.isLoaderItemExpired(player, item)) || manager.isChunkLoaded(location)))){
+
             ev.setCancelled(true);
             if(remove)
                 player.getInventory().removeItem(item);
@@ -65,7 +68,7 @@ public class BlockPlaceLis implements Listener {
             case LOADER:
                 manager.placeBlockLoader(location, item, player);
             case COLLECTOR:
-                //smth
+                manager.placeCollector(location, player.getUniqueId());
         }
     }
 

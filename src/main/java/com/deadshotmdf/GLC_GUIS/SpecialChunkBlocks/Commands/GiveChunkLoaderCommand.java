@@ -41,7 +41,7 @@ public class GiveChunkLoaderCommand implements CommandExecutor {
             return true;
         }
 
-        chunkLoaderManager.addPlayerItem(target, target.getLocation(), chunkLoaderManager.getLoaderItem(cooldown));
+        chunkLoaderManager.addPlayerItem(target, target.getLocation(), args.length == 2 ? chunkLoaderManager.getLoaderItem(cooldown) : chunkLoaderManager.giveCollector());
         return true;
     }
 }
