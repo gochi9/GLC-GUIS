@@ -1,5 +1,6 @@
 package com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.GUI;
 
+import com.deadshotmdf.GLC_GUIS.AH.AHTransaction;
 import com.deadshotmdf.GLC_GUIS.GUIUtils;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.GuiElement;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.SpecialChunkBlocks.CollectorItemDisplay;
@@ -44,7 +45,17 @@ public class CollectorGUI extends PerPlayerPagedGUI<SpecialBlocksManager, Map.En
 
     @Override
     protected List<Map.Entry<Material, Double>> getItemsToDisplay() {
-        return new ArrayList<>(correspondentManager.getPrices().entrySet());
+        chunkHopper.trimUselessInfo();
+        Map<Material, Integer> counts = chunkHopper.getValues();
+
+        List<Map.Entry<Material, Double>> priceEntries = new ArrayList<>(correspondentManager.getPrices().entrySet());
+
+        priceEntries.sort(Comparator.<Map.Entry<Material, Double>>comparingDouble(entry -> {
+            Integer count = counts.get(entry.getKey());
+            return count == null || count == 0 ? Double.NEGATIVE_INFINITY : count.doubleValue();
+        }).reversed());
+
+        return priceEntries;
     }
 
     @Override

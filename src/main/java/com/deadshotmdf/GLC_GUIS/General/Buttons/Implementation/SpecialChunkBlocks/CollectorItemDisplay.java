@@ -52,9 +52,9 @@ public class CollectorItemDisplay extends AbstractButton {
             return;
 
         Material material = item.getType();
-        int amount = chunkHopper.getValues().get(material);
+        Integer amount = chunkHopper.getValues().get(material);
 
-        if(amount == 0)
+        if(amount == null || amount == 0)
             return;
 
         Player player = (Player) ev.getWhoClicked();
