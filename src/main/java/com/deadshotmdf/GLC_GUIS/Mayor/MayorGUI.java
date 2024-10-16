@@ -22,7 +22,7 @@ public class MayorGUI extends PerPlayerGUI<MayorManager> {
 
     @Override
     public void handleClick(InventoryClickEvent ev, Object... args) {
-        if(viewer != null && correspondentManager.getDelayedUpgrade(viewer) == null)
+        if(viewer != null)
             super.handleClick(ev, args);
     }
 

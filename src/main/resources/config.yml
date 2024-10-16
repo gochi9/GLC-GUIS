@@ -162,16 +162,16 @@ upgrades:
     lore_upgrade_line:
       - '- Access to the bank: &a{price_cash}$ &b{price_glcoins}GLCoins'
     levels:
-      1: '1;100;0.5;120;0.4'
+      - '1;100;0.5;120;0.4'
   BANK:
     lore_main:
       - '&aThe interest you`ll receive daily for deposited money'
     lore_upgrade_line:
-      - '- {interest}% - &a{price_cash}$ &b{price_glcoins}GLCoins'
+      - '- {benefit}% - &a{price_cash}$ &b{price_glcoins}GLCoins'
     levels:
-      1: '0.05;100;0.5;0;0'
-      2: '0.10;100;0.5;0;0'
-      3: '0.15;100;0.5;0.0'
+      - '0.05;100;0.5;0;0'
+      - '0.10;100;0.5;0;0'
+      - '0.15;100;0.5;0;0'
 
 
 #Used for button actions

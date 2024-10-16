@@ -346,8 +346,8 @@ public class ConfigSettings {
     }
 
     //Mayor
-    public static String getUpgradeInProgress(long delay){
-        return upgradeInProgress.replace("{delay}", GUIUtils.convertMillisToDate(delay));
+    public static String getUpgradeInProgress(long delay, double glcoins){
+        return upgradeInProgress.replace("{date}", GUIUtils.convertMillisToDate(delay)).replace("{price_glcoins}", s(glcoins));
     }
 
     //
@@ -442,7 +442,7 @@ public class ConfigSettings {
         chunkCollectorItemLore = color(config.getStringList("chunkCollectorItemLore"));
 
         //Mayor
-
+        upgradeInProgress = color(config.getString("upgradeInProgress"));
 
         extraMessages.clear();
 

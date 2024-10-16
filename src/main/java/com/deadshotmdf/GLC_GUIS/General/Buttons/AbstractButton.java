@@ -106,7 +106,7 @@ public abstract class AbstractButton implements GuiElement{
         return canClick;
     }
 
-    public abstract void onClick(InventoryClickEvent event, GUI gui, Object... args);
+    public abstract void onClick(InventoryClickEvent ev, GUI gui, Object... args);
 
     public List<String> getLoreClone(){
         return new ArrayList<>(lore);

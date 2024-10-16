@@ -6,6 +6,7 @@ import com.deadshotmdf.GLC_GUIS.General.Buttons.GuiElement;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.AbstractGUIManager;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -68,13 +69,30 @@ public class MayorManager extends AbstractGUIManager {
             guiManager.commenceOpen(player, mayor, null);
     }
 
-    public void startPlayerDelay(Upgrade upgrade, UUID uuid, UpgradeType upgradeType, int currentLevel){
-        UpgradeLevel level;
+    public boolean noLongerDelay(UUID uuid){
+        DelayUpgradePair pair = delayedUpgrades.get(uuid);
 
-        try{level = upgrade.getLevels().get(currentLevel - 1);}
+        if(pair == null)
+            return false;
+
+        if(pair.delay() - System.currentTimeMillis() <= 0){
+            delayedUpgrades.remove(uuid);
+            return true;
+        }
+
+        return false;
+    }
+
+    public void startPlayerDelay(Upgrade upgrade, UUID uuid, UpgradeType upgradeType, int currentLevel){
+        UpgradeLevel nextLevel;
+
+        //Player level is from 1 to infinity
+        //Upgrade level list is from 0 to infinity
+        //To access the current level of a player you would do player level - 1
+        try{nextLevel = upgrade.getLevels().get(currentLevel);}
         catch(IndexOutOfBoundsException ignored){return;}
 
-        if(level.getDelay() <= 0 || upgrade.getMaxLevel() <= currentLevel){
+        if(nextLevel.getDelay() <= 0 || upgrade.getMaxLevel() <= currentLevel){
             //If there's no delay just advance, or if the level is too high, set it to the max
             advancePlayerLevel(uuid, upgradeType);
             return;
@@ -83,11 +101,12 @@ public class MayorManager extends AbstractGUIManager {
         if(getDelayedUpgrade(uuid) != null)
             return;
 
-        addDelayedUpgrade(uuid, new DelayUpgradePair(upgradeType, System.currentTimeMillis() + level.getDelay() + 1000));
+        addDelayedUpgrade(uuid, new DelayUpgradePair(upgradeType, System.currentTimeMillis() + nextLevel.getDelay() + 1000));
     }
 
     //Advances the players level. If the level is too high, set it to the maximum possible level for the upgrade type instead
     public void advancePlayerLevel(UUID uuid, UpgradeType type){
+        noLongerDelay(uuid);
         if(getDelayedUpgrade(uuid) != null)
             return;
 
@@ -98,8 +117,7 @@ public class MayorManager extends AbstractGUIManager {
 
         Map<UpgradeType, Integer> playerUpgrades = getPlayerUpgrades(uuid);
         int level = playerUpgrades.getOrDefault(type, 0);
-        int max = upgrade.getMaxLevel();;
-        playerUpgrades.put(type, level < max ? level + 1 : max);
+        playerUpgrades.put(type, Math.min(level + 1, upgrade.getMaxLevel()));
     }
 
     @Override
@@ -177,10 +195,10 @@ public class MayorManager extends AbstractGUIManager {
             return null;
 
         Double benefit = GUIUtils.getDouble(split[0]);
-        Double cost = GUIUtils.getDouble(split[0]);
-        Double glcoins = GUIUtils.getDouble(split[0]);
-        Long delay = GUIUtils.getLong(split[0]);
-        Double instant = GUIUtils.getDouble(split[0]);
+        Double cost = GUIUtils.getDouble(split[1]);
+        Double glcoins = GUIUtils.getDouble(split[2]);
+        Long delay = GUIUtils.getLong(split[3]);
+        Double instant = GUIUtils.getDouble(split[4]);
 
         if(benefit == null || cost == null || glcoins == null || delay == null || instant == null)
             return null;
