@@ -11,6 +11,7 @@ import net.luckperms.api.node.Node;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,6 +23,10 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.text.DecimalFormat;
@@ -109,6 +114,47 @@ public class GUIUtils {
         return uuid;
     }
 
+    public static String serializeMap(Map<?, ?> map){
+        ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
+        try (ObjectOutputStream objectOutStream = new ObjectOutputStream(byteOutStream)) {
+            objectOutStream.writeObject(map);
+        }
+        catch (Throwable e){
+            e.printStackTrace();
+            return "";
+        }
+        return Base64.getEncoder().encodeToString(byteOutStream.toByteArray());
+    }
+
+    public static Map<?, ?> deserializeEnumMap(String base64, Class<?> enumClass) {
+        Map<?, ?> map = deserializeMap(base64, EnumMap.class, enumClass);
+        return map == null ? new EnumMap<>(Material.class) : map;
+    }
+
+    public static Map<?, ?> deserializeHashMap(String base64) {
+        Map<?, ?> map = deserializeMap(base64, HashMap.class, null);
+        return map == null ? new HashMap<>() : map;
+    }
+
+    private static <T extends Map<?, ?>> T deserializeMap(String base64, Class<T> mapClass, Class<?> enumClass) {
+        byte[] bytes = Base64.getDecoder().decode(base64);
+        ByteArrayInputStream byteInStream = new ByteArrayInputStream(bytes);
+        try (ObjectInputStream objectInStream = new ObjectInputStream(byteInStream)) {
+            return (T) objectInStream.readObject();
+        }
+        catch (Throwable e) {
+            e.printStackTrace();
+            try {
+                return EnumMap.class.isAssignableFrom(mapClass) ? (T) new EnumMap<>((Class<Enum>) enumClass) : mapClass.getDeclaredConstructor().newInstance();
+            }
+            catch (Exception ex) {
+                System.err.println("Failed to create map instance");
+                ex.printStackTrace();
+                return null;
+            }
+        }
+    }
+
     public static AbstractButton loadButton(String actionValue, ItemStack itemStack, Object correspondantManager, GuiManager guiManager, Map<String, String> map, String... args) {
         TriFunction<ItemStack, Object, GuiManager, String[], Map<String, String>, AbstractButton> factory = buttonMap.get(actionValue);
         return factory == null ? null : factory.apply(itemStack, correspondantManager, guiManager, args, map);
@@ -138,6 +184,15 @@ public class GUIUtils {
     public static Double getDouble(String s){
         try{
             return Double.valueOf(s);
+        }
+        catch (Throwable ignored){
+            return null;
+        }
+    }
+
+    public static Long getLong(String s){
+        try{
+            return Long.parseLong(s);
         }
         catch (Throwable ignored){
             return null;

@@ -91,6 +91,9 @@ public class ConfigSettings {
     private static String chunkCollectorItemName;
     private static List<String> chunkCollectorItemLore;
 
+    //Mayor
+    private static String upgradeInProgress;
+
     private static final HashMap<String, String> extraMessages = new HashMap<>();
 
     public static String getReloadConfig(){
@@ -342,6 +345,11 @@ public class ConfigSettings {
         return replaceList(chunkCollectorItemLore, chunkCollectorItemLorePlaceholder, GUIUtils.getDigits(sell));
     }
 
+    //Mayor
+    public static String getUpgradeInProgress(long delay){
+        return upgradeInProgress.replace("{delay}", GUIUtils.convertMillisToDate(delay));
+    }
+
     //
 
     public static String getExtraMessage(String key){
@@ -432,6 +440,9 @@ public class ConfigSettings {
         collectorHologramLines = color(config.getStringList("collectorHologramLines"));
         chunkCollectorItemName = color(config.getString("chunkCollectorItemName"));
         chunkCollectorItemLore = color(config.getStringList("chunkCollectorItemLore"));
+
+        //Mayor
+
 
         extraMessages.clear();
 

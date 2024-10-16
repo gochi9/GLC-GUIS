@@ -1,18 +1,9 @@
 package com.deadshotmdf.GLC_GUIS.SpecialChunkBlocks.Misc;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.Base64;
-import java.util.EnumMap;
-import java.util.UUID;
 
 public class SpecialBlockUtils {
 
@@ -54,41 +45,6 @@ public class SpecialBlockUtils {
             return null;
 
         return currentTime + milliseconds;
-    }
-
-    public static UUID getUUID(String s){
-        try{
-            return UUID.fromString(s);
-        }
-        catch (Throwable ignored){
-            return null;
-        }
-    }
-
-    public static String serializeEnumMap(EnumMap<Material, Integer> map){
-        ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
-        try (ObjectOutputStream objectOutStream = new ObjectOutputStream(byteOutStream)) {
-            objectOutStream.writeObject(map);
-        }
-        catch (Throwable e){
-            e.printStackTrace();
-            return "";
-        }
-        return Base64.getEncoder().encodeToString(byteOutStream.toByteArray());
-    }
-
-    public static EnumMap<Material, Integer> deserializeEnumMap(String base64) {
-        byte[] bytes = Base64.getDecoder().decode(base64);
-        ByteArrayInputStream byteInStream = new ByteArrayInputStream(bytes);
-        try (ObjectInputStream objectInStream = new ObjectInputStream(byteInStream)) {
-            @SuppressWarnings("unchecked")
-            EnumMap<Material, Integer> map = (EnumMap<Material, Integer>) objectInStream.readObject();
-            return map;
-        }
-        catch (Throwable e){
-            e.printStackTrace();
-            return new EnumMap<>(Material.class);
-        }
     }
 
     public static void showSurroundingChunkParticles(Player player, Location loc, Particle particle) {

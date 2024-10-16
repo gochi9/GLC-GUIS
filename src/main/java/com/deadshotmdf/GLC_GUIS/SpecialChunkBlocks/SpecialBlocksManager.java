@@ -358,7 +358,7 @@ public class SpecialBlocksManager extends AbstractGUIManager {
         String path = (isLoader ? "loaders." : "collectors.") + i.getAndIncrement();
         config.set(path + ".owner", specialChunkBlock.getOwner().toString());
         config.set(path + ".location", k);
-        config.set(path + (isLoader ? ".cooldown" : ".items"), isLoader ? ((ChunkLoader)specialChunkBlock).getCooldown() : SpecialBlockUtils.serializeEnumMap(((ChunkHopper)specialChunkBlock).getValues()));
+        config.set(path + (isLoader ? ".cooldown" : ".items"), isLoader ? ((ChunkLoader)specialChunkBlock).getCooldown() : GUIUtils.serializeMap(((ChunkHopper)specialChunkBlock).getValues()));
 
         specialChunkBlock.removeBlock(plugin, false);
     }
@@ -369,7 +369,7 @@ public class SpecialBlocksManager extends AbstractGUIManager {
             String path = "loaders." + key;
             long cooldown = config.getLong(path + ".cooldown");
             Location location = config.getLocation(path + ".location");
-            UUID owner = SpecialBlockUtils.getUUID(config.getString(path + ".owner"));
+            UUID owner = GUIUtils.getUUID(config.getString(path + ".owner"));
 
             if(cooldown <= 0 || cooldown < current || cooldown - current <= 0 || location == null || owner == null)
                 continue;
@@ -383,14 +383,15 @@ public class SpecialBlocksManager extends AbstractGUIManager {
         for(String key : getKeys("collectors", false)){
             String path = "collectors." + key;
             Location location = config.getLocation(path + ".location");
-            UUID owner = SpecialBlockUtils.getUUID(config.getString(path + ".owner"));
+            UUID owner = GUIUtils.getUUID(config.getString(path + ".owner"));
 
             if(location == null || owner == null)
                 continue;
 
             String map = config.getString(path + ".items");
 
-            EnumMap<Material, Integer> stored = map != null ? SpecialBlockUtils.deserializeEnumMap(map) : null;
+            @SuppressWarnings("unchecked")
+            EnumMap<Material, Integer> stored = map != null ? (EnumMap<Material, Integer>) GUIUtils.deserializeEnumMap(map, Material.class) : null;
 
             ChunkHopper chunkHopper = new ChunkHopper(owner, location, stored != null ? stored : new EnumMap<>(Material.class));
             addSpecialBlock(location, chunkHopper);

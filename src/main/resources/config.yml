@@ -142,6 +142,38 @@ chunkCollectorItemLore:
   - '&6Withdraw - &7(Left Click)'
   - '&6Sell - &a{sell}$ &6 - &7(Right Click)'
 
+###########
+## MAYOR ##
+###########
+
+#Format for upgrade levels: {benefit;price_money;glcoins;time to complete in minutes;price to complete instantly in glcoins after buying with cash}
+#The benefit stands for thing that the player receives upon buying the upgrade, ex, UNLOCK_BANK doesn't really offer anything apart from access to the bank itself so 1 is just a placeholder
+#But for CROP_MULTIPLIER 1.1 stands for the multiplier
+
+upgradeInProgress: '&cThis upgrade will be finished on {date}. Finish now: {price_glcoins}'
+
+upgrades:
+  UNLOCK_BANK:
+    lore_main:
+      - '&aThe bank offers you access to store your money'
+      - '&aThis prevents your money being lost upon death'
+      - '&aYou`ll receive interest daily based on the amount stored'
+      - '&aYou cannot use the money in the bank directly to pay for anything'
+    lore_upgrade_line:
+      - '- Access to the bank: &a{price_cash}$ &b{price_glcoins}GLCoins'
+    levels:
+      1: '1;100;0.5;120;0.4'
+  BANK:
+    lore_main:
+      - '&aThe interest you`ll receive daily for deposited money'
+    lore_upgrade_line:
+      - '- {interest}% - &a{price_cash}$ &b{price_glcoins}GLCoins'
+    levels:
+      1: '0.05;100;0.5;0;0'
+      2: '0.10;100;0.5;0;0'
+      3: '0.15;100;0.5;0.0'
+
+
 #Used for button actions
 extraMessages:
   cannotAccessShopCategory: 'Go to spawn and search for the npc, you poor fuck'
