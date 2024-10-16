@@ -36,7 +36,7 @@ public abstract class SubCommand<T extends AbstractGUIManager> {
         this.commandWrongSyntax = commandWrongSyntax;
     }
 
-    protected boolean canExecute(CommandSender sender, int argsLength, boolean sendMessage){
+    public boolean canExecute(CommandSender sender, int argsLength, boolean sendMessage){
         boolean isPlayer = sender instanceof Player;
         if(commandType == CommandType.PLAYER && !isPlayer){
             if(sendMessage)

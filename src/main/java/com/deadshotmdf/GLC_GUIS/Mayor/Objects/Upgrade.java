@@ -1,4 +1,6 @@
-package com.deadshotmdf.GLC_GUIS.Mayor;
+package com.deadshotmdf.GLC_GUIS.Mayor.Objects;
+
+import com.deadshotmdf.GLC_GUIS.Mayor.Enums.UpgradeType;
 
 import java.util.List;
 

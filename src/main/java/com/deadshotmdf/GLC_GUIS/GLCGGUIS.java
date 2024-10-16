@@ -10,7 +10,7 @@ import com.deadshotmdf.GLC_GUIS.BlackMarket.Listeners.NPCListener;
 import com.deadshotmdf.GLC_GUIS.General.Commands.Implementation.GenericGUISCommand;
 import com.deadshotmdf.GLC_GUIS.General.Listeners.GUIListener;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
-import com.deadshotmdf.GLC_GUIS.Mayor.Mayor;
+import com.deadshotmdf.GLC_GUIS.Mayor.Commands.MayorCommand;
 import com.deadshotmdf.GLC_GUIS.Mayor.MayorManager;
 import com.deadshotmdf.GLC_GUIS.Shop.OpenShopCommand;
 import com.deadshotmdf.GLC_GUIS.Shop.ShopManager;
@@ -71,7 +71,7 @@ public final class GLCGGUIS extends JavaPlugin {
         this.getCommand("ah").setExecutor(new AHCommand(this, actionHouseManager));
         this.getCommand("giveloader").setExecutor(new GiveChunkLoaderCommand(specialBlocksManager));
         this.getCommand("openbankgui").setExecutor(new BankGUICMD(bankGUIManager));
-        this.getCommand("mayor").setExecutor(new Mayor(mayorManager));
+        this.getCommand("mayor").setExecutor(new MayorCommand(this, mayorManager));
     }
 
     @Override

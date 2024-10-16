@@ -1,6 +1,7 @@
-package com.deadshotmdf.GLC_GUIS.Mayor;
+package com.deadshotmdf.GLC_GUIS.Mayor.Objects;
 
 import com.deadshotmdf.GLC_GUIS.GUIUtils;
+import com.deadshotmdf.GLC_GUIS.Mayor.Enums.UpgradeType;
 
 public record DelayUpgradePair(UpgradeType upgradeType, long delay) {
 

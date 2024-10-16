@@ -1,10 +1,12 @@
-package com.deadshotmdf.GLC_GUIS.Mayor;
+package com.deadshotmdf.GLC_GUIS.Mayor.Objects;
 
 import com.deadshotmdf.GLC_GUIS.General.Buttons.GuiElement;
 import com.deadshotmdf.GLC_GUIS.General.Buttons.Implementation.Mayor.MayorUpgrade;
 import com.deadshotmdf.GLC_GUIS.General.GUI.GUI;
 import com.deadshotmdf.GLC_GUIS.General.GUI.PerPlayerGUI;
 import com.deadshotmdf.GLC_GUIS.General.Managers.GuiManager;
+import com.deadshotmdf.GLC_GUIS.Mayor.Enums.UpgradeType;
+import com.deadshotmdf.GLC_GUIS.Mayor.MayorManager;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 

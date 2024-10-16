@@ -1,4 +1,4 @@
-package com.deadshotmdf.GLC_GUIS.Mayor;
+package com.deadshotmdf.GLC_GUIS.Mayor.Objects;
 
 public class UpgradeLevel {
 

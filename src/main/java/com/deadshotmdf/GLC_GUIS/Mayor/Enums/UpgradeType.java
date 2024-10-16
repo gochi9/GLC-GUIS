@@ -1,5 +1,6 @@
-package com.deadshotmdf.GLC_GUIS.Mayor;
+package com.deadshotmdf.GLC_GUIS.Mayor.Enums;
 
+//NEVER MODIFY THE PACKAGE FOR THIS CLASS
 public enum UpgradeType {
 
     UNLOCK_BANK,
