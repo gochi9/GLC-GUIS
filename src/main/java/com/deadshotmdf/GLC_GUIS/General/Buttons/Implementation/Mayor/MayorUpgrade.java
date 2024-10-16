@@ -124,20 +124,20 @@ public class MayorUpgrade extends AbstractButton {
         switch (ev.getClick()){
             case LEFT:
                 if(delayExits)
-                    return;
+                    break;
 
                 double cost = nextLevel.getCost();
                 double balance = economy.getBalance(player);
                 if(balance < cost){
                     player.sendMessage(ConfigSettings.getNotEnoughFunds(cost, balance));
-                    return;
+                    break;
                 }
 
                 economy.withdrawPlayer(player, cost);
                 player.sendMessage(ConfigSettings.getBoughtItem(cost, 0));
                 mayorManager.startPlayerDelay(upgrade, uuid, upgradeType, playerLevel);
                 gui.refreshInventory();
-                return;
+                break;
 
             case RIGHT: GLCoinsS.getDatabase().getEntryPartialAsync(uuid, uuid, null).thenAccept(value ->{
                 if(value == null)
@@ -156,7 +156,7 @@ public class MayorUpgrade extends AbstractButton {
                 player.sendMessage(ConfigSettings.getBoughtItem(0, glcoins));
                 gui.refreshInventory();
             });
-
+            break;
         }
     }
 }
