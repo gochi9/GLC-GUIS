@@ -10,6 +10,7 @@ public enum UpgradeType {
     BANK_LIMIT,
     HOPPER_LIMIT,
     MOB_LOOT_MULTIPLIER,
+    CHUNK_MEMBERS,
     CROP_MULTIPLIER;
 
     public static UpgradeType fromString(String s){
@@ -24,6 +25,7 @@ public enum UpgradeType {
             case "BANK_LIMIT" -> BANK_LIMIT;
             case "HOPPER_LIMIT" -> HOPPER_LIMIT;
             case "MOB_LOOT_MULTIPLIER" -> MOB_LOOT_MULTIPLIER;
+            case "CHUNK_MEMBERS" -> CHUNK_MEMBERS;
             case "CROP_MULTIPLIER" -> CROP_MULTIPLIER;
             default -> null;
         };

@@ -56,6 +56,33 @@ public class MayorManager extends AbstractGUIManager {
         return upgrades.get(type);
     }
 
+    public double getUpgradeBenefit(UUID uuid, UpgradeType type){
+        Upgrade upgrade = getUpgrade(type);
+        int max;
+
+        if(upgrade == null || (max = upgrade.getMaxLevel()) < 1)
+            return 0.000;
+
+        int level = getPlayerUpgrade(uuid, type);
+
+        if(level < 1)
+            return 0.000;
+
+        level = Math.min(level, max);
+
+        UpgradeLevel upgradeLevel;
+
+        try{upgradeLevel = upgrade.getLevels().get(level - 1);}
+        catch (Throwable ignored){return 0.000;}
+
+        if(upgradeLevel == null)
+            return 0.000;
+
+        double benefit = upgradeLevel.getBenefit();
+
+        return Math.max(benefit, 0.000);
+    }
+
     public void openGUI(Player player){
         UUID uuid = player.getUniqueId();
         DelayUpgradePair pair = delayedUpgrades.get(uuid);

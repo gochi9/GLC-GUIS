@@ -95,4 +95,8 @@ public final class GLCGGUIS extends JavaPlugin {
         return economy;
     }
 
+    public MayorManager getMayorManager(){
+        return mayorManager;
+    }
+
 }

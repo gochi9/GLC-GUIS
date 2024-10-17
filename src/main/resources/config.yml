@@ -152,6 +152,9 @@ chunkCollectorItemLore:
 
 upgradeInProgress: '&cThis upgrade will be finished on {date}. Finish now: {price_glcoins}'
 
+cannotOpenBank: '&cYou do not have a bank account. Visit the mayor'
+cannotOpenBankTarget: '&c{player} does not have a bank account. Tell them to visit the mayor'
+
 upgrades:
   UNLOCK_BANK:
     lore_main:

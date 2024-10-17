@@ -93,6 +93,8 @@ public class ConfigSettings {
 
     //Mayor
     private static String upgradeInProgress;
+    private static String cannotOpenBank;
+    private static String cannotOpenBankTarget;
 
     private static final HashMap<String, String> extraMessages = new HashMap<>();
 
@@ -350,6 +352,14 @@ public class ConfigSettings {
         return upgradeInProgress.replace("{date}", GUIUtils.convertMillisToDate(delay)).replace("{price_glcoins}", s(glcoins));
     }
 
+    public static String getCannotOpenBank(){
+        return cannotOpenBank;
+    }
+
+    public static String getCannotOpenBankTarget(String player){
+        return cannotOpenBankTarget.replace("{player}", player);
+    }
+
     //
 
     public static String getExtraMessage(String key){
@@ -443,6 +453,8 @@ public class ConfigSettings {
 
         //Mayor
         upgradeInProgress = color(config.getString("upgradeInProgress"));
+        cannotOpenBank = color(config.getString("cannotOpenBank"));
+        cannotOpenBankTarget = color(config.getString("cannotOpenBankTarget"));
 
         extraMessages.clear();
 
