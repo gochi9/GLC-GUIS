@@ -11,7 +11,8 @@ public enum UpgradeType {
     HOPPER_LIMIT,
     MOB_LOOT_MULTIPLIER,
     CHUNK_MEMBERS,
-    CROP_MULTIPLIER;
+    CROP_MULTIPLIER,
+    PLAYER_LIMIT;
 
     public static UpgradeType fromString(String s){
         if(s == null)
@@ -27,6 +28,7 @@ public enum UpgradeType {
             case "MOB_LOOT_MULTIPLIER" -> MOB_LOOT_MULTIPLIER;
             case "CHUNK_MEMBERS" -> CHUNK_MEMBERS;
             case "CROP_MULTIPLIER" -> CROP_MULTIPLIER;
+            case "PLAYER_LIMIT" -> PLAYER_LIMIT;
             default -> null;
         };
     }
